@@ -1,0 +1,18 @@
+POST localhost:8080/user/registration
+Content-Type: application/json
+
+{
+  "email": "example@email.com",
+  "password": "password",
+  "firstName": "first name",
+  "lastName": "last name",
+  "passport": "MP12341234",
+  "birthday": "11-02-1900",
+  "address": {
+    "city": "Minsk",
+    "street": "Nemiga",
+    "house": "12a"
+  }
+}
+
+###
