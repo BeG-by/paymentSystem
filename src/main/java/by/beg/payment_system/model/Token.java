@@ -1,36 +1,34 @@
 package by.beg.payment_system.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.Valid;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address {
+public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "City can't be empty")
-    private String city;
+    private String tokenValue;
 
-    @NotBlank(message = "Street can't be empty")
-    private String street;
-
-    @NotBlank(message = "House can't be empty")
-    private String house;
-
-    @OneToOne(mappedBy = "address")
-    @JsonBackReference
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @ToString.Exclude
+    @Valid
     private User user;
 
+    public Token(String tokenValue, User user) {
+        this.tokenValue = tokenValue;
+        this.user = user;
+    }
 }
