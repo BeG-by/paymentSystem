@@ -8,12 +8,13 @@ import by.beg.payment_system.model.Token;
 import by.beg.payment_system.model.User;
 import by.beg.payment_system.repository.TokenRepository;
 import by.beg.payment_system.repository.UserRepository;
-import by.beg.payment_system.util.GenerateTokenUtil;
+import by.beg.payment_system.util.GenerateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> checkUser = userRepository.findUserByEmailAndPassword(user.getEmail(), user.getPassword());
 
         if (checkUser.isPresent()) {
-            String tokenValue = GenerateTokenUtil.generateToken();
+            String tokenValue = GenerateUtil.generateToken();
             Token token = tokenRepository.save(new Token(tokenValue, checkUser.get()));
             log.info("Token was added: " + token);
             return token;
@@ -115,6 +116,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public User getAdminRole(long userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        user.setUserRole(User.UserRole.ADMIN);
+        user.setLastUpdate(new Date());
+        log.info("Admin role was added for user:" + user);
+        return user;
     }
 
 

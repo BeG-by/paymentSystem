@@ -1,9 +1,7 @@
 package by.beg.payment_system.model;
 
-import by.beg.payment_system.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,27 +10,37 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//validation ?
 public class Wallet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String walletValue;
+
     @Enumerated(EnumType.STRING)
     private WalletType walletType;
 
-    @Temporal(TemporalType.TIMESTAMP) // pattern - ?
-    private Date creatingDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private final Date creatDate = new Date();
 
-    private double balance;
+    private double balance = 0;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
 
+    public Wallet(String walletValue, WalletType type, User user) {
+        this.walletValue = walletValue;
+        this.walletType = type;
+        this.user = user;
+    }
 
-    enum WalletType {
-        BYN, USD, EURO
+
+    public enum WalletType {
+        BYN, USD, EUR, RUB
     }
 
 }

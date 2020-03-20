@@ -2,15 +2,15 @@ POST localhost:8080/user/registration
 Content-Type: application/json
 
 {
-  "email": "example@email.com",
+  "email": "example4@email.com",
   "password": "password",
   "firstName": "first name",
   "lastName": "last name",
-  "passport": "MP123456789",
+  "passport": "MP1234567894",
   "birthday": "11-03-1993",
   "address": {
     "city": "Minsk",
-    "street": "Nemiga",
+    "street": "Pushkin",
     "house": "12a"
   }
 }
@@ -21,7 +21,7 @@ POST localhost:8080/user/authorization
 Content-Type: application/json
 
 {
-  "email": "example@email.com",
+  "email": "example2@email.com",
   "password": "password"
 }
 
@@ -29,21 +29,21 @@ Content-Type: application/json
 
 GET localhost:8080/user/logout
 Content-Type: application/json
-token: hriwzfi1782790263
+token: benkilq-1627313068
 
 ###
 
-GET localhost:8080/user/findById/3
+GET localhost:8080/user/findById/1
 Content-Type: application/json
-token: gduiprf-136314509
+token: snijhrj-1236018832
 ###
 
 PUT localhost:8080/user/update
 Content-Type: application/json
-token: gduiprf-136314509
+token: snijhrj-1236018832
 
 {
-  "id": 10,
+  "id": 3,
   "email": "edit@email.com",
   "password": "password",
   "firstName": "first name",
@@ -59,14 +59,17 @@ token: gduiprf-136314509
 
 ###
 
-DELETE localhost:8080/user/delete/10
+DELETE localhost:8080/user/delete/3
 Content-Type: application/json
-token: gduiprf-136314509
-
+token: idbjsxi319461464
 ###
 
 GET localhost:8080/user/getAll
 Content-Type: application/json
-token: cvhilxy-1523808414
+token: snijhrj-1236018832
+###
 
+PUT localhost:8080/user/getAdminRole/2
+Content-Type: application/json
+token: snijhrj-1236018832
 ###

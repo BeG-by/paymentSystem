@@ -1,14 +1,10 @@
 package by.beg.payment_system.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.Valid;
+import java.util.Date;
 
 @Entity
 @Data
@@ -22,9 +18,13 @@ public class Token {
 
     private String tokenValue;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private final Date createDate = new Date();
+
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @ToString.Exclude
-    @Valid
+    @EqualsAndHashCode.Exclude
     private User user;
 
     public Token(String tokenValue, User user) {

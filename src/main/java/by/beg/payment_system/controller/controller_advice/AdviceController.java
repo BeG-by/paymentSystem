@@ -1,9 +1,6 @@
 package by.beg.payment_system.controller.controller_advice;
 
-import by.beg.payment_system.exception.NoAccessException;
-import by.beg.payment_system.exception.UserIsPresentException;
-import by.beg.payment_system.exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.UserNotFoundException;
+import by.beg.payment_system.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Objects;
@@ -23,6 +21,13 @@ public class AdviceController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> paramValidate() {
+        return ResponseEntity.badRequest().body("Invalid path variable.");
+    }
+
+
+    //USER
 
     @ExceptionHandler(UserIsPresentException.class)
     public ResponseEntity<String> userIsPresent() {
@@ -42,5 +47,12 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserIsNotAuthorizedException.class)
     public ResponseEntity<String> checkAuth() {
         return new ResponseEntity<>("User isn't authorized", HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    //WALLET
+
+    @ExceptionHandler(WalletIsExistException.class)
+    public ResponseEntity<String> walletIsPresent() {
+        return new ResponseEntity<>("Wallet is present.", HttpStatus.BAD_REQUEST);
     }
 }

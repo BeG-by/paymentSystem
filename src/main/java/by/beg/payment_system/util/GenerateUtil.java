@@ -2,7 +2,7 @@ package by.beg.payment_system.util;
 
 import java.util.Random;
 
-public class GenerateTokenUtil {
+public class GenerateUtil {
 
     private static Random random = new Random();
     private static char[] chars;
@@ -29,6 +29,12 @@ public class GenerateTokenUtil {
 
         return string + randomNum;
 
+    }
+
+    public static String generateWalletValue() {
+        int max = 999_999_999;
+        int min = 100_000_000;
+        return String.valueOf(random.nextInt(max - min) + min);
     }
 
 

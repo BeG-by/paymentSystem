@@ -88,6 +88,12 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
+    @PutMapping("/getAdminRole/{userId}")
+    public ResponseEntity<User> getAdminRoleUser(@PathVariable long userId, @RequestHeader String token) throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException {
+        checkAdminRole(userService.checkAuthorization(token));
+        return new ResponseEntity<>(userService.getAdminRole(userId), HttpStatus.OK);
+    }
+
 
     private void checkAdminRole(User user) throws NoAccessException {
         if (!user.getUserRole().equals(User.UserRole.ADMIN)) {

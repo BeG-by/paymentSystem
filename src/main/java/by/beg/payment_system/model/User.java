@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -45,13 +47,22 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UserRole userRole = UserRole.USER;
 
-    @OneToOne(cascade = CascadeType.ALL , orphanRemoval = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Date lastUpdate = new Date();
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @Valid
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL , mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
     private List<Token> tokens;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    private Set<Wallet> wallets;
 
 
     public enum UserRole {

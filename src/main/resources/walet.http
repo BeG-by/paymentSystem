@@ -1,0 +1,4 @@
+GET localhost:8080/wallet/create/BYN
+Content-Type: application/json
+token: xqqdfsi433599310
+###
