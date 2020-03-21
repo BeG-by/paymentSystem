@@ -1,4 +1,4 @@
-package by.beg.payment_system.exception;
+package by.beg.payment_system.exception.user_exception;
 
 public class UserIsNotAuthorizedException extends Exception {
 

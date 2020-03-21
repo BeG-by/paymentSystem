@@ -11,6 +11,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//hasn't done
 public class Deposit {
 
     @Id

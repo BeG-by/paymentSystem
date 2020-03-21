@@ -1,32 +1,34 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.exception.WalletIsExistException;
+import by.beg.payment_system.exception.wallet_exception.WalletIsExistException;
+import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
 import by.beg.payment_system.model.User;
 import by.beg.payment_system.model.Wallet;
-import by.beg.payment_system.repository.UserRepository;
+import by.beg.payment_system.model.CurrencyType;
 import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.util.GenerateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
 @Slf4j
 @Transactional
 public class WalletServiceImpl implements WalletService {
 
-    private UserRepository userRepository;
     private WalletRepository walletRepository;
 
-    public WalletServiceImpl(UserRepository userRepository, WalletRepository walletRepository) {
-        this.userRepository = userRepository;
+    public WalletServiceImpl(WalletRepository walletRepository) {
         this.walletRepository = walletRepository;
     }
 
     @Override
-    public Wallet create(Wallet.WalletType type, User user) throws WalletIsExistException {
+    public Wallet create(CurrencyType type, User user) throws WalletIsExistException {
 
-        if (walletRepository.findByWalletTypeAndUser(type, user).isPresent()) {
+        if (walletRepository.findByCurrencyTypeAndUser(type, user).isPresent()) {
             throw new WalletIsExistException();
         }
 
@@ -36,4 +38,26 @@ public class WalletServiceImpl implements WalletService {
         log.info("Wallet was added: " + save);
         return save;
     }
+
+    @Override
+    public List<Wallet> getAll(User user) {
+        return walletRepository.findAllByUser(user);
+    }
+
+    @Override
+    public Wallet delete(CurrencyType type, User user) throws WalletNotFoundException {
+        Wallet wallet = walletRepository.findByCurrencyTypeAndUser(type, user).orElseThrow(WalletNotFoundException::new);
+        walletRepository.delete(wallet);
+        log.info("Wallet was deleted: " + wallet);
+        return wallet;
+    }
+
+    @Override
+    public Wallet recharge(User user, CurrencyType type, double money) throws WalletNotFoundException {
+        Wallet wallet = walletRepository.findByCurrencyTypeAndUser(type, user).orElseThrow(WalletNotFoundException::new);
+        wallet.setBalance(wallet.getBalance() + money);
+        log.info("User has charged the balance " + (new Date()) + ": " + wallet);
+        return wallet;
+    }
+
 }

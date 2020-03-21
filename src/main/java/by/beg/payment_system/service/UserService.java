@@ -1,9 +1,9 @@
 package by.beg.payment_system.service;
 
 import by.beg.payment_system.dto.UserAuthorizationDTO;
-import by.beg.payment_system.exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.UserIsPresentException;
-import by.beg.payment_system.exception.UserNotFoundException;
+import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
+import by.beg.payment_system.exception.user_exception.UserIsPresentException;
+import by.beg.payment_system.exception.user_exception.UserNotFoundException;
 import by.beg.payment_system.model.Token;
 import by.beg.payment_system.model.User;
 

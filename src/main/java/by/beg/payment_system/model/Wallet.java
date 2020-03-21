@@ -1,5 +1,6 @@
 package by.beg.payment_system.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class Wallet {
     private String walletValue;
 
     @Enumerated(EnumType.STRING)
-    private WalletType walletType;
+    private CurrencyType currencyType;
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -30,17 +31,14 @@ public class Wallet {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private User user;
 
-    public Wallet(String walletValue, WalletType type, User user) {
+    public Wallet(String walletValue, CurrencyType type, User user) {
         this.walletValue = walletValue;
-        this.walletType = type;
+        this.currencyType = type;
         this.user = user;
     }
 
-
-    public enum WalletType {
-        BYN, USD, EUR, RUB
-    }
 
 }

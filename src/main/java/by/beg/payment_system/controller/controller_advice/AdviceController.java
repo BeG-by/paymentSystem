@@ -1,6 +1,13 @@
 package by.beg.payment_system.controller.controller_advice;
 
-import by.beg.payment_system.exception.*;
+import by.beg.payment_system.exception.transfer_exception.LackOfMoneyException;
+import by.beg.payment_system.exception.transfer_exception.TargetWalletNotFoundException;
+import by.beg.payment_system.exception.user_exception.NoAccessException;
+import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
+import by.beg.payment_system.exception.user_exception.UserIsPresentException;
+import by.beg.payment_system.exception.user_exception.UserNotFoundException;
+import by.beg.payment_system.exception.wallet_exception.WalletIsExistException;
+import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +48,12 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NoAccessException.class)
     public ResponseEntity<String> checkAdmin() {
-        return new ResponseEntity<>("User role isn't administration", HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>("User role isn't administration.", HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(UserIsNotAuthorizedException.class)
     public ResponseEntity<String> checkAuth() {
-        return new ResponseEntity<>("User isn't authorized", HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>("User isn't authorized.", HttpStatus.NOT_ACCEPTABLE);
     }
 
     //WALLET
@@ -54,5 +61,22 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(WalletIsExistException.class)
     public ResponseEntity<String> walletIsPresent() {
         return new ResponseEntity<>("Wallet is present.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WalletNotFoundException.class)
+    public ResponseEntity<String> walletNotFound() {
+        return new ResponseEntity<>("Wallet not found.", HttpStatus.BAD_REQUEST);
+    }
+
+    //TRANSFER
+
+    @ExceptionHandler(LackOfMoneyException.class)
+    public ResponseEntity<String> notMoney() {
+        return new ResponseEntity<>("Not enough money on current wallet for transfer.", HttpStatus.LOCKED);
+    }
+
+    @ExceptionHandler(TargetWalletNotFoundException.class)
+    public ResponseEntity<String> targetNotFound() {
+        return new ResponseEntity<>("Target wallet not found.", HttpStatus.BAD_REQUEST);
     }
 }

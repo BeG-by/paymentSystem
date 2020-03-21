@@ -2,15 +2,15 @@ POST localhost:8080/user/registration
 Content-Type: application/json
 
 {
-  "email": "example4@email.com",
+  "email": "example2@email.com",
   "password": "password",
   "firstName": "first name",
   "lastName": "last name",
-  "passport": "MP1234567894",
+  "passport": "MP123456789",
   "birthday": "11-03-1993",
   "address": {
     "city": "Minsk",
-    "street": "Pushkin",
+    "street": "Nemiga",
     "house": "12a"
   }
 }
@@ -33,18 +33,18 @@ token: benkilq-1627313068
 
 ###
 
-GET localhost:8080/user/findById/1
+GET localhost:8080/user/findById/3
 Content-Type: application/json
-token: snijhrj-1236018832
+token: mltjejd1279580875
 ###
 
 PUT localhost:8080/user/update
 Content-Type: application/json
-token: snijhrj-1236018832
+token: mltjejd1279580875
 
 {
   "id": 3,
-  "email": "edit@email.com",
+  "email": "nedit@email.com",
   "password": "password",
   "firstName": "first name",
   "lastName": "last name",
@@ -66,7 +66,7 @@ token: idbjsxi319461464
 
 GET localhost:8080/user/getAll
 Content-Type: application/json
-token: snijhrj-1236018832
+token: mltjejd1279580875
 ###
 
 PUT localhost:8080/user/getAdminRole/2

@@ -1,9 +1,9 @@
 package by.beg.payment_system.service;
 
 import by.beg.payment_system.dto.UserAuthorizationDTO;
-import by.beg.payment_system.exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.UserIsPresentException;
-import by.beg.payment_system.exception.UserNotFoundException;
+import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
+import by.beg.payment_system.exception.user_exception.UserIsPresentException;
+import by.beg.payment_system.exception.user_exception.UserNotFoundException;
 import by.beg.payment_system.model.Token;
 import by.beg.payment_system.model.User;
 import by.beg.payment_system.repository.TokenRepository;
@@ -98,10 +98,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) throws UserNotFoundException {
-        userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
-        User userSave = userRepository.save(user);
-        log.info("User was updated: " + userSave);
-        return userSave;
+        User persistUser = userRepository.findById(user.getId()).map(currentUser -> userRepository.save(user)).orElseThrow(UserNotFoundException::new);
+        log.info("User was updated: " + persistUser);
+        return persistUser;
     }
 
     @Override

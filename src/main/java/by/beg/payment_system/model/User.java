@@ -23,7 +23,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Pattern(regexp = "\\w+[@]\\w+\\.(com|by|ru)", message = "Incorrect email")
+    @Pattern(regexp = "\\w+[@]\\w+\\.\\w+", message = "Incorrect email")
     private String email;
 
     @Size(min = 4, max = 16, message = "Password must have 4-16 symbols")
@@ -61,8 +61,14 @@ public class User {
     private List<Token> tokens;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonManagedReference
     private Set<Wallet> wallets;
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "user")
+    @JsonIgnore
+    @ToString.Exclude
+    private List<TransferDetail> transferDetails;
 
 
     public enum UserRole {

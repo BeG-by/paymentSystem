@@ -1,4 +1,28 @@
-GET localhost:8080/wallet/create/BYN
+GET localhost:8080/wallet/create/EUR
 Content-Type: application/json
-token: xqqdfsi433599310
+token: qhjhlvw1018987866
+
+###
+
+GET localhost:8080/wallet/getAll
+Content-Type: application/json
+token: luqotof55656255
+
+###
+
+DELETE localhost:8080/wallet/delete/USD
+Content-Type: application/json
+token: mltjejd1279580875
+
+###
+
+POST localhost:8080/wallet/rechargeBalance
+Content-Type: application/json
+token: qhjhlvw1018987866
+
+{
+  "money": 1000,
+  "type": "USD"
+}
+
 ###

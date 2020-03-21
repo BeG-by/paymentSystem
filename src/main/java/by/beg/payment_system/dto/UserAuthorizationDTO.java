@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UserAuthorizationDTO {
 
-    @Pattern(regexp = "\\w+[@]\\w+\\.(com|by|ru)", message = "Incorrect email")
+    @Pattern(regexp = "\\w+[@]\\w+\\.\\w+", message = "Incorrect email")
     private String email;
 
     @Size(min = 4, max = 16, message = "Password must have 4-16 symbols")
