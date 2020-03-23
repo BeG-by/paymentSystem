@@ -70,6 +70,11 @@ public class User {
     @ToString.Exclude
     private List<TransferDetail> transferDetails;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonManagedReference
+    private List<Deposit> deposits;
+
 
     public enum UserRole {
         USER, ADMIN

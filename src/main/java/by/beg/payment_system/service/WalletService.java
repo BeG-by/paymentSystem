@@ -6,6 +6,7 @@ import by.beg.payment_system.model.CurrencyType;
 import by.beg.payment_system.model.User;
 import by.beg.payment_system.model.Wallet;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface WalletService {
@@ -16,6 +17,6 @@ public interface WalletService {
 
     Wallet delete(CurrencyType type, User user) throws WalletNotFoundException;
 
-    Wallet recharge(User user, CurrencyType type, double balance) throws WalletNotFoundException;
+    Wallet recharge(User user, CurrencyType type, BigDecimal balance) throws WalletNotFoundException;
 
 }

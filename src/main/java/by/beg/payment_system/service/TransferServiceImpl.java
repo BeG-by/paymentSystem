@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 
@@ -36,7 +37,7 @@ public class TransferServiceImpl implements TransferService {
     public TransferDetail doTransfer(User user, TransferDetail transferDetail) throws WalletNotFoundException, LackOfMoneyException, TargetWalletNotFoundException {
 
         CurrencyType currencyType = transferDetail.getCurrencyType();
-        double moneySend = transferDetail.getMoneySend();
+        BigDecimal moneySend = transferDetail.getMoneySend();
         String targetWalletValue = transferDetail.getTargetWalletValue();
 
         Wallet userWallet = null;
@@ -48,19 +49,14 @@ public class TransferServiceImpl implements TransferService {
             }
         }
 
-        if (userWallet == null) {
-            throw new WalletNotFoundException();
-        }
-
-        if (userWallet.getBalance() < moneySend) {
-            throw new LackOfMoneyException();
-        }
+        if (userWallet == null) {throw new WalletNotFoundException();}
+        if (userWallet.getBalance().compareTo(moneySend) < 0) {throw new LackOfMoneyException();}
 
         Wallet targetWallet = walletRepository.findWalletByWalletValue(targetWalletValue).orElseThrow(TargetWalletNotFoundException::new);
 
-        userWallet.setBalance(userWallet.getBalance() - moneySend);
-        double receivedMoney = currencyConverterUtil.convertMoney(userWallet.getCurrencyType(), targetWallet.getCurrencyType(), moneySend);
-        targetWallet.setBalance(targetWallet.getBalance() + receivedMoney);
+        userWallet.setBalance(userWallet.getBalance().subtract(moneySend));
+        BigDecimal receivedMoney = currencyConverterUtil.convertMoney(userWallet.getCurrencyType(), targetWallet.getCurrencyType(), moneySend);
+        targetWallet.setBalance(targetWallet.getBalance().add(receivedMoney));
 
         transferDetail.setUser(user);
         transferDetail.setMoneyReceive(receivedMoney);

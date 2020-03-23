@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -26,7 +27,8 @@ public class Wallet {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private final Date creatDate = new Date();
 
-    private double balance = 0;
+    @Column(scale = 2 , precision = 20)
+    private BigDecimal balance = new BigDecimal(0);
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @ToString.Exclude

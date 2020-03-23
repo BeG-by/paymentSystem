@@ -1,0 +1,17 @@
+GET localhost:8080/deposit/create
+Content-Type: application/json
+token: pwuabdf-885312292
+
+{
+  "money": 100,
+  "depositType": "RUB360",
+  "currencyType": "USD"
+}
+
+###
+
+GET localhost:8080/deposit/getDesc
+Content-Type: application/json
+token: pwuabdf-885312292
+
+###

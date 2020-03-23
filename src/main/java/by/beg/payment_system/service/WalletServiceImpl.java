@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -53,9 +54,9 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Wallet recharge(User user, CurrencyType type, double money) throws WalletNotFoundException {
+    public Wallet recharge(User user, CurrencyType type, BigDecimal money) throws WalletNotFoundException {
         Wallet wallet = walletRepository.findByCurrencyTypeAndUser(type, user).orElseThrow(WalletNotFoundException::new);
-        wallet.setBalance(wallet.getBalance() + money);
+        wallet.setBalance(wallet.getBalance().add(money));
         log.info("User has charged the balance " + (new Date()) + ": " + wallet);
         return wallet;
     }

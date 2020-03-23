@@ -6,9 +6,11 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -32,14 +34,16 @@ public class TransferDetail {
     @Enumerated(EnumType.STRING)
     private CurrencyType currencyType;
 
-    @Pattern(regexp = "[A-Z]{3}\\d{9}" , message = "Wallet value isn't valid")
+    @Pattern(regexp = "[A-Z]{3}\\d{9}", message = "Wallet value isn't valid")
     private String targetWalletValue;
 
-    @Min(message = "Value \"money\" must be more than 1", value = 1)
-    private double moneySend;
+    @DecimalMin(message = "Value \"money\" must be more than 1", value = "1")
+    @Column(scale = 2, precision = 20)
+    private BigDecimal moneySend;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private double moneyReceive;
+    @Column(scale = 2 , precision = 20)
+    private BigDecimal moneyReceive;
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
