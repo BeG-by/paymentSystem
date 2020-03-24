@@ -3,10 +3,10 @@ package by.beg.payment_system.service;
 import by.beg.payment_system.exception.transfer_exception.LackOfMoneyException;
 import by.beg.payment_system.exception.transfer_exception.TargetWalletNotFoundException;
 import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
-import by.beg.payment_system.model.TransferDetail;
-import by.beg.payment_system.model.User;
-import by.beg.payment_system.model.Wallet;
-import by.beg.payment_system.model.CurrencyType;
+import by.beg.payment_system.model.finance.TransferDetail;
+import by.beg.payment_system.model.user.User;
+import by.beg.payment_system.model.finance.Wallet;
+import by.beg.payment_system.model.finance.CurrencyType;
 import by.beg.payment_system.repository.TransferRepository;
 import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.util.CurrencyConverterUtil;
@@ -49,8 +49,13 @@ public class TransferServiceImpl implements TransferService {
             }
         }
 
-        if (userWallet == null) {throw new WalletNotFoundException();}
-        if (userWallet.getBalance().compareTo(moneySend) < 0) {throw new LackOfMoneyException();}
+        if (userWallet == null) {
+            throw new WalletNotFoundException();
+        }
+
+        if (userWallet.getBalance().compareTo(moneySend) < 0) {
+            throw new LackOfMoneyException();
+        }
 
         Wallet targetWallet = walletRepository.findWalletByWalletValue(targetWalletValue).orElseThrow(TargetWalletNotFoundException::new);
 

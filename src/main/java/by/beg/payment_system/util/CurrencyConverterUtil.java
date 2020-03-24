@@ -1,6 +1,6 @@
 package by.beg.payment_system.util;
 
-import by.beg.payment_system.model.CurrencyType;
+import by.beg.payment_system.model.finance.CurrencyType;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

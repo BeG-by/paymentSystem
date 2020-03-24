@@ -1,8 +1,8 @@
 package by.beg.payment_system.repository;
 
-import by.beg.payment_system.model.User;
-import by.beg.payment_system.model.Wallet;
-import by.beg.payment_system.model.CurrencyType;
+import by.beg.payment_system.model.user.User;
+import by.beg.payment_system.model.finance.Wallet;
+import by.beg.payment_system.model.finance.CurrencyType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

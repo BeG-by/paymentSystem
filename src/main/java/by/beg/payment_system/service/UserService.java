@@ -4,8 +4,8 @@ import by.beg.payment_system.dto.UserAuthorizationDTO;
 import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
 import by.beg.payment_system.exception.user_exception.UserIsPresentException;
 import by.beg.payment_system.exception.user_exception.UserNotFoundException;
-import by.beg.payment_system.model.Token;
-import by.beg.payment_system.model.User;
+import by.beg.payment_system.model.security.Token;
+import by.beg.payment_system.model.user.User;
 
 import java.util.List;
 

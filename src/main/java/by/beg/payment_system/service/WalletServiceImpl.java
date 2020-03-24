@@ -2,9 +2,9 @@ package by.beg.payment_system.service;
 
 import by.beg.payment_system.exception.wallet_exception.WalletIsExistException;
 import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
-import by.beg.payment_system.model.User;
-import by.beg.payment_system.model.Wallet;
-import by.beg.payment_system.model.CurrencyType;
+import by.beg.payment_system.model.user.User;
+import by.beg.payment_system.model.finance.Wallet;
+import by.beg.payment_system.model.finance.CurrencyType;
 import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.util.GenerateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -57,7 +56,7 @@ public class WalletServiceImpl implements WalletService {
     public Wallet recharge(User user, CurrencyType type, BigDecimal money) throws WalletNotFoundException {
         Wallet wallet = walletRepository.findByCurrencyTypeAndUser(type, user).orElseThrow(WalletNotFoundException::new);
         wallet.setBalance(wallet.getBalance().add(money));
-        log.info("User has charged the balance " + (new Date()) + ": " + wallet);
+        log.info("User has charged the balance: " + wallet);
         return wallet;
     }
 

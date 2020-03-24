@@ -1,5 +1,6 @@
-package by.beg.payment_system.model;
+package by.beg.payment_system.model.security;
 
+import by.beg.payment_system.model.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 

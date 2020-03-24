@@ -1,0 +1,24 @@
+POST localhost:8080/deposit/create
+Content-Type: application/json
+token: lycxqdx-1168056860
+
+{
+  "money": 100,
+  "depositType": "BYN240",
+  "currencyType": "USD"
+}
+
+###
+
+GET localhost:8080/deposit/getDescriptions
+Content-Type: application/json
+token: zefjopt560594358
+
+###
+
+GET localhost:8080/deposit/getAllByUser
+Content-Type: application/json
+token: lycxqdx-1168056860
+
+###
+

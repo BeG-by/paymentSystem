@@ -4,8 +4,8 @@ import by.beg.payment_system.dto.DepositOpenDTO;
 import by.beg.payment_system.exception.transfer_exception.LackOfMoneyException;
 import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
 import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
-import by.beg.payment_system.model.Deposit;
-import by.beg.payment_system.model.User;
+import by.beg.payment_system.model.finance.Deposit;
+import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.service.DepositService;
 import by.beg.payment_system.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -28,16 +28,23 @@ public class DepositController {
         this.userService = userService;
     }
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<Deposit> createDeposit(@RequestHeader String token, @RequestBody @Valid DepositOpenDTO openDTO) throws UserIsNotAuthorizedException, LackOfMoneyException, WalletNotFoundException {
         User user = userService.checkAuthorization(token);
         return ResponseEntity.ok(depositService.create(openDTO, user));
     }
 
-    @GetMapping("/getDesc")
+    @GetMapping("/getDescriptions")
     public ResponseEntity<List<Deposit>> getDesc(@RequestHeader String token) throws UserIsNotAuthorizedException {
         userService.checkAuthorization(token);
-        return ResponseEntity.ok().body(depositService.getDepositDescription());
+        return ResponseEntity.ok().body(depositService.getDepositsDescription());
     }
+
+    @GetMapping("/getAllByUser")
+    public ResponseEntity<List<Deposit>> getAllByUser(@RequestHeader String token) throws UserIsNotAuthorizedException {
+        User user = userService.checkAuthorization(token);
+        return ResponseEntity.ok().body(depositService.getAllByUser(user));
+    }
+
 
 }

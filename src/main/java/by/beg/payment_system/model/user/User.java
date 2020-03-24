@@ -1,5 +1,9 @@
-package by.beg.payment_system.model;
+package by.beg.payment_system.model.user;
 
+import by.beg.payment_system.model.security.Token;
+import by.beg.payment_system.model.finance.Deposit;
+import by.beg.payment_system.model.finance.TransferDetail;
+import by.beg.payment_system.model.finance.Wallet;
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 

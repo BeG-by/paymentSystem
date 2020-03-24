@@ -4,8 +4,8 @@ import by.beg.payment_system.dto.UserAuthorizationDTO;
 import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
 import by.beg.payment_system.exception.user_exception.UserIsPresentException;
 import by.beg.payment_system.exception.user_exception.UserNotFoundException;
-import by.beg.payment_system.model.Token;
-import by.beg.payment_system.model.User;
+import by.beg.payment_system.model.security.Token;
+import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.repository.TokenRepository;
 import by.beg.payment_system.repository.UserRepository;
 import by.beg.payment_system.util.GenerateUtil;
@@ -40,23 +40,19 @@ public class UserServiceImpl implements UserService {
             throw new UserIsPresentException();
         }
 
-        final User saveUser = userRepository.save(user);
+        User saveUser = userRepository.save(user);
         log.info("User was added: " + saveUser);
         return saveUser;
     }
 
     @Override
     public Token authorization(UserAuthorizationDTO user) throws UserNotFoundException {
-        Optional<User> checkUser = userRepository.findUserByEmailAndPassword(user.getEmail(), user.getPassword());
+        User checkUser = userRepository.findUserByEmailAndPassword(user.getEmail(), user.getPassword()).orElseThrow(UserNotFoundException::new);
 
-        if (checkUser.isPresent()) {
-            String tokenValue = GenerateUtil.generateToken();
-            Token token = tokenRepository.save(new Token(tokenValue, checkUser.get()));
-            log.info("Token was added: " + token);
-            return token;
-        }
-
-        throw new UserNotFoundException();
+        String tokenValue = GenerateUtil.generateToken();
+        Token token = tokenRepository.save(new Token(tokenValue, checkUser));
+        log.info("Token was added: " + token);
+        return token;
     }
 
     @Override
@@ -76,9 +72,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User checkAuthorization(String token) throws UserIsNotAuthorizedException {
-        Optional<Token> tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
-        Optional<User> userByTokens = userRepository.findUserByTokens(tokenByTokenValue.orElseThrow(UserIsNotAuthorizedException::new));
-        return userByTokens.orElseThrow(UserIsNotAuthorizedException::new);
+        Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token).orElseThrow(UserIsNotAuthorizedException::new);
+        return userRepository.findUserByTokens(tokenByTokenValue).orElseThrow(UserIsNotAuthorizedException::new);
     }
 
     @Override
@@ -105,11 +100,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteUser(long userId) throws UserNotFoundException {
-        Optional<User> byId = userRepository.findById(userId);
-        userRepository.delete(byId.orElseThrow(UserNotFoundException::new));
-        User user = byId.get();
-        log.info("User was deleted: " + user);
-        return user;
+        User byId = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        userRepository.delete(byId);
+
+        log.info("User was deleted: " + byId);
+        return byId;
     }
 
     @Override
@@ -122,7 +117,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setUserRole(User.UserRole.ADMIN);
         user.setLastUpdate(new Date());
-        log.info("Admin role was added for user:" + user);
+        log.info("Admin role was added for user: " + user);
         return user;
     }
 

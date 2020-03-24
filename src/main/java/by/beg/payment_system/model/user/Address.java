@@ -1,4 +1,4 @@
-package by.beg.payment_system.model;
+package by.beg.payment_system.model.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;

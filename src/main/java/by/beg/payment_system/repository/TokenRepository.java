@@ -1,7 +1,7 @@
 package by.beg.payment_system.repository;
 
-import by.beg.payment_system.model.Token;
-import by.beg.payment_system.model.User;
+import by.beg.payment_system.model.security.Token;
+import by.beg.payment_system.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

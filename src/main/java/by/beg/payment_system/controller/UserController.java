@@ -5,8 +5,8 @@ import by.beg.payment_system.exception.user_exception.NoAccessException;
 import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
 import by.beg.payment_system.exception.user_exception.UserIsPresentException;
 import by.beg.payment_system.exception.user_exception.UserNotFoundException;
-import by.beg.payment_system.model.Token;
-import by.beg.payment_system.model.User;
+import by.beg.payment_system.model.security.Token;
+import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,7 @@ public class UserController {
 
     @PostMapping("/authorization")
     public ResponseEntity<Token> authorization(@RequestBody @Valid UserAuthorizationDTO user) throws UserNotFoundException {
-        return new ResponseEntity<>(userService.authorization(user), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(userService.authorization(user), HttpStatus.OK);
     }
 
     @GetMapping("/logout")

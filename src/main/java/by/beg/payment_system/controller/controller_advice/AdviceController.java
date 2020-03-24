@@ -48,12 +48,12 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NoAccessException.class)
     public ResponseEntity<String> checkAdmin() {
-        return new ResponseEntity<>("User role isn't administration.", HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>("User role isn't administration.", HttpStatus.LOCKED);
     }
 
     @ExceptionHandler(UserIsNotAuthorizedException.class)
     public ResponseEntity<String> checkAuth() {
-        return new ResponseEntity<>("User isn't authorized.", HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>("User isn't authorized.", HttpStatus.LOCKED);
     }
 
     //WALLET
