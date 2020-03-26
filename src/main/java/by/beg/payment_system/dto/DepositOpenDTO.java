@@ -1,7 +1,7 @@
 package by.beg.payment_system.dto;
 
-import by.beg.payment_system.model.finance.CurrencyType;
-import by.beg.payment_system.model.finance.DepositType;
+import by.beg.payment_system.model.finance.enumerations.CurrencyType;
+import by.beg.payment_system.model.finance.enumerations.DepositType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

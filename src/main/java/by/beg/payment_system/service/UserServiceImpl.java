@@ -4,6 +4,7 @@ import by.beg.payment_system.dto.UserAuthorizationDTO;
 import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
 import by.beg.payment_system.exception.user_exception.UserIsPresentException;
 import by.beg.payment_system.exception.user_exception.UserNotFoundException;
+import by.beg.payment_system.model.finance.TransferDetail;
 import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.repository.TokenRepository;
@@ -100,11 +101,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteUser(long userId) throws UserNotFoundException {
-        User byId = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        userRepository.delete(byId);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        log.info("User was deleted: " + byId);
-        return byId;
+        for (TransferDetail detail : user.getTransferDetails()) {
+            detail.setUser(null);
+        }
+
+        userRepository.delete(user);
+
+        log.info("User was deleted: " + user);
+        return user;
     }
 
     @Override

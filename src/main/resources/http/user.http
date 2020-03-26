@@ -35,12 +35,12 @@ token: benkilq-1627313068
 
 GET localhost:8080/user/findById/1
 Content-Type: application/json
-token: zxdpmnm-631285338
+token: nbjxcmj601512433
 ###
 
 PUT localhost:8080/user/update
 Content-Type: application/json
-token: zxdpmnm-631285338
+token: nbjxcmj601512433
 
 {
   "id": 1,
@@ -59,9 +59,9 @@ token: zxdpmnm-631285338
 
 ###
 
-DELETE localhost:8080/user/delete/3
+DELETE localhost:8080/user/delete/2
 Content-Type: application/json
-token: idbjsxi319461464
+token: nbjxcmj601512433
 ###
 
 GET localhost:8080/user/getAll

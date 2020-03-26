@@ -2,7 +2,7 @@ package by.beg.payment_system.service;
 
 import by.beg.payment_system.exception.wallet_exception.WalletIsExistException;
 import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
-import by.beg.payment_system.model.finance.CurrencyType;
+import by.beg.payment_system.model.finance.enumerations.CurrencyType;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.model.finance.Wallet;
 

@@ -1,10 +1,10 @@
 POST localhost:8080/transfer
 Content-Type: application/json
-token: zxdpmnm-631285338
+token: nbjxcmj601512433
 
 {
-  "currencyType": "EUR",
-  "targetWalletValue": "USD364122412",
+  "currencyType": "USD",
+  "targetWalletValue": "USD646106057",
   "moneySend": 1000
 }
 ###

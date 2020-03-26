@@ -1,6 +1,6 @@
 POST localhost:8080/deposit/create
 Content-Type: application/json
-token: lycxqdx-1168056860
+token: jxwycsf-1651338500
 
 {
   "money": 100,
@@ -16,9 +16,30 @@ token: zefjopt560594358
 
 ###
 
-GET localhost:8080/deposit/getAllByUser
+GET localhost:8080/deposit/getAllByUser/1
 Content-Type: application/json
-token: lycxqdx-1168056860
+token: jxwycsf-1651338500
 
 ###
 
+PUT localhost:8080/deposit/pickUp
+Content-Type: application/json
+token: lycxqdx-1168056860
+###
+
+GET localhost:8080/deposit/getAllByStatus/UNAVAILABLE
+Content-Type: application/json
+token: jxwycsf-1651338500
+###
+
+POST localhost:8080/deposit//getAll/filterByCreateDate
+Content-Type: application/json
+token: jxwycsf-1651338500
+
+{
+  "firstDate": "31-12-2020",
+  "secondDate": "31-12-2025"
+
+}
+
+###

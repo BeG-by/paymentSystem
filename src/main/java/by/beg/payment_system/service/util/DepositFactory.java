@@ -1,8 +1,8 @@
-package by.beg.payment_system.util;
+package by.beg.payment_system.service.util;
 
-import by.beg.payment_system.model.finance.CurrencyType;
+import by.beg.payment_system.model.finance.enumerations.CurrencyType;
 import by.beg.payment_system.model.finance.Deposit;
-import by.beg.payment_system.model.finance.DepositType;
+import by.beg.payment_system.model.finance.enumerations.DepositType;
 
 import java.util.Calendar;
 import java.util.Date;

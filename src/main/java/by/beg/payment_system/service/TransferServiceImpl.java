@@ -6,10 +6,10 @@ import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
 import by.beg.payment_system.model.finance.TransferDetail;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.model.finance.Wallet;
-import by.beg.payment_system.model.finance.CurrencyType;
+import by.beg.payment_system.model.finance.enumerations.CurrencyType;
 import by.beg.payment_system.repository.TransferRepository;
 import by.beg.payment_system.repository.WalletRepository;
-import by.beg.payment_system.util.CurrencyConverterUtil;
+import by.beg.payment_system.service.util.CurrencyConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +25,12 @@ public class TransferServiceImpl implements TransferService {
 
     private TransferRepository transferRepository;
     private WalletRepository walletRepository;
-    private CurrencyConverterUtil currencyConverterUtil;
+    private CurrencyConverter currencyConverter;
 
-    public TransferServiceImpl(TransferRepository transferRepository, WalletRepository walletRepository, CurrencyConverterUtil currencyConverterUtil) {
+    public TransferServiceImpl(TransferRepository transferRepository, WalletRepository walletRepository, CurrencyConverter currencyConverter) {
         this.transferRepository = transferRepository;
         this.walletRepository = walletRepository;
-        this.currencyConverterUtil = currencyConverterUtil;
+        this.currencyConverter = currencyConverter;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class TransferServiceImpl implements TransferService {
         Wallet targetWallet = walletRepository.findWalletByWalletValue(targetWalletValue).orElseThrow(TargetWalletNotFoundException::new);
 
         userWallet.setBalance(userWallet.getBalance().subtract(moneySend));
-        BigDecimal receivedMoney = currencyConverterUtil.convertMoney(userWallet.getCurrencyType(), targetWallet.getCurrencyType(), moneySend);
+        BigDecimal receivedMoney = currencyConverter.convertMoney(userWallet.getCurrencyType(), targetWallet.getCurrencyType(), moneySend);
         targetWallet.setBalance(targetWallet.getBalance().add(receivedMoney));
 
         transferDetail.setUser(user);
@@ -73,7 +73,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public Map<String, Double> getExchangeRates() {
-        return currencyConverterUtil.getExchangeRates();
+        return currencyConverter.getExchangeRates();
     }
 
 

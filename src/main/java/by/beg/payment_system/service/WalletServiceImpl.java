@@ -4,7 +4,7 @@ import by.beg.payment_system.exception.wallet_exception.WalletIsExistException;
 import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.model.finance.Wallet;
-import by.beg.payment_system.model.finance.CurrencyType;
+import by.beg.payment_system.model.finance.enumerations.CurrencyType;
 import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.util.GenerateUtil;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package by.beg.payment_system.util;
+package by.beg.payment_system.service.util;
 
 import by.beg.payment_system.model.finance.Deposit;
 
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-public class DepositCalculateUtil {
+public class DepositCalculate {
 
     public static BigDecimal calculate(Deposit deposit) {
 
