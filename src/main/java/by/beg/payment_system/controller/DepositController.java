@@ -1,14 +1,12 @@
 package by.beg.payment_system.controller;
 
-import by.beg.payment_system.dto.DateDTO;
-import by.beg.payment_system.dto.DepositOpenDTO;
-import by.beg.payment_system.exception.transfer_exception.LackOfMoneyException;
-import by.beg.payment_system.exception.user_exception.NoAccessException;
-import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
+import by.beg.payment_system.exception.DepositNotFoundException;
+import by.beg.payment_system.exception.UnremovableStatusException;
+import by.beg.payment_system.exception.NoAccessException;
+import by.beg.payment_system.exception.UserIsNotAuthorizedException;
 import by.beg.payment_system.model.finance.Deposit;
-import by.beg.payment_system.model.finance.enumerations.DepositStatus;
 import by.beg.payment_system.model.user.User;
+import by.beg.payment_system.model.user.UserRole;
 import by.beg.payment_system.service.DepositService;
 import by.beg.payment_system.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -33,57 +31,59 @@ public class DepositController {
 
     //USER
 
-    @PostMapping("/create")
-    public ResponseEntity<Deposit> createDeposit(@RequestHeader String token, @RequestBody @Valid DepositOpenDTO openDTO) throws UserIsNotAuthorizedException, LackOfMoneyException, WalletNotFoundException {
-        User user = userService.checkAuthorization(token);
-        return ResponseEntity.ok(depositService.create(openDTO, user));
-    }
-
-    @GetMapping("/getDescriptions")
-    public ResponseEntity<List<Deposit>> getDesc(@RequestHeader String token) throws UserIsNotAuthorizedException {
+    @GetMapping("/getAllAvailable")
+    public ResponseEntity<List<Deposit>> getAllAvailable(@RequestHeader String token) throws UserIsNotAuthorizedException {
         userService.checkAuthorization(token);
-        return ResponseEntity.ok().body(depositService.getDepositsDescription());
+        return ResponseEntity.ok(depositService.getAllAvailable());
     }
 
-    @GetMapping("/getAllByUser")
-    public ResponseEntity<List<Deposit>> getAllByUser(@RequestHeader String token) throws UserIsNotAuthorizedException {
-        User user = userService.checkAuthorization(token);
-        return ResponseEntity.ok().body(depositService.getAllByUser(user));
-    }
-
-    @PutMapping("/pickUp")
-    public ResponseEntity<List<Deposit>> pickUpDeposits(@RequestHeader String token) throws UserIsNotAuthorizedException, WalletNotFoundException {
-        User user = userService.checkAuthorization(token);
-        return ResponseEntity.ok().body(depositService.pickUp(user));
-    }
 
     //ADMIN
 
-    @GetMapping("/getAllByUser/{userId}")
-    public ResponseEntity<List<Deposit>> adminGetAllByUser(@RequestHeader String token, @PathVariable long userId) throws UserIsNotAuthorizedException, NoAccessException {
+    @PostMapping("/create")
+    public ResponseEntity<Deposit> create(@RequestHeader String token, @RequestBody @Valid Deposit deposit) throws UserIsNotAuthorizedException, NoAccessException {
         checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok().body(depositService.getAllForAdmin(userId));
+        return ResponseEntity.ok(depositService.create(deposit));
     }
 
-    @GetMapping("/getAllByStatus/{status}")
-    public ResponseEntity<List<Deposit>> adminGetAllByStatus(@RequestHeader String token, @PathVariable DepositStatus status) throws UserIsNotAuthorizedException, NoAccessException {
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Deposit>> getAll(@RequestHeader String token) throws UserIsNotAuthorizedException, NoAccessException {
         checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok().body(depositService.getAllForAdminByStatus(status));
+        return ResponseEntity.ok(depositService.getAll());
     }
 
-    @PostMapping("/getAll/filterByCreateDate")
-    public ResponseEntity<List<Deposit>> adminFilterByDate(@RequestHeader String token, @RequestBody DateDTO dateDTO) throws UserIsNotAuthorizedException, NoAccessException {
-        checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok().body(depositService.filterByCreateDate(dateDTO.getFirstDate(), dateDTO.getSecondDate()));
+    @GetMapping("/findById/{depositId}")
+    public ResponseEntity<Deposit> getAll(@RequestHeader String token, @PathVariable long depositId)
+            throws UserIsNotAuthorizedException, NoAccessException, DepositNotFoundException {
 
+        checkAdminRole(userService.checkAuthorization(token));
+        return ResponseEntity.ok(depositService.findById(depositId));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Deposit> update(@RequestHeader String token, @RequestBody @Valid Deposit deposit) throws UserIsNotAuthorizedException, NoAccessException {
+        checkAdminRole(userService.checkAuthorization(token));
+        return ResponseEntity.ok(depositService.update(deposit));
+    }
+
+    @DeleteMapping("/delete/{depositId}")
+    public ResponseEntity<Deposit> delete(@RequestHeader String token, @PathVariable long depositId)
+            throws UserIsNotAuthorizedException, NoAccessException, DepositNotFoundException, UnremovableStatusException {
+
+        checkAdminRole(userService.checkAuthorization(token));
+        return ResponseEntity.ok(depositService.delete(depositId));
+    }
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<List<Deposit>> deleteAll(@RequestHeader String token) throws UserIsNotAuthorizedException, NoAccessException {
+        checkAdminRole(userService.checkAuthorization(token));
+        return ResponseEntity.ok(depositService.deleteAll());
+    }
 
     private void checkAdminRole(User user) throws NoAccessException {
-        if (!user.getUserRole().equals(User.UserRole.ADMIN)) {
+        if (!user.getUserRole().equals(UserRole.ADMIN)) {
             throw new NoAccessException();
         }
     }
-
 
 }

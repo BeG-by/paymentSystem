@@ -1,9 +1,9 @@
 package by.beg.payment_system.controller;
 
 import by.beg.payment_system.dto.ChargeWalletDTO;
-import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.wallet_exception.WalletIsExistException;
-import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
+import by.beg.payment_system.exception.UserIsNotAuthorizedException;
+import by.beg.payment_system.exception.WalletIsExistException;
+import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.model.finance.Wallet;
 import by.beg.payment_system.model.finance.enumerations.CurrencyType;
@@ -54,6 +54,5 @@ public class WalletController {
         User user = userService.checkAuthorization(token);
         return ResponseEntity.ok(walletService.recharge(user, chargeWalletDTO.getType(), chargeWalletDTO.getMoney()));
     }
-
 
 }

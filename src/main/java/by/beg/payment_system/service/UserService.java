@@ -1,9 +1,10 @@
 package by.beg.payment_system.service;
 
 import by.beg.payment_system.dto.UserAuthorizationDTO;
-import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.user_exception.UserIsPresentException;
-import by.beg.payment_system.exception.user_exception.UserNotFoundException;
+import by.beg.payment_system.exception.UserIsNotAuthorizedException;
+import by.beg.payment_system.exception.UserIsPresentException;
+import by.beg.payment_system.exception.UserNotFoundException;
+import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.user.User;
 
@@ -32,6 +33,8 @@ public interface UserService {
     List<User> getAllUsers();
 
     User getAdminRole(long userId) throws UserNotFoundException;
+
+    User findByWalletValue(String walletValue) throws WalletNotFoundException, UserNotFoundException;
 
 
 }

@@ -1,7 +1,7 @@
 package by.beg.payment_system.model.user;
 
+import by.beg.payment_system.model.finance.DepositDetail;
 import by.beg.payment_system.model.security.Token;
-import by.beg.payment_system.model.finance.Deposit;
 import by.beg.payment_system.model.finance.TransferDetail;
 import by.beg.payment_system.model.finance.Wallet;
 import com.fasterxml.jackson.annotation.*;
@@ -77,11 +77,6 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
-    private List<Deposit> deposits;
-
-
-    public enum UserRole {
-        USER, ADMIN
-    }
+    private List<DepositDetail> depositDetails;
 
 }

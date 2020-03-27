@@ -1,12 +1,14 @@
 package by.beg.payment_system.controller;
 
 import by.beg.payment_system.dto.UserAuthorizationDTO;
-import by.beg.payment_system.exception.user_exception.NoAccessException;
-import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.user_exception.UserIsPresentException;
-import by.beg.payment_system.exception.user_exception.UserNotFoundException;
+import by.beg.payment_system.exception.NoAccessException;
+import by.beg.payment_system.exception.UserIsNotAuthorizedException;
+import by.beg.payment_system.exception.UserIsPresentException;
+import by.beg.payment_system.exception.UserNotFoundException;
+import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.user.User;
+import by.beg.payment_system.model.user.UserRole;
 import by.beg.payment_system.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,34 +52,44 @@ public class UserController {
     //ADMIN
 
     @GetMapping("findByEmail/{email}")
-    public ResponseEntity<User> findByEmail(@PathVariable String email, @RequestHeader String token) throws UserNotFoundException, NoAccessException, UserIsNotAuthorizedException {
+    public ResponseEntity<User> findByEmail(@PathVariable String email, @RequestHeader String token)
+            throws UserNotFoundException, NoAccessException, UserIsNotAuthorizedException {
+
         User user = userService.checkAuthorization(token);
         checkAdminRole(user);
         return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
     }
 
     @GetMapping("findById/{userId}")
-    public ResponseEntity<User> findById(@PathVariable long userId, @RequestHeader String token) throws UserNotFoundException, NoAccessException, UserIsNotAuthorizedException {
+    public ResponseEntity<User> findById(@PathVariable long userId, @RequestHeader String token)
+            throws UserNotFoundException, NoAccessException, UserIsNotAuthorizedException {
+
         User user = userService.checkAuthorization(token);
         checkAdminRole(user);
         return new ResponseEntity<>(userService.findById(userId), HttpStatus.OK);
     }
 
     @GetMapping("findByPassport/{passport}")
-    public ResponseEntity<User> findByPassport(@PathVariable String passport, @RequestHeader String token) throws UserNotFoundException, NoAccessException, UserIsNotAuthorizedException {
+    public ResponseEntity<User> findByPassport(@PathVariable String passport, @RequestHeader String token)
+            throws UserNotFoundException, NoAccessException, UserIsNotAuthorizedException {
+
         User user = userService.checkAuthorization(token);
         checkAdminRole(user);
         return new ResponseEntity<>(userService.findByPassport(passport), HttpStatus.OK);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<User> updateUser(@RequestBody @Valid User user, @RequestHeader String token) throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException {
+    public ResponseEntity<User> updateUser(@RequestBody @Valid User user, @RequestHeader String token)
+            throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException {
+
         checkAdminRole(userService.checkAuthorization(token));
         return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<User> deleteUser(@PathVariable long userId, @RequestHeader String token) throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException {
+    public ResponseEntity<User> deleteUser(@PathVariable long userId, @RequestHeader String token)
+            throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException {
+
         checkAdminRole(userService.checkAuthorization(token));
         return new ResponseEntity<>(userService.deleteUser(userId), HttpStatus.OK);
     }
@@ -89,17 +101,25 @@ public class UserController {
     }
 
     @PutMapping("/getAdminRole/{userId}")
-    public ResponseEntity<User> getAdminRoleUser(@PathVariable long userId, @RequestHeader String token) throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException {
+    public ResponseEntity<User> getAdminRoleUser(@PathVariable long userId, @RequestHeader String token)
+            throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException {
+
         checkAdminRole(userService.checkAuthorization(token));
         return new ResponseEntity<>(userService.getAdminRole(userId), HttpStatus.OK);
     }
 
+    @GetMapping("/findByWalletValue/{value}")
+    public ResponseEntity<User> findByWalletValue(@PathVariable String value, @RequestHeader String token)
+            throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException, WalletNotFoundException {
+
+        checkAdminRole(userService.checkAuthorization(token));
+        return new ResponseEntity<>(userService.findByWalletValue(value), HttpStatus.OK);
+    }
 
     private void checkAdminRole(User user) throws NoAccessException {
-        if (!user.getUserRole().equals(User.UserRole.ADMIN)) {
+        if (!user.getUserRole().equals(UserRole.ADMIN)) {
             throw new NoAccessException();
         }
     }
-
 
 }

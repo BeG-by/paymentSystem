@@ -1,4 +1,4 @@
-package by.beg.payment_system.exception.transfer_exception;
+package by.beg.payment_system.exception;
 
 public class TargetWalletNotFoundException extends Exception {
 

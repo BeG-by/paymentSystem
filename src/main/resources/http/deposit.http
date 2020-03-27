@@ -1,45 +1,49 @@
 POST localhost:8080/deposit/create
 Content-Type: application/json
-token: jxwycsf-1651338500
+token: pkutzqu2096202243
 
 {
-  "money": 100,
-  "depositType": "BYN240",
-  "currencyType": "USD"
+  "name": "BYN240",
+  "currencyType": "USD",
+  "period": 240,
+  "rate": 7.1,
+  "capitalization": null
 }
 
 ###
 
-GET localhost:8080/deposit/getDescriptions
+GET localhost:8080/deposit/getAllAvailable
 Content-Type: application/json
-token: zefjopt560594358
-
+token: pkutzqu2096202243
 ###
 
-GET localhost:8080/deposit/getAllByUser/1
+GET localhost:8080/deposit/getAll
 Content-Type: application/json
-token: jxwycsf-1651338500
-
+token: pkutzqu2096202243
 ###
 
-PUT localhost:8080/deposit/pickUp
+GET localhost:8080/deposit/findById/1
 Content-Type: application/json
-token: lycxqdx-1168056860
+token: pkutzqu2096202243
 ###
 
-GET localhost:8080/deposit/getAllByStatus/UNAVAILABLE
+PUT localhost:8080/deposit/update
 Content-Type: application/json
-token: jxwycsf-1651338500
-###
-
-POST localhost:8080/deposit//getAll/filterByCreateDate
-Content-Type: application/json
-token: jxwycsf-1651338500
+token: pkutzqu2096202243
 
 {
-  "firstDate": "31-12-2020",
-  "secondDate": "31-12-2025"
-
+  "id": 1,
+  "name": "updated",
+  "currencyType": "BYN",
+  "period": 240,
+  "rate": 3.6,
+  "status": "DELETED",
+  "capitalization": true
 }
 
 ###
+
+
+
+
+

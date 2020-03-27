@@ -1,6 +1,6 @@
-GET localhost:8080/wallet/create/USD
+GET localhost:8080/wallet/create/RUB
 Content-Type: application/json
-token: jxwycsf-1651338500
+token: pkutzqu2096202243
 
 ###
 
@@ -18,7 +18,7 @@ token: mltjejd1279580875
 
 POST localhost:8080/wallet/rechargeBalance
 Content-Type: application/json
-token: jxwycsf-1651338500
+token: pkutzqu2096202243
 
 {
   "money": 1000,

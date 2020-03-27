@@ -1,13 +1,15 @@
-package by.beg.payment_system.controller.controller_advice;
+package by.beg.payment_system.controller.advice_controller;
 
-import by.beg.payment_system.exception.transfer_exception.LackOfMoneyException;
-import by.beg.payment_system.exception.transfer_exception.TargetWalletNotFoundException;
-import by.beg.payment_system.exception.user_exception.NoAccessException;
-import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.user_exception.UserIsPresentException;
-import by.beg.payment_system.exception.user_exception.UserNotFoundException;
-import by.beg.payment_system.exception.wallet_exception.WalletIsExistException;
-import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
+import by.beg.payment_system.exception.DepositNotFoundException;
+import by.beg.payment_system.exception.UnremovableStatusException;
+import by.beg.payment_system.exception.LackOfMoneyException;
+import by.beg.payment_system.exception.TargetWalletNotFoundException;
+import by.beg.payment_system.exception.NoAccessException;
+import by.beg.payment_system.exception.UserIsNotAuthorizedException;
+import by.beg.payment_system.exception.UserIsPresentException;
+import by.beg.payment_system.exception.UserNotFoundException;
+import by.beg.payment_system.exception.WalletIsExistException;
+import by.beg.payment_system.exception.WalletNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.Objects;
 
 @RestControllerAdvice
-public class AdviceController extends ResponseEntityExceptionHandler {
+public class MainAdviceController extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -78,5 +80,19 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TargetWalletNotFoundException.class)
     public ResponseEntity<String> targetNotFound() {
         return new ResponseEntity<>("Target wallet not found.", HttpStatus.BAD_REQUEST);
+    }
+
+    //DEPOSIT
+
+    @ExceptionHandler(DepositNotFoundException.class)
+    public ResponseEntity<String> depositNotFound() {
+        return new ResponseEntity<>("Deposit not found.", HttpStatus.BAD_REQUEST);
+    }
+
+    //STATUS
+
+    @ExceptionHandler(UnremovableStatusException.class)
+    public ResponseEntity<String> unremovableStatus() {
+        return new ResponseEntity<>("Status is unremovable.", HttpStatus.BAD_REQUEST);
     }
 }

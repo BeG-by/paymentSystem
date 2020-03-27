@@ -1,32 +1,25 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.dto.DepositOpenDTO;
-import by.beg.payment_system.exception.transfer_exception.LackOfMoneyException;
-import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
+import by.beg.payment_system.exception.DepositNotFoundException;
+import by.beg.payment_system.exception.UnremovableStatusException;
 import by.beg.payment_system.model.finance.Deposit;
-import by.beg.payment_system.model.finance.enumerations.DepositStatus;
-import by.beg.payment_system.model.finance.enumerations.DepositType;
-import by.beg.payment_system.model.user.User;
-import org.springframework.data.domain.Sort;
 
-import java.util.Date;
 import java.util.List;
 
 public interface DepositService {
 
-    Deposit create(DepositOpenDTO openDTO, User user) throws WalletNotFoundException, LackOfMoneyException;
+    Deposit create(Deposit deposit);
 
-    List<Deposit> getDepositsDescription();
+    List<Deposit> getAllAvailable();
 
-    List<Deposit> getAllByUser(User user);
+    Deposit update(Deposit deposit);
 
-    List<Deposit> pickUp(User user) throws WalletNotFoundException;
+    Deposit findById(long depositId) throws DepositNotFoundException;
 
-    List<Deposit> getAllForAdmin(long userId);
+    List<Deposit> getAll();
 
-    List<Deposit> getAllForAdminByStatus(DepositStatus depositStatus);
+    Deposit delete(long depositId) throws DepositNotFoundException, UnremovableStatusException;
 
-    List<Deposit> filterByCreateDate(Date firstDate, Date secondDate);
-
+    List<Deposit> deleteAll();
 
 }

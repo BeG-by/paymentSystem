@@ -1,5 +1,5 @@
 package by.beg.payment_system.model.finance.enumerations;
 
-public enum  DepositStatus {
+public enum Status {
     AVAILABLE, UNAVAILABLE, DELETED
 }

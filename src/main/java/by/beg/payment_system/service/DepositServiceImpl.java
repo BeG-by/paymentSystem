@@ -1,27 +1,14 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.dto.DepositOpenDTO;
-import by.beg.payment_system.exception.transfer_exception.LackOfMoneyException;
-import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
+import by.beg.payment_system.exception.DepositNotFoundException;
+import by.beg.payment_system.exception.UnremovableStatusException;
 import by.beg.payment_system.model.finance.Deposit;
-import by.beg.payment_system.model.finance.enumerations.DepositStatus;
-import by.beg.payment_system.model.finance.enumerations.DepositType;
-import by.beg.payment_system.model.user.User;
-import by.beg.payment_system.model.finance.Wallet;
+import by.beg.payment_system.model.finance.enumerations.Status;
 import by.beg.payment_system.repository.DepositRepository;
-import by.beg.payment_system.repository.UserRepository;
-import by.beg.payment_system.repository.WalletRepository;
-import by.beg.payment_system.service.util.CurrencyConverter;
-import by.beg.payment_system.service.util.DepositCalculate;
-import by.beg.payment_system.service.util.DepositFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,103 +18,64 @@ import java.util.stream.Collectors;
 public class DepositServiceImpl implements DepositService {
 
     private DepositRepository depositRepository;
-    private WalletRepository walletRepository;
-    private UserRepository userRepository;
-    private CurrencyConverter currencyConverter;
 
-
-    public DepositServiceImpl(DepositRepository depositRepository, WalletRepository walletRepository, UserRepository userRepository, CurrencyConverter currencyConverter) {
+    public DepositServiceImpl(DepositRepository depositRepository) {
         this.depositRepository = depositRepository;
-        this.walletRepository = walletRepository;
-        this.userRepository = userRepository;
-        this.currencyConverter = currencyConverter;
     }
 
     @Override
-    public Deposit create(DepositOpenDTO openDTO, User user) throws WalletNotFoundException, LackOfMoneyException {
+    public Deposit create(Deposit deposit) {
+        Deposit save = depositRepository.save(deposit);
+        log.info("Deposit was created: " + save);
+        return save;
+    }
 
-        BigDecimal moneySend = openDTO.getMoney();
-        Wallet wallet = walletRepository.findByCurrencyTypeAndUser(openDTO.getCurrencyType(), user).orElseThrow(WalletNotFoundException::new);
+    @Override
+    public List<Deposit> getAllAvailable() {
+        return depositRepository.findAll().stream()
+                .filter(deposit -> deposit.getStatus().equals(Status.AVAILABLE)).collect(Collectors.toList());
+    }
 
-        if (wallet.getBalance().compareTo(moneySend) < 0) {
-            throw new LackOfMoneyException();
+    @Override
+    public Deposit update(Deposit deposit) {
+        Deposit save = depositRepository.save(deposit);
+        log.info("Deposit was updated: " + save);
+        return save;
+    }
+
+    @Override
+    public Deposit findById(long depositId) throws DepositNotFoundException {
+        return depositRepository.findById(depositId).orElseThrow(DepositNotFoundException::new);
+    }
+
+    @Override
+    public List<Deposit> getAll() {
+        return depositRepository.findAll();
+    }
+
+    @Override
+    public Deposit delete(long depositId) throws DepositNotFoundException, UnremovableStatusException {
+        Deposit byId = depositRepository.findById(depositId).orElseThrow(DepositNotFoundException::new);
+
+        if (byId.getStatus().equals(Status.DELETED)) {
+            depositRepository.delete(byId);
+            log.info("Deposit was deleted: " + byId);
+        } else {
+            throw new UnremovableStatusException();
         }
 
-        wallet.setBalance(wallet.getBalance().subtract(moneySend));
-
-        Deposit deposit = DepositFactory.getInstance(openDTO.getDepositType());
-
-        BigDecimal receivedMoney = currencyConverter.convertMoney(openDTO.getCurrencyType(), deposit.getCurrencyType(), moneySend);
-
-        deposit.setUser(user);
-        deposit.setBalance(receivedMoney);
-        deposit.setReturnBalance(DepositCalculate.calculate(deposit));
-        Deposit depositSave = depositRepository.save(deposit);
-        log.info("Deposit was created: " + depositSave);
-
-        return depositSave;
+        return byId;
     }
 
     @Override
-    public List<Deposit> getDepositsDescription() {
-        List<Deposit> deposits = new ArrayList<>();
+    public List<Deposit> deleteAll() {
 
-        for (DepositType currentType : DepositType.values()) {
-            deposits.add(DepositFactory.getInstance(currentType));
+        List<Deposit> deposits = depositRepository.deleteAllByStatus(Status.DELETED);
+
+        for (Deposit currentDeposit : deposits) {
+            log.info("Deposit was deleted: " + currentDeposit);
         }
 
         return deposits;
     }
-
-    @Override
-    public List<Deposit> getAllByUser(User user) {
-        List<Deposit> allByUser = depositRepository.findAllByUser(user).stream().
-                filter(deposit -> !deposit.getDepositStatus().equals(DepositStatus.DELETED)).collect(Collectors.toList());
-
-        Date today = new Date();
-
-        for (Deposit deposit : allByUser) {
-            if (deposit.getFinishDate().before(today)) {
-                deposit.setDepositStatus(DepositStatus.AVAILABLE);
-
-                log.info("Deposit change status: " + deposit);
-            }
-        }
-
-        return allByUser;
-    }
-
-    @Override
-    public List<Deposit> pickUp(User user) throws WalletNotFoundException {
-        List<Deposit> allByUser = depositRepository.findAllByUser(user).stream().
-                filter(deposit -> deposit.getDepositStatus().equals(DepositStatus.AVAILABLE)).collect(Collectors.toList());
-        ;
-
-        for (Deposit deposit : allByUser) {
-            Wallet wallet = walletRepository.findByCurrencyTypeAndUser(deposit.getCurrencyType(), user).orElseThrow(WalletNotFoundException::new);
-            wallet.setBalance(wallet.getBalance().add(deposit.getReturnBalance()));
-            deposit.setDepositStatus(DepositStatus.DELETED);
-
-            log.info("Deposit change status: " + deposit);
-        }
-
-        return allByUser;
-    }
-
-    @Override
-    public List<Deposit> getAllForAdmin(long userId) {
-        return depositRepository.findAllByUser(userRepository.getOne(userId));
-    }
-
-    @Override
-    public List<Deposit> getAllForAdminByStatus(DepositStatus depositStatus) {
-        return depositRepository.findAllByDepositStatus(depositStatus).stream()
-                .filter(deposit -> deposit.getDepositStatus().equals(depositStatus)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Deposit> filterByCreateDate(Date firstDate, Date secondDate) {
-        return depositRepository.filterByCreateDate(firstDate , secondDate, Sort.by("startDate"));
-    }
-
 }

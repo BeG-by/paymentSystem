@@ -1,4 +1,4 @@
-package by.beg.payment_system.exception.wallet_exception;
+package by.beg.payment_system.exception;
 
 public class WalletIsExistException extends Exception {
 

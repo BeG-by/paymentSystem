@@ -1,15 +1,17 @@
 package by.beg.payment_system.model.finance;
 
 import by.beg.payment_system.model.finance.enumerations.CurrencyType;
-import by.beg.payment_system.model.finance.enumerations.DepositStatus;
-import by.beg.payment_system.model.finance.enumerations.DepositType;
-import by.beg.payment_system.model.user.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import by.beg.payment_system.model.finance.enumerations.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,49 +23,29 @@ public class Deposit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Enumerated(EnumType.STRING)
-    private DepositType depositType;
+    @NotBlank(message = "Name can't be empty")
+    private String name;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Currency can't be null")
     private CurrencyType currencyType;
 
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
+    @Positive(message = "Period must be more than 1")
+    private int period;
 
-    private int days;
+    @DecimalMin(message = "Value \"money\" must be more than 0", value = "0")
+    private BigDecimal rate;
 
-    @Temporal(TemporalType.DATE)
-    private Date finishDate;
-
-    @Column(precision = 20, scale = 2)
-    private BigDecimal balance;
-
-    @Column(precision = 20, scale = 2)
-    private BigDecimal returnBalance;
-
-    private double rate;
-
+    @NotNull(message = "Capitalization can't be null")
     private boolean isCapitalization;
 
     @Enumerated(EnumType.STRING)
-    private DepositStatus depositStatus = DepositStatus.UNAVAILABLE;
+    private Status status = Status.AVAILABLE;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @OneToMany(cascade = CascadeType.PERSIST , mappedBy = "deposit")
+    @JsonIgnore
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @JsonBackReference
-    private User user;
+    private List<DepositDetail> depositDetails;
 
 
-    public Deposit(DepositType depositType, CurrencyType currencyType, Date startDate, int days, Date finishDate,
-                   double rate, boolean isCapitalization) {
-        this.depositType = depositType;
-        this.currencyType = currencyType;
-        this.startDate = startDate;
-        this.days = days;
-        this.finishDate = finishDate;
-        this.rate = rate;
-        this.isCapitalization = isCapitalization;
-
-    }
 }

@@ -1,8 +1,8 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.exception.transfer_exception.LackOfMoneyException;
-import by.beg.payment_system.exception.transfer_exception.TargetWalletNotFoundException;
-import by.beg.payment_system.exception.wallet_exception.WalletNotFoundException;
+import by.beg.payment_system.exception.LackOfMoneyException;
+import by.beg.payment_system.exception.TargetWalletNotFoundException;
+import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.finance.TransferDetail;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.model.finance.Wallet;
@@ -11,10 +11,13 @@ import by.beg.payment_system.repository.TransferRepository;
 import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.service.util.CurrencyConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
@@ -74,6 +77,11 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public Map<String, Double> getExchangeRates() {
         return currencyConverter.getExchangeRates();
+    }
+
+    @Override
+    public List<TransferDetail> filterByDate(Date firstDate, Date secondDate) {
+        return transferRepository.filterByDate(firstDate, secondDate, Sort.by("date"));
     }
 
 

@@ -1,20 +1,25 @@
 package by.beg.payment_system.service;
 
 import by.beg.payment_system.dto.UserAuthorizationDTO;
-import by.beg.payment_system.exception.user_exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.user_exception.UserIsPresentException;
-import by.beg.payment_system.exception.user_exception.UserNotFoundException;
+import by.beg.payment_system.exception.UserIsNotAuthorizedException;
+import by.beg.payment_system.exception.UserIsPresentException;
+import by.beg.payment_system.exception.UserNotFoundException;
+import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.finance.TransferDetail;
+import by.beg.payment_system.model.finance.Wallet;
 import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.user.User;
+import by.beg.payment_system.model.user.UserRole;
 import by.beg.payment_system.repository.TokenRepository;
 import by.beg.payment_system.repository.UserRepository;
+import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.util.GenerateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +30,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private WalletRepository walletRepository;
     private TokenRepository tokenRepository;
 
     @Autowired
@@ -121,9 +127,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getAdminRole(long userId) throws UserNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        user.setUserRole(User.UserRole.ADMIN);
+        user.setUserRole(UserRole.ADMIN);
         user.setLastUpdate(new Date());
         log.info("Admin role was added for user: " + user);
+        return user;
+    }
+
+    @Override
+    public User findByWalletValue(String walletValue) throws WalletNotFoundException, UserNotFoundException {
+        Wallet wallet = walletRepository.findWalletByWalletValue(walletValue).orElseThrow(WalletNotFoundException::new);
+
+        User user = userRepository.findUserByWallets(new ArrayList<>() {
+            {
+                add(wallet);
+            }
+        }).orElseThrow(UserNotFoundException::new);
+
         return user;
     }
 

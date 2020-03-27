@@ -1,4 +1,4 @@
-package by.beg.payment_system.exception.user_exception;
+package by.beg.payment_system.exception;
 
 public class UserIsPresentException extends Exception {
 
