@@ -29,21 +29,21 @@ Content-Type: application/json
 
 GET localhost:8080/user/logout
 Content-Type: application/json
-token: benkilq-1627313068
+token: test
 
 ###
 
 GET localhost:8080/user/findById/1
 Content-Type: application/json
-token: nbjxcmj601512433
+token: test
 ###
 
 PUT localhost:8080/user/update
 Content-Type: application/json
-token: nbjxcmj601512433
+token: test
 
 {
-  "id": 1,
+  "id": 5,
   "email": "edit@email.com",
   "password": "password",
   "firstName": "first name",
@@ -59,17 +59,27 @@ token: nbjxcmj601512433
 
 ###
 
-DELETE localhost:8080/user/delete/2
+DELETE localhost:8080/user/delete/1
 Content-Type: application/json
-token: nbjxcmj601512433
+token: test
 ###
 
 GET localhost:8080/user/getAll
 Content-Type: application/json
-token: zxdpmnm-631285338
+token: test
 ###
 
-PUT localhost:8080/user/getAdminRole/2
+PUT localhost:8080/user/getAdminRole/3
 Content-Type: application/json
-token: snijhrj-1236018832
+token: test
+###
+
+GET localhost:8080/user/findByWalletValue/USD111111111
+Content-Type: application/json
+token: test
+###
+
+PUT localhost:8080/user/changeStatus/4/BLOCKED
+Content-Type: application/json
+token: test
 ###

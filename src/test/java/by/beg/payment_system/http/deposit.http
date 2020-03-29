@@ -1,0 +1,43 @@
+POST localhost:8080/deposit/create
+Content-Type: application/json
+token: test
+
+{
+  "name": "BYN240",
+  "currencyType": "BYN",
+  "period": 240,
+  "rate": 7.1,
+  "capitalization": true
+}
+
+###
+
+GET localhost:8080/deposit/getAllAvailable
+Content-Type: application/json
+token: test
+###
+
+GET localhost:8080/deposit/getAll
+Content-Type: application/json
+token: test
+###
+
+GET localhost:8080/deposit/findById/3
+Content-Type: application/json
+token: test
+###
+
+DELETE localhost:8080/deposit/delete/6
+Content-Type: application/json
+token: test
+###
+
+DELETE localhost:8080/deposit/deleteAll
+Content-Type: application/json
+token: test
+###
+
+
+
+
+

@@ -1,7 +1,7 @@
 package by.beg.payment_system.repository;
 
+import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.DepositDetail;
-import by.beg.payment_system.model.finance.enumerations.Status;
 import by.beg.payment_system.model.user.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;

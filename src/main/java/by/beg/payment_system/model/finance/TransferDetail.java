@@ -1,6 +1,6 @@
 package by.beg.payment_system.model.finance;
 
-import by.beg.payment_system.model.finance.enumerations.CurrencyType;
+import by.beg.payment_system.model.enumerations.CurrencyType;
 import by.beg.payment_system.model.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;

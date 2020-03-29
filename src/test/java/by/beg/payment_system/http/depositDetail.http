@@ -1,40 +1,41 @@
 POST localhost:8080/depositDetail/create
 Content-Type: application/json
-token: pkutzqu2096202243
+token: test
 
 {
   "money": 100,
-  "currencyType": "USD",
-  "depositId": 2
+  "currencyType": "EUR",
+  "depositName": "USD240"
 }
-
 ###
 
-GET localhost:8080/depositDetail/getAll
+GET localhost:8080/depositDetail/getAll/132
 Content-Type: application/json
-token: pkutzqu2096202243
-
+token: test
 ###
 
 PUT localhost:8080/depositDetail/pickUp
 Content-Type: application/json
-token: pkutzqu2096202243
-
+token: test
 ###
 
 GET localhost:8080/depositDetail/getAllByStatus/UNAVAILABLE
 Content-Type: application/json
-token: pkutzqu2096202243
-
+token: test
 ###
 
 POST localhost:8080/depositDetail//getAll/filterByCreateDate
 Content-Type: application/json
-token: pkutzqu2096202243
+token: test
 
 {
   "firstDate": "31-12-2018",
   "secondDate": "31-12-2025"
 }
+###
+
+DELETE localhost:8080/depositDetail/deleteAll
+Content-Type: application/json
+token: test
 
 ###

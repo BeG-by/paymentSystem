@@ -1,15 +1,6 @@
 package by.beg.payment_system.controller.advice_controller;
 
-import by.beg.payment_system.exception.DepositNotFoundException;
-import by.beg.payment_system.exception.UnremovableStatusException;
-import by.beg.payment_system.exception.LackOfMoneyException;
-import by.beg.payment_system.exception.TargetWalletNotFoundException;
-import by.beg.payment_system.exception.NoAccessException;
-import by.beg.payment_system.exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.UserIsPresentException;
-import by.beg.payment_system.exception.UserNotFoundException;
-import by.beg.payment_system.exception.WalletIsExistException;
-import by.beg.payment_system.exception.WalletNotFoundException;
+import by.beg.payment_system.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +49,11 @@ public class MainAdviceController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>("User isn't authorized.", HttpStatus.LOCKED);
     }
 
+    @ExceptionHandler(UserBlockedException.class)
+    public ResponseEntity<String> blockUser() {
+        return new ResponseEntity<>("User is blocked.", HttpStatus.LOCKED);
+    }
+
     //WALLET
 
     @ExceptionHandler(WalletIsExistException.class)
@@ -82,6 +78,16 @@ public class MainAdviceController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>("Target wallet not found.", HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CurrencyConverterException.class)
+    public ResponseEntity<String> converterFail() {
+        return new ResponseEntity<>("Service is temporarily unavailable", HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(TransferNotFoundException.class)
+    public ResponseEntity<String> transferNotFound() {
+        return new ResponseEntity<>("Transfer not found.", HttpStatus.BAD_REQUEST);
+    }
+
     //DEPOSIT
 
     @ExceptionHandler(DepositNotFoundException.class)
@@ -89,10 +95,34 @@ public class MainAdviceController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>("Deposit not found.", HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DepositIsPresentException.class)
+    public ResponseEntity<String> depositIsPresent() {
+        return new ResponseEntity<>("Deposit is present. Change deposit name.", HttpStatus.BAD_REQUEST);
+    }
+
+    //CREDIT
+
+    @ExceptionHandler(CreditNotFoundException.class)
+    public ResponseEntity<String> creditNotFound() {
+        return new ResponseEntity<>("Credit not found.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CreditDetailIsPresentException.class)
+    public ResponseEntity<String> creditDetailIsPresent() {
+        return new ResponseEntity<>("CreditDetail is present for current user.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CreditIsPresentException.class)
+    public ResponseEntity<String> creditIsPresent() {
+        return new ResponseEntity<>("Credit is present. Change credit name.", HttpStatus.BAD_REQUEST);
+    }
+
+
     //STATUS
 
     @ExceptionHandler(UnremovableStatusException.class)
     public ResponseEntity<String> unremovableStatus() {
         return new ResponseEntity<>("Status is unremovable.", HttpStatus.BAD_REQUEST);
     }
+
 }

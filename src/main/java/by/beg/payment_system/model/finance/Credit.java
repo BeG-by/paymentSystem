@@ -17,13 +17,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Deposit {
+public class Credit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Pattern(regexp = "[A-Z]{3}\\d+", message = "Wrong deposit name")
+    @Pattern(regexp = "[A-Z]{3}\\d+", message = "Wrong credit name")
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -36,16 +36,13 @@ public class Deposit {
     @DecimalMin(message = "Value \"money\" must be more than 0", value = "0")
     private BigDecimal rate;
 
-    @NotNull(message = "Capitalization can't be null")
-    private boolean isCapitalization;
-
     @Enumerated(EnumType.STRING)
     private Status status = Status.AVAILABLE;
 
-    @OneToMany(cascade = CascadeType.PERSIST , mappedBy = "deposit")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "credit")
     @JsonIgnore
     @ToString.Exclude
-    private List<DepositDetail> depositDetails;
+    private List<CreditDetail> creditDetails;
 
 
 }

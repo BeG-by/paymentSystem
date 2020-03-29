@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepositDetail {
+public class CreditDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,18 +26,24 @@ public class DepositDetail {
     @Temporal(TemporalType.DATE)
     private Date finishDate;
 
-    @Column(precision = 20, scale = 2)
-    private BigDecimal balance;
+    @Temporal(TemporalType.DATE)
+    private Date lastUpdate;
 
     @Column(precision = 20, scale = 2)
-    private BigDecimal returnBalance;
+    private BigDecimal startDebt;
+
+    @Column(precision = 20, scale = 2)
+    private BigDecimal currentDebt;
+
+    @Column(precision = 20, scale = 2)
+    private BigDecimal fullDebt;
 
     @Enumerated(EnumType.STRING)
-    private Status depositDetailStatus = Status.UNAVAILABLE;
+    private Status creditStatus = Status.OPEN;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Deposit deposit;
+    private Credit credit;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @ToString.Exclude
@@ -45,12 +51,14 @@ public class DepositDetail {
     @JsonBackReference
     private User user;
 
-
-    public DepositDetail(Date startDate, Date finishDate, BigDecimal balance, BigDecimal returnBalance, Deposit deposit) {
+    public CreditDetail(Date startDate, Date finishDate, Date lastUpdate, BigDecimal startDebt, BigDecimal currentDebt, BigDecimal fullDebt, Credit credit) {
         this.startDate = startDate;
         this.finishDate = finishDate;
-        this.balance = balance;
-        this.returnBalance = returnBalance;
-        this.deposit = deposit;
+        this.lastUpdate = lastUpdate;
+        this.startDebt = startDebt;
+        this.currentDebt = currentDebt;
+        this.fullDebt = fullDebt;
+        this.credit = credit;
     }
+
 }

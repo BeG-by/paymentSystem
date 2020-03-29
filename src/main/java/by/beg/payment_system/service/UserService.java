@@ -1,10 +1,8 @@
 package by.beg.payment_system.service;
 
 import by.beg.payment_system.dto.UserAuthorizationDTO;
-import by.beg.payment_system.exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.UserIsPresentException;
-import by.beg.payment_system.exception.UserNotFoundException;
-import by.beg.payment_system.exception.WalletNotFoundException;
+import by.beg.payment_system.exception.*;
+import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.user.User;
 
@@ -18,7 +16,7 @@ public interface UserService {
 
     User logout(String token) throws UserNotFoundException, UserIsNotAuthorizedException;
 
-    User checkAuthorization(String token) throws UserIsNotAuthorizedException;
+    User checkAuthorization(String token) throws UserIsNotAuthorizedException, UserBlockedException;
 
     User findById(long id) throws UserNotFoundException;
 
@@ -28,13 +26,15 @@ public interface UserService {
 
     User updateUser(User user) throws UserNotFoundException;
 
-    User deleteUser(long userId) throws UserNotFoundException;
+    User deleteUser(long userId) throws UserNotFoundException, UnremovableStatusException;
 
     List<User> getAllUsers();
 
     User getAdminRole(long userId) throws UserNotFoundException;
 
     User findByWalletValue(String walletValue) throws WalletNotFoundException, UserNotFoundException;
+
+    User changeStatus(long userId, Status status) throws UserNotFoundException;
 
 
 }

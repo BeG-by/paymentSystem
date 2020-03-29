@@ -1,11 +1,8 @@
 package by.beg.payment_system.service;
 
 import by.beg.payment_system.dto.UserAuthorizationDTO;
-import by.beg.payment_system.exception.UserIsNotAuthorizedException;
-import by.beg.payment_system.exception.UserIsPresentException;
-import by.beg.payment_system.exception.UserNotFoundException;
-import by.beg.payment_system.exception.WalletNotFoundException;
-import by.beg.payment_system.model.finance.TransferDetail;
+import by.beg.payment_system.exception.*;
+import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Wallet;
 import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.user.User;
@@ -15,11 +12,10 @@ import by.beg.payment_system.repository.UserRepository;
 import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.util.GenerateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,9 +29,9 @@ public class UserServiceImpl implements UserService {
     private WalletRepository walletRepository;
     private TokenRepository tokenRepository;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, TokenRepository tokenRepository) {
+    public UserServiceImpl(UserRepository userRepository, WalletRepository walletRepository, TokenRepository tokenRepository) {
         this.userRepository = userRepository;
+        this.walletRepository = walletRepository;
         this.tokenRepository = tokenRepository;
     }
 
@@ -78,9 +74,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User checkAuthorization(String token) throws UserIsNotAuthorizedException {
+    public User checkAuthorization(String token) throws UserIsNotAuthorizedException, UserBlockedException {
         Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token).orElseThrow(UserIsNotAuthorizedException::new);
-        return userRepository.findUserByTokens(tokenByTokenValue).orElseThrow(UserIsNotAuthorizedException::new);
+        User user = userRepository.findUserByTokens(tokenByTokenValue).orElseThrow(UserIsNotAuthorizedException::new);
+        if (user.getStatus().equals(Status.BLOCKED)) {
+            throw new UserBlockedException();
+        }
+        return user;
     }
 
     @Override
@@ -106,12 +106,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User deleteUser(long userId) throws UserNotFoundException {
+    public User deleteUser(long userId) throws UserNotFoundException, UnremovableStatusException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        long walletCount = user.getWallets().stream().filter(wallet -> wallet.getBalance().compareTo(new BigDecimal(0)) > 0).count();
+        long depositCount = user.getDepositDetails().stream().filter(depositDetail -> !depositDetail.getDepositDetailStatus().equals(Status.DELETED)).count();
+        long creditCount = user.getCreditDetails().stream().filter(creditDetail -> !creditDetail.getCreditStatus().equals(Status.CLOSED)).count();
 
-        for (TransferDetail detail : user.getTransferDetails()) {
-            detail.setUser(null);
+        if (walletCount > 0 || depositCount > 0 || creditCount > 0) {
+            throw new UnremovableStatusException();
         }
+
+        user.getTransferDetails().forEach(transferDetail -> transferDetail.setUser(null));
 
         userRepository.delete(user);
 
@@ -136,13 +141,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByWalletValue(String walletValue) throws WalletNotFoundException, UserNotFoundException {
         Wallet wallet = walletRepository.findWalletByWalletValue(walletValue).orElseThrow(WalletNotFoundException::new);
+        return userRepository.findUserByWallets(wallet).orElseThrow(UserNotFoundException::new);
+    }
 
-        User user = userRepository.findUserByWallets(new ArrayList<>() {
-            {
-                add(wallet);
-            }
-        }).orElseThrow(UserNotFoundException::new);
-
+    @Override
+    public User changeStatus(long userId, Status status) throws UserNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        user.setStatus(status);
+        log.info("Status was changed for :" + user);
         return user;
     }
 

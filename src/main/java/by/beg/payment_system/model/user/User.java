@@ -1,11 +1,19 @@
 package by.beg.payment_system.model.user;
 
+import by.beg.payment_system.model.enumerations.Status;
+import by.beg.payment_system.model.finance.CreditDetail;
 import by.beg.payment_system.model.finance.DepositDetail;
-import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.finance.TransferDetail;
 import by.beg.payment_system.model.finance.Wallet;
-import com.fasterxml.jackson.annotation.*;
-import lombok.*;
+import by.beg.payment_system.model.security.Token;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -51,6 +59,10 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UserRole userRole = UserRole.USER;
 
+    @Enumerated(EnumType.STRING)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Status status = Status.ACTIVE;
+
     @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date lastUpdate = new Date();
@@ -78,5 +90,11 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     private List<DepositDetail> depositDetails;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonManagedReference
+    private List<CreditDetail> creditDetails;
+
 
 }

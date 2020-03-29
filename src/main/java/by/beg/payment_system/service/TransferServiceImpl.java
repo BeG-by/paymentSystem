@@ -1,12 +1,10 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.exception.LackOfMoneyException;
-import by.beg.payment_system.exception.TargetWalletNotFoundException;
-import by.beg.payment_system.exception.WalletNotFoundException;
+import by.beg.payment_system.exception.*;
+import by.beg.payment_system.model.enumerations.CurrencyType;
 import by.beg.payment_system.model.finance.TransferDetail;
-import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.model.finance.Wallet;
-import by.beg.payment_system.model.finance.enumerations.CurrencyType;
+import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.repository.TransferRepository;
 import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.service.util.CurrencyConverter;
@@ -37,7 +35,8 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public TransferDetail doTransfer(User user, TransferDetail transferDetail) throws WalletNotFoundException, LackOfMoneyException, TargetWalletNotFoundException {
+    public TransferDetail doTransfer(User user, TransferDetail transferDetail)
+            throws WalletNotFoundException, LackOfMoneyException, TargetWalletNotFoundException, CurrencyConverterException {
 
         CurrencyType currencyType = transferDetail.getCurrencyType();
         BigDecimal moneySend = transferDetail.getMoneySend();
@@ -75,13 +74,34 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public Map<String, Double> getExchangeRates() {
-        return currencyConverter.getExchangeRates();
+    public Map<String, BigDecimal> getExchangeRates() throws CurrencyConverterException {
+        return currencyConverter.getAllRates();
     }
 
     @Override
     public List<TransferDetail> filterByDate(Date firstDate, Date secondDate) {
         return transferRepository.filterByDate(firstDate, secondDate, Sort.by("date"));
+    }
+
+    @Override
+    public List<TransferDetail> getAll() {
+        return transferRepository.findAll(Sort.by("date"));
+    }
+
+    @Override
+    public TransferDetail deleteById(long id) throws TransferNotFoundException {
+        TransferDetail transferDetail = transferRepository.findById(id).orElseThrow(TransferNotFoundException::new);
+        transferRepository.delete(transferDetail);
+        log.info("TransferDetail was deleted" + transferDetail);
+        return transferDetail;
+    }
+
+    @Override
+    public List<TransferDetail> deleteBetweenDate(Date firstDate, Date secondDate) {
+        List<TransferDetail> transferDetails = transferRepository.filterByDate(firstDate, secondDate, Sort.by("date"));
+        transferRepository.deleteAll(transferDetails);
+        transferDetails.forEach(transferDetail -> log.info("TransferDetail was deleted" + transferDetail));
+        return transferDetails;
     }
 
 

@@ -1,0 +1,55 @@
+POST localhost:8080/creditDetail/create
+Content-Type: application/json
+token: test
+
+{
+  "money": 1000,
+  "creditName": "USD360"
+}
+
+###
+
+GET localhost:8080/creditDetail/get
+Content-Type: application/json
+token: test
+###
+
+POST localhost:8080/creditDetail/repay
+Content-Type: application/json
+token: test
+
+{
+  "money": 900,
+  "creditName": "USD720"
+}
+###
+
+GET localhost:8080/creditDetail/get/1
+Content-Type: application/json
+token: test
+###
+
+GET localhost:8080/creditDetail/getAllByStatus/CLOSED
+Content-Type: application/json
+token: test
+###
+
+POST localhost:8080/creditDetail//getAll/filterByCreateDate
+Content-Type: application/json
+token: test
+
+{
+  "firstDate": "31-12-2018",
+  "secondDate": "31-12-2025"
+}
+###
+
+DELETE localhost:8080/creditDetail//deleteAll
+Content-Type: application/json
+token: test
+###
+
+PUT localhost:8080/creditDetail//refreshAll
+Content-Type: application/json
+token: test
+###

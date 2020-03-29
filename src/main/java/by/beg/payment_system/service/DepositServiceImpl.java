@@ -1,9 +1,10 @@
 package by.beg.payment_system.service;
 
+import by.beg.payment_system.exception.DepositIsPresentException;
 import by.beg.payment_system.exception.DepositNotFoundException;
 import by.beg.payment_system.exception.UnremovableStatusException;
+import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Deposit;
-import by.beg.payment_system.model.finance.enumerations.Status;
 import by.beg.payment_system.repository.DepositRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,12 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
-    public Deposit create(Deposit deposit) {
+    public Deposit create(Deposit deposit) throws DepositIsPresentException {
+
+        if (depositRepository.findByName(deposit.getName()).isPresent()) {
+            throw new DepositIsPresentException();
+        }
+
         Deposit save = depositRepository.save(deposit);
         log.info("Deposit was created: " + save);
         return save;
@@ -34,13 +40,6 @@ public class DepositServiceImpl implements DepositService {
     public List<Deposit> getAllAvailable() {
         return depositRepository.findAll().stream()
                 .filter(deposit -> deposit.getStatus().equals(Status.AVAILABLE)).collect(Collectors.toList());
-    }
-
-    @Override
-    public Deposit update(Deposit deposit) {
-        Deposit save = depositRepository.save(deposit);
-        log.info("Deposit was updated: " + save);
-        return save;
     }
 
     @Override
@@ -69,13 +68,8 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     public List<Deposit> deleteAll() {
-
         List<Deposit> deposits = depositRepository.deleteAllByStatus(Status.DELETED);
-
-        for (Deposit currentDeposit : deposits) {
-            log.info("Deposit was deleted: " + currentDeposit);
-        }
-
+        deposits.forEach(deposit -> log.info("Deposit was deleted: " + deposit));
         return deposits;
     }
 }
