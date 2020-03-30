@@ -61,6 +61,14 @@ public class CreditController {
         return ResponseEntity.ok(creditService.findById(creditId));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Credit> update(@RequestHeader String token, @RequestBody @Valid Credit credit)
+            throws UserIsNotAuthorizedException, NoAccessException, UserBlockedException, CreditNotFoundException {
+
+        checkAdminRole(userService.checkAuthorization(token));
+        return ResponseEntity.ok(creditService.update(credit));
+    }
+
     @DeleteMapping("/delete/{creditId}")
     public ResponseEntity<Credit> delete(@RequestHeader String token, @PathVariable long creditId)
             throws UserIsNotAuthorizedException, NoAccessException, UnremovableStatusException, CreditNotFoundException, UserBlockedException {

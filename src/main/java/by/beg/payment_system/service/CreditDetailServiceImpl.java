@@ -128,7 +128,7 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     @Override
     public List<CreditDetail> deleteAll() {
         List<CreditDetail> creditDetails = creditDetailRepository.deleteAllByCreditStatus(Status.CLOSED);
-        creditDetails.forEach(creditDetail -> log.info("CreditDetail was deleted" + creditDetail));
+        creditDetails.forEach(creditDetail -> log.info("CreditDetail was deleted: " + creditDetail));
         return creditDetails;
     }
 

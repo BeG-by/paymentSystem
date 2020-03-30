@@ -53,6 +53,14 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
+    public Deposit update(Deposit deposit) throws DepositNotFoundException {
+        depositRepository.findById(deposit.getId()).orElseThrow(DepositNotFoundException::new);
+        Deposit save = depositRepository.save(deposit);
+        log.info("Deposit was updated: " + save);
+        return save;
+    }
+
+    @Override
     public Deposit delete(long depositId) throws DepositNotFoundException, UnremovableStatusException {
         Deposit byId = depositRepository.findById(depositId).orElseThrow(DepositNotFoundException::new);
 
@@ -72,4 +80,5 @@ public class DepositServiceImpl implements DepositService {
         deposits.forEach(deposit -> log.info("Deposit was deleted: " + deposit));
         return deposits;
     }
+
 }

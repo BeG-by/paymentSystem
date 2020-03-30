@@ -136,7 +136,7 @@ public class DepositDetailServiceImpl implements DepositDetailService {
     @Override
     public List<DepositDetail> deleteAll() {
         List<DepositDetail> depositDetails = depositDetailRepository.deleteAllByDepositDetailStatus(Status.DELETED);
-        depositDetails.forEach(depositDetail -> log.info("DepositDetail was deleted: " + depositDetail));
+        depositDetails.forEach(depositDetail -> log.info("DepositDetail's status was changed: " + depositDetail));
         return depositDetails;
     }
 
@@ -150,7 +150,7 @@ public class DepositDetailServiceImpl implements DepositDetailService {
         for (DepositDetail depositDetail : depositDetails) {
             if (depositDetail.getFinishDate().before(today)) {
                 depositDetail.setDepositDetailStatus(Status.AVAILABLE);
-                log.info("DepositDetail was changed status: " + depositDetail);
+                log.info("DepositDetail's status was changed: " + depositDetail);
             }
         }
 

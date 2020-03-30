@@ -54,6 +54,14 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
+    public Credit update(Credit credit) throws CreditNotFoundException {
+        creditRepository.findById(credit.getId()).orElseThrow(CreditNotFoundException::new);
+        Credit save = creditRepository.save(credit);
+        log.info("Credit was updated: " + save);
+        return save;
+    }
+
+    @Override
     public Credit delete(long creditId) throws CreditNotFoundException, UnremovableStatusException {
         Credit byId = creditRepository.findById(creditId).orElseThrow(CreditNotFoundException::new);
 

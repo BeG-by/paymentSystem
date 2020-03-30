@@ -17,6 +17,8 @@ public interface CreditService {
 
     List<Credit> getAll();
 
+    Credit update(Credit credit) throws CreditNotFoundException;
+
     Credit delete(long creditId) throws CreditNotFoundException, UnremovableStatusException;
 
     List<Credit> deleteAll();

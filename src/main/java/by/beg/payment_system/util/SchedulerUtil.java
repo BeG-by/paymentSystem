@@ -1,39 +1,47 @@
-package by.beg.payment_system.service.util;
+package by.beg.payment_system.util;
 
 import by.beg.payment_system.service.CreditDetailService;
 import by.beg.payment_system.service.DepositDetailService;
+import by.beg.payment_system.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class Scheduler {
+public class SchedulerUtil {
 
     private DepositDetailService depositDetailService;
     private CreditDetailService creditDetailService;
+    private UserService userService;
 
-    public Scheduler(DepositDetailService depositDetailService, CreditDetailService creditDetailService) {
+    public SchedulerUtil(DepositDetailService depositDetailService, CreditDetailService creditDetailService, UserService userService) {
         this.depositDetailService = depositDetailService;
         this.creditDetailService = creditDetailService;
+        this.userService = userService;
     }
-
 
     @Scheduled(cron = "0 */3 * * * *")
     public void refreshDepositsDetail() {
 
-        log.info("DepositDetails started to refresh");
         depositDetailService.refreshAll();
-        log.info("DepositsDetails were refreshed");
+        log.info("DepositsDetails have been refreshed");
 
     }
 
     @Scheduled(cron = "0 */3 * * * *")
     public void refreshCreditsDetail() {
 
-        log.info("CreditDetails started to refresh");
         creditDetailService.refreshAll();
-        log.info("CreditDetails were refreshed");
+        log.info("CreditDetails have been refreshed");
+
+    }
+
+    @Scheduled(cron = "0 */2 * * * *")
+    public void clearTokens() {
+
+        userService.clearTokens();
+        log.info("Tokens have been refreshed");
 
     }
 

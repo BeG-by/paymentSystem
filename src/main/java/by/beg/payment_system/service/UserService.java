@@ -14,7 +14,7 @@ public interface UserService {
 
     Token authorization(UserAuthorizationDTO user) throws UserNotFoundException;
 
-    User logout(String token) throws UserNotFoundException, UserIsNotAuthorizedException;
+    User logout(User user);
 
     User checkAuthorization(String token) throws UserIsNotAuthorizedException, UserBlockedException;
 
@@ -35,6 +35,8 @@ public interface UserService {
     User findByWalletValue(String walletValue) throws WalletNotFoundException, UserNotFoundException;
 
     User changeStatus(long userId, Status status) throws UserNotFoundException;
+
+    void clearTokens();
 
 
 }

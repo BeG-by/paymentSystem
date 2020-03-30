@@ -40,8 +40,9 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<User> logout(@RequestHeader String token) throws UserNotFoundException, UserIsNotAuthorizedException {
-        return new ResponseEntity<>(userService.logout(token), HttpStatus.OK);
+    public ResponseEntity<User> logout(@RequestHeader String token) throws UserIsNotAuthorizedException, UserBlockedException {
+        User user = userService.checkAuthorization(token);
+        return new ResponseEntity<>(userService.logout(user), HttpStatus.OK);
 
     }
 

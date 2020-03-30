@@ -61,6 +61,14 @@ public class DepositController {
         return ResponseEntity.ok(depositService.findById(depositId));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Deposit> update(@RequestHeader String token, @RequestBody @Valid Deposit deposit)
+            throws UserIsNotAuthorizedException, NoAccessException, UserBlockedException, DepositNotFoundException {
+
+        checkAdminRole(userService.checkAuthorization(token));
+        return ResponseEntity.ok(depositService.update(deposit));
+    }
+
 
     @DeleteMapping("/delete/{depositId}")
     public ResponseEntity<Deposit> delete(@RequestHeader String token, @PathVariable long depositId)

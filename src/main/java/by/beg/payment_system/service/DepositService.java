@@ -17,6 +17,8 @@ public interface DepositService {
 
     List<Deposit> getAll();
 
+    Deposit update(Deposit deposit) throws DepositNotFoundException;
+
     Deposit delete(long depositId) throws DepositNotFoundException, UnremovableStatusException;
 
     List<Deposit> deleteAll();

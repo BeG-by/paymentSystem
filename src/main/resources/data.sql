@@ -27,7 +27,7 @@ VALUES (null, '1993-06-13', 'something3@gmail.com', 'firstName', 'lastName', '20
 INSERT INTO token VALUE (null, '2020-10-10', 'test', 1);
 INSERT INTO token VALUE (null, '2020-10-10', 'test1', 2);
 INSERT INTO token VALUE (null, '2020-10-10', '3', 3);
-INSERT INTO token VALUE (null, '2020-10-10', '4', 4);
+INSERT INTO token VALUE (null, '2019-10-10', '4', 4);
 
 INSERT INTO wallet VALUE (null, 1000, '2020-01-01', 'USD', 'USD111111111', 1);
 INSERT INTO wallet VALUE (null, 1000, '2020-01-01', 'EUR', 'EUR222222222', 1);
@@ -63,10 +63,10 @@ INSERT INTO deposit_detail VALUE (null, 100, 'AVAILABLE', '2022-01-01', 120, '20
 INSERT INTO deposit_detail VALUE (null, 100, 'UNAVAILABLE', '2015-01-01', 120, '2013-01-01', 1, 1);
 INSERT INTO deposit_detail VALUE (null, 1000, 'AVAILABLE', '2024-01-01', 1300, '2017-01-01', 2, 3);
 INSERT INTO deposit_detail VALUE (null, 500, 'UNAVAILABLE', '2013-01-01', 545, '2011-01-01', 6, 3);
-INSERT INTO deposit_detail VALUE (null, 100, 'AVAILABLE', '2021-01-01', 120, '2018-01-0', 4, 4);
+INSERT INTO deposit_detail VALUE (null, 100, 'AVAILABLE', '2021-01-01', 120, '2018-01-01', 4, 4);
 
-INSERT INTO credit_detail VALUE (null, 'OPEN', 200, '2025-02-02', 200, '2020-03-29', '2020-03-29', 180, 1, 1);
-INSERT INTO credit_detail VALUE (null, 'OPEN', 300, '2025-02-02', 200, '2020-03-29', '2020-03-29', 180, 2, 2);
-INSERT INTO credit_detail VALUE (null, 'OPEN', 400, '2025-02-02', 200, '2020-03-29', '2020-03-29', 180, 3, 3);
-INSERT INTO credit_detail VALUE (null, 'CLOSED', 500, '2025-02-02', 200, '2020-03-29', '2020-03-29', 180, 4, 4);
+INSERT INTO credit_detail VALUE (null, 'OPEN', 200, '2025-02-02', 220, '2020-03-29', '2020-03-29', 180, 1, 1);
+INSERT INTO credit_detail VALUE (null, 'OPEN', 300, '2025-02-02', 350, '2020-03-29', '2020-03-29', 180, 2, 2);
+INSERT INTO credit_detail VALUE (null, 'OPEN', 400, '2025-02-02', 460, '2020-03-29', '2020-03-29', 180, 3, 3);
+INSERT INTO credit_detail VALUE (null, 'CLOSED', 500, '2025-02-02', 557, '2020-03-29', '2020-03-29', 180, 4, 4);
 

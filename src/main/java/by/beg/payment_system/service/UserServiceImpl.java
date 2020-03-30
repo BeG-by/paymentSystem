@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,8 +38,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registration(User user) throws UserIsPresentException {
-        Optional<User> checkUser = userRepository.findUserByEmailOrPassport(user.getEmail(), user.getPassport());
-        if (checkUser.isPresent()) {
+
+        if (userRepository.findUserByEmailOrPassport(user.getEmail(), user.getPassport()).isPresent()) {
             throw new UserIsPresentException();
         }
 
@@ -59,18 +59,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User logout(String token) throws UserNotFoundException, UserIsNotAuthorizedException {
-        Optional<Token> tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
-        Optional<User> userByTokens = userRepository.findUserByTokens(tokenByTokenValue.orElseThrow(UserIsNotAuthorizedException::new));
-        List<Token> allByUser = tokenRepository.findAllByUser(userByTokens.orElseThrow(UserNotFoundException::new));
-
+    public User logout(User user) {
+        List<Token> allByUser = tokenRepository.findAllByUser(user);
         tokenRepository.deleteAll(allByUser);
-
-        for (Token currentToken : allByUser) {
-            log.info("Token was deleted: " + currentToken);
-        }
-
-        return userByTokens.get();
+        allByUser.forEach(token -> log.info("Token was deleted: " + token));
+        return user;
     }
 
     @Override
@@ -134,7 +127,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setUserRole(UserRole.ADMIN);
         user.setLastUpdate(new Date());
-        log.info("Admin role was added for user: " + user);
+        log.info("Admin role was added for: " + user);
         return user;
     }
 
@@ -148,8 +141,28 @@ public class UserServiceImpl implements UserService {
     public User changeStatus(long userId, Status status) throws UserNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setStatus(status);
-        log.info("Status was changed for :" + user);
+        user.setLastUpdate(new Date());
+        log.info("Status was changed for: " + user);
         return user;
+    }
+
+    @Override
+    public void clearTokens() {
+        Date today = new Date();
+        Calendar calendar = Calendar.getInstance();
+        List<Token> tokens = tokenRepository.findAll();
+
+        for (Token currentToken : tokens) {
+            calendar.setTime(currentToken.getCreateDate());
+            calendar.add(Calendar.MINUTE, 15);
+
+            if (today.after(calendar.getTime())) {
+                tokenRepository.delete(currentToken);
+                log.info("Token was deleted: " + currentToken);
+            }
+
+        }
+
     }
 
 
