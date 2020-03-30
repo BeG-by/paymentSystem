@@ -79,10 +79,14 @@ public class CreditDetailServiceImpl implements CreditDetailService {
             throw new LackOfMoneyException();
 
         } else if (creditDetail.getCurrentDebt().subtract(openDTO.getMoney()).compareTo(new BigDecimal(0)) <= 0) {
+
             wallet.setBalance(wallet.getBalance().subtract(creditDetail.getCurrentDebt()));
+
             creditDetail.setCurrentDebt(new BigDecimal(0));
             creditDetail.setCreditStatus(Status.CLOSED);
-            creditDetail.setFinishDate(new Date());
+            Date today = new Date();
+            creditDetail.setLastUpdate(today);
+            creditDetail.setFinishDate(today);
             log.info("CreditDetail was closed: " + creditDetail);
 
         } else {

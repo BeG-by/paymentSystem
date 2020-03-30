@@ -39,7 +39,7 @@ class UserServiceImplTest {
 
 
     @Test
-    void throwUnremovableStatusException_whenDeleteUser() {
+    void should_throwUnremovableStatusException_whenDeleteUser() {
 
         User user = new User();
         CreditDetail creditDetail = new CreditDetail();
@@ -58,7 +58,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void returnUser_whenDeleteUser() throws UserNotFoundException, UnremovableStatusException {
+    void should_returnUser_whenDeleteUser() throws UserNotFoundException, UnremovableStatusException {
 
         User user = new User();
         user.setId(1);
@@ -80,7 +80,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void returnUserAdmin_whenGivenUser() throws UserNotFoundException {
+    void should_returnUserAdmin_whenGivenUser() throws UserNotFoundException {
         User user = new User();
         user.setId(1);
 
@@ -96,7 +96,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void returnDeleteStatus_whenGivenStatusAndUser() throws UserNotFoundException {
+    void should_returnDeleteStatus_whenGivenStatusAndUser() throws UserNotFoundException {
         User user = new User();
         user.setId(1);
 
@@ -113,7 +113,7 @@ class UserServiceImplTest {
 
 
     @Test
-    void deleteOneToken_whenGivenTwoToken() {
+    void should_deleteOneToken_whenGivenTwoToken() {
 
         Token firstToken = new Token();
         Calendar firstCalendar = Calendar.getInstance();
