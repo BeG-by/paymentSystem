@@ -1,11 +1,11 @@
 POST localhost:8080/depositDetail/create
 Content-Type: application/json
-token: test
+token: lhookyf1275652500
 
 {
   "money": 100,
-  "currencyType": "EUR",
-  "depositName": "USD240"
+  "currencyType": "USD",
+  "depositName": "BYN360"
 }
 ###
 

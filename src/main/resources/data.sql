@@ -16,11 +16,11 @@ VALUES (null, '1991-04-11', 'something1@gmail.com', 'firstName', 'lastName', '20
         'ACTIVE',
         'ADMIN', 2);
 INSERT INTO user
-VALUES (null, '1992-05-12', 'something2@gmail.com', 'firstName', 'lastName', '2020-01-01', 'PP333333333', 'password',
-        'ACTIVE',
+VALUES (null, '1992-05-12', 'istokx08@gmail.com', 'firstName', 'lastName', '2020-01-01', 'PP333333333', 'password',
+        'BLOCKED',
         'USER', 3);
 INSERT INTO user
-VALUES (null, '1993-06-13', 'something3@gmail.com', 'firstName', 'lastName', '2020-01-01', 'PP444444444', 'password',
+VALUES (null, '1993-06-13', 'invalidAddress', 'firstName', 'lastName', '2020-01-01', 'PP444444444', 'password',
         'ACTIVE',
         'USER', 4);
 

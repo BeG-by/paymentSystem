@@ -4,6 +4,7 @@ import by.beg.payment_system.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -122,7 +123,15 @@ public class MainAdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnremovableStatusException.class)
     public ResponseEntity<String> unremovableStatus() {
-        return new ResponseEntity<>("Status is unremovable.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Unremovable status.", HttpStatus.LOCKED);
     }
+
+    //MAIL_SENDER
+
+    @ExceptionHandler(MailException.class)
+    public ResponseEntity<String> invalidAddress() {
+        return new ResponseEntity<>("Invalid user's address or something else... Check log files on the server", HttpStatus.BAD_REQUEST);
+    }
+
 
 }

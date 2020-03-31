@@ -1,0 +1,9 @@
+GET localhost:8080/mail/sendRates/3
+Content-Type: application/json
+token: test
+###
+
+GET localhost:8080/mail/blockNotification/3
+Content-Type: application/json
+token: test
+###

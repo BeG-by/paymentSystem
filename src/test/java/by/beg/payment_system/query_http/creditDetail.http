@@ -1,6 +1,6 @@
 POST localhost:8080/creditDetail/create
 Content-Type: application/json
-token: test
+token: lhookyf1275652500
 
 {
   "money": 1000,
@@ -16,10 +16,10 @@ token: test
 
 POST localhost:8080/creditDetail/repay
 Content-Type: application/json
-token: test
+token: lhookyf1275652500
 
 {
-  "money": 900,
+  "money": 1200,
   "creditName": "USD720"
 }
 ###
