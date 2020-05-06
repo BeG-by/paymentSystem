@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map;
+
 
 @Service
 @Transactional
@@ -73,8 +75,8 @@ public class MailSenderServiceImpl implements MailSenderService {
         message.setFrom(username);
         message.setSubject("Notification about blocking.");
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyyг.");
-        message.setText("You have been blocked. (" + simpleDateFormat.format(user.getLastUpdate()) + ")");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy" , Locale.ENGLISH);
+        message.setText("You have been blocked. (" + user.getLastUpdate().format(formatter) + ")");
 
         javaMailSender.send(message);
         log.info("Message has been sent to user: " + user);

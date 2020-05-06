@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -126,7 +127,7 @@ public class UserServiceImpl implements UserService {
     public User getAdminRole(long userId) throws UserNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setUserRole(UserRole.ADMIN);
-        user.setLastUpdate(new Date());
+        user.setLastUpdate(LocalDateTime.now());
         log.info("Admin role was added for: " + user);
         return user;
     }
@@ -141,7 +142,7 @@ public class UserServiceImpl implements UserService {
     public User changeStatus(long userId, Status status) throws UserNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setStatus(status);
-        user.setLastUpdate(new Date());
+        user.setLastUpdate(LocalDateTime.now());
         log.info("Status was changed for: " + user);
         return user;
     }

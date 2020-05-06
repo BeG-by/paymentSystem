@@ -1,6 +1,6 @@
 POST localhost:8080/depositDetail/create
 Content-Type: application/json
-token: lhookyf1275652500
+token: huxueis-1020096634
 
 {
   "money": 100,

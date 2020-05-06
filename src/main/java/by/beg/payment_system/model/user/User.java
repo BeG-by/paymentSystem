@@ -21,7 +21,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -51,9 +52,8 @@ public class User {
     private String passport;
 
     @NotNull(message = "Date can't be empty")
-    @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date birthday;
+    private LocalDate birthday;
 
     @Enumerated(EnumType.STRING)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -63,9 +63,8 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Status status = Status.ACTIVE;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Date lastUpdate = new Date();
+    private LocalDateTime lastUpdate = LocalDateTime.now();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

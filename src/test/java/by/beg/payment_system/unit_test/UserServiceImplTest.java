@@ -20,6 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,7 +93,7 @@ class UserServiceImplTest {
         User adminUser = userService.getAdminRole(Mockito.anyLong());
         assertEquals(user.getId(), adminUser.getId());
         assertEquals(UserRole.ADMIN, user.getUserRole());
-        assertEquals(new Date().getTime(), adminUser.getLastUpdate().getTime(), 10);
+        assertTrue(Duration.between(LocalDateTime.now() , adminUser.getLastUpdate()).getSeconds() < 3);
 
     }
 
@@ -107,7 +109,7 @@ class UserServiceImplTest {
         User adminUser = userService.changeStatus(Mockito.anyLong(), Status.DELETED);
         assertEquals(user.getId(), adminUser.getId());
         assertEquals(Status.DELETED, user.getStatus());
-        assertEquals(new Date().getTime(), adminUser.getLastUpdate().getTime(), 10);
+        assertTrue(Duration.between(LocalDateTime.now() , adminUser.getLastUpdate()).getSeconds() < 3);
 
     }
 

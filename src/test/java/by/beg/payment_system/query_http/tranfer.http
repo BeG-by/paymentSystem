@@ -11,7 +11,7 @@ token: lhookyf1275652500
 
 GET localhost:8080/transfer/getExchangeRates
 Content-Type: application/json
-token: test
+token: huxueis-1020096634
 ###
 
 POST localhost:8080/transfer//getAll/filterByDate
