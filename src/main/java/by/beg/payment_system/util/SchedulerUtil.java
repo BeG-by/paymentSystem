@@ -21,7 +21,7 @@ public class SchedulerUtil {
         this.userService = userService;
     }
 
-    @Scheduled(cron = "0 */15 * * * *")
+    @Scheduled(cron = "0 */45 * * * *")
     public void refreshDepositsDetail() {
 
         depositDetailService.refreshAll();
@@ -29,7 +29,7 @@ public class SchedulerUtil {
 
     }
 
-    @Scheduled(cron = "0 */15 * * * *")
+    @Scheduled(cron = "0 */45 * * * *")
     public void refreshCreditsDetail() {
 
         creditDetailService.refreshAll();
@@ -37,7 +37,7 @@ public class SchedulerUtil {
 
     }
 
-    @Scheduled(cron = "0 */15 * * * *")
+    @Scheduled(cron = "0 */45 * * * *")
     public void clearTokens() {
 
         userService.clearTokens();

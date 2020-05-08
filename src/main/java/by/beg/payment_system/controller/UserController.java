@@ -1,5 +1,6 @@
 package by.beg.payment_system.controller;
 
+import by.beg.payment_system.dto.AuthenticationResponseDTO;
 import by.beg.payment_system.dto.UserAuthorizationDTO;
 import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.Status;
@@ -35,7 +36,7 @@ public class UserController {
 
 
     @PostMapping("/authorization")
-    public ResponseEntity<Token> authorization(@RequestBody @Valid UserAuthorizationDTO user) throws UserNotFoundException {
+    public ResponseEntity<AuthenticationResponseDTO> authorization(@RequestBody @Valid UserAuthorizationDTO user) throws UserNotFoundException {
         return new ResponseEntity<>(userService.authorization(user), HttpStatus.OK);
     }
 

@@ -1,4 +1,4 @@
-package by.beg.payment_system.service;
+package by.beg.payment_system.service.impl;
 
 import by.beg.payment_system.exception.DepositIsPresentException;
 import by.beg.payment_system.exception.DepositNotFoundException;
@@ -6,6 +6,7 @@ import by.beg.payment_system.exception.UnremovableStatusException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Deposit;
 import by.beg.payment_system.repository.DepositRepository;
+import by.beg.payment_system.service.DepositService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package by.beg.payment_system.service;
+package by.beg.payment_system.service.impl;
 
 import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.CurrencyType;
@@ -7,6 +7,7 @@ import by.beg.payment_system.model.finance.Wallet;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.repository.TransferRepository;
 import by.beg.payment_system.repository.WalletRepository;
+import by.beg.payment_system.service.TransferService;
 import by.beg.payment_system.service.util.CurrencyConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;

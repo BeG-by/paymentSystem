@@ -1,4 +1,4 @@
-package by.beg.payment_system.service;
+package by.beg.payment_system.service.impl;
 
 import by.beg.payment_system.exception.CreditIsPresentException;
 import by.beg.payment_system.exception.CreditNotFoundException;
@@ -6,6 +6,7 @@ import by.beg.payment_system.exception.UnremovableStatusException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Credit;
 import by.beg.payment_system.repository.CreditRepository;
+import by.beg.payment_system.service.CreditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

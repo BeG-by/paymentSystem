@@ -1,4 +1,4 @@
-package by.beg.payment_system.service;
+package by.beg.payment_system.service.impl;
 
 import by.beg.payment_system.exception.CurrencyConverterException;
 import by.beg.payment_system.exception.UnremovableStatusException;
@@ -6,6 +6,7 @@ import by.beg.payment_system.exception.UserNotFoundException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.repository.UserRepository;
+import by.beg.payment_system.service.MailSenderService;
 import by.beg.payment_system.service.util.CurrencyConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

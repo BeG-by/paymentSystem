@@ -1,9 +1,10 @@
 POST localhost:8080/credit/create
 Content-Type: application/json
-token: test
+Authorization: Pay_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg4OTU1Mjg1LCJleHAiOjE1ODg5NTY0ODV9.raG5UoblMpZgVWwCP77Zd3JK_oB86dimOLeugASZa6w
+token: wzyovxq-1346522408
 
 {
-  "name": "USD720",
+  "name": "USD721",
   "currencyType": "USD",
   "period": 720,
   "rate": 9

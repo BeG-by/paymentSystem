@@ -1,4 +1,4 @@
-package by.beg.payment_system.service;
+package by.beg.payment_system.service.impl;
 
 import by.beg.payment_system.dto.DepositOpenDTO;
 import by.beg.payment_system.exception.*;
@@ -11,6 +11,7 @@ import by.beg.payment_system.repository.DepositDetailRepository;
 import by.beg.payment_system.repository.DepositRepository;
 import by.beg.payment_system.repository.UserRepository;
 import by.beg.payment_system.repository.WalletRepository;
+import by.beg.payment_system.service.DepositDetailService;
 import by.beg.payment_system.service.util.CurrencyConverter;
 import by.beg.payment_system.service.util.DepositDetailFactory;
 import lombok.extern.slf4j.Slf4j;

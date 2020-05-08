@@ -1,4 +1,4 @@
-package by.beg.payment_system.service;
+package by.beg.payment_system.service.impl;
 
 import by.beg.payment_system.dto.CreditOpenDTO;
 import by.beg.payment_system.exception.*;
@@ -11,6 +11,7 @@ import by.beg.payment_system.repository.CreditDetailRepository;
 import by.beg.payment_system.repository.CreditRepository;
 import by.beg.payment_system.repository.UserRepository;
 import by.beg.payment_system.repository.WalletRepository;
+import by.beg.payment_system.service.CreditDetailService;
 import by.beg.payment_system.service.util.CreditDetailFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;

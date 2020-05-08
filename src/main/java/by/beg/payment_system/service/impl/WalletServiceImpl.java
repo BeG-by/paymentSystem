@@ -1,4 +1,4 @@
-package by.beg.payment_system.service;
+package by.beg.payment_system.service.impl;
 
 import by.beg.payment_system.exception.UnremovableStatusException;
 import by.beg.payment_system.exception.WalletIsExistException;
@@ -8,6 +8,7 @@ import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Wallet;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.repository.WalletRepository;
+import by.beg.payment_system.service.WalletService;
 import by.beg.payment_system.util.GenerateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,6 @@
 package by.beg.payment_system.service;
 
+import by.beg.payment_system.dto.AuthenticationResponseDTO;
 import by.beg.payment_system.dto.UserAuthorizationDTO;
 import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.Status;
@@ -12,7 +13,7 @@ public interface UserService {
 
     User registration(User user) throws UserIsPresentException;
 
-    Token authorization(UserAuthorizationDTO user) throws UserNotFoundException;
+    AuthenticationResponseDTO authorization(UserAuthorizationDTO user) throws UserNotFoundException;
 
     User logout(User user);
 

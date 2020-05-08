@@ -1,5 +1,6 @@
-package by.beg.payment_system.service;
+package by.beg.payment_system.service.impl;
 
+import by.beg.payment_system.dto.AuthenticationResponseDTO;
 import by.beg.payment_system.dto.UserAuthorizationDTO;
 import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.Status;
@@ -10,11 +11,19 @@ import by.beg.payment_system.model.user.UserRole;
 import by.beg.payment_system.repository.TokenRepository;
 import by.beg.payment_system.repository.UserRepository;
 import by.beg.payment_system.repository.WalletRepository;
+import by.beg.payment_system.security.JwtTokenProvider;
+import by.beg.payment_system.service.UserService;
 import by.beg.payment_system.util.GenerateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Calendar;
@@ -28,14 +37,25 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private WalletRepository walletRepository;
+    private PasswordEncoder passwordEncoder;
+    private JwtTokenProvider jwtTokenProvider;
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
     private TokenRepository tokenRepository;
 
-    public UserServiceImpl(UserRepository userRepository, WalletRepository walletRepository, TokenRepository tokenRepository) {
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository,
+                           WalletRepository walletRepository,
+                           PasswordEncoder passwordEncoder,
+                           JwtTokenProvider jwtTokenProvider,
+                           AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.walletRepository = walletRepository;
-        this.tokenRepository = tokenRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.authenticationManager = authenticationManager;
     }
-
 
     @Override
     public User registration(User user) throws UserIsPresentException {
@@ -44,19 +64,25 @@ public class UserServiceImpl implements UserService {
             throw new UserIsPresentException();
         }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         User saveUser = userRepository.save(user);
-        log.info("User was added: " + saveUser);
+        log.info("User was registered: " + saveUser);
         return saveUser;
     }
 
     @Override
-    public Token authorization(UserAuthorizationDTO user) throws UserNotFoundException {
-        User checkUser = userRepository.findUserByEmailAndPassword(user.getEmail(), user.getPassword()).orElseThrow(UserNotFoundException::new);
+    public AuthenticationResponseDTO authorization(UserAuthorizationDTO user) throws UserNotFoundException {
 
-        String tokenValue = GenerateUtil.generateToken();
-        Token token = tokenRepository.save(new Token(tokenValue, checkUser));
-        log.info("Token was added: " + token);
-        return token;
+        final String email = user.getEmail();
+        final String password = user.getPassword();
+
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        User realUser = userRepository.findUserByEmail(user.getEmail()).orElseThrow(UserNotFoundException::new);
+
+        final String token = jwtTokenProvider.createToken(email, realUser.getUserRole());
+
+        return new AuthenticationResponseDTO(email, token);
     }
 
     @Override
