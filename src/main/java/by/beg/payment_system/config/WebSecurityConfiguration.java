@@ -17,8 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final JwtTokenProvider jwtTokenProvider;
-
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     public WebSecurityConfiguration(JwtTokenProvider jwtTokenProvider) {
@@ -44,9 +43,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/**").permitAll()
-                .antMatchers("/mail/**").permitAll()
-                .antMatchers("/credit/**").hasAuthority("ADMIN")
+                .antMatchers("/user/registration").permitAll()
+                .antMatchers("/user/authentication").permitAll()
+                .antMatchers("/*/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));

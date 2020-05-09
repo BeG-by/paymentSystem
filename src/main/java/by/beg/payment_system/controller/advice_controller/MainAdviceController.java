@@ -40,20 +40,20 @@ public class MainAdviceController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>("User not found. Check your input data.", HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NoAccessException.class)
+    @ExceptionHandler(JwtAuthenticationException.class)
     public ResponseEntity<String> checkAdmin() {
-        return new ResponseEntity<>("User role isn't administration.", HttpStatus.LOCKED);
+        return new ResponseEntity<>("JWT token expired or invalid.", HttpStatus.FORBIDDEN);
     }
-
-    @ExceptionHandler(UserIsNotAuthorizedException.class)
-    public ResponseEntity<String> checkAuth() {
-        return new ResponseEntity<>("User isn't authorized.", HttpStatus.LOCKED);
-    }
-
-    @ExceptionHandler(UserBlockedException.class)
-    public ResponseEntity<String> blockUser() {
-        return new ResponseEntity<>("User is blocked.", HttpStatus.LOCKED);
-    }
+//
+//    @ExceptionHandler(UserIsNotAuthorizedException.class)
+//    public ResponseEntity<String> checkAuth() {
+//        return new ResponseEntity<>("User isn't authorized.", HttpStatus.LOCKED);
+//    }
+//
+//    @ExceptionHandler(UserBlockedException.class)
+//    public ResponseEntity<String> blockUser() {
+//        return new ResponseEntity<>("User is blocked.", HttpStatus.LOCKED);
+//    }
 
     //WALLET
 

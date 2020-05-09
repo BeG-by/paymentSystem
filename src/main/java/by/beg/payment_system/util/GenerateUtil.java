@@ -17,20 +17,6 @@ public class GenerateUtil {
     }
 
 
-    public static String generateToken() {
-        int randomNum = random.nextInt();
-        char[] charTokens = new char[7];
-
-        for (int i = 0; i < charTokens.length; i++) {
-            charTokens[i] = chars[random.nextInt(chars.length)];
-        }
-
-        String string = new String(charTokens);
-
-        return string + randomNum;
-
-    }
-
     public static String generateWalletValue() {
         int max = 999_999_999;
         int min = 100_000_000;

@@ -77,7 +77,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         message.setSubject("Notification about blocking.");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy" , Locale.ENGLISH);
-        message.setText("You have been blocked. (" + user.getLastUpdate().format(formatter) + ")");
+//        message.setText("You have been blocked. (" + user.getLastUpdate().format(formatter) + ")");
 
         javaMailSender.send(message);
         log.info("Message has been sent to user: " + user);

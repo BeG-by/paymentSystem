@@ -17,7 +17,7 @@ Content-Type: application/json
 
 ###
 
-POST localhost:8080/user/authorization
+POST localhost:8080/user/authentication
 Content-Type: application/json
 
 {
@@ -27,25 +27,24 @@ Content-Type: application/json
 
 ###
 
-GET localhost:8080/user/logout
+GET localhost:8080/user/admin/findByEmail/example@email.com
 Content-Type: application/json
-token: test
-
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDQ1MTc4LCJleHAiOjE1ODkwNDYzNzh9.NOBukmrjICFkTbB5htHXTrjMJNLp9IRCXAxhv0jZBlc
 ###
 
-GET localhost:8080/user/findById/1
+GET localhost:8080/user/admin/findById/2
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTA0MzY4NywiZXhwIjoxNTg5MDQ0ODg3fQ.6aW3_jeR9ze_Cl3i83Q5_vQxxs6n07xIdYjRZgBi0zs
 ###
 
-PUT localhost:8080/user/update
+PUT localhost:8080/user/admin/update
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDQ1OTYyLCJleHAiOjE1ODkwNDcxNjJ9.z4sspoVmHYSAhVnbMManVoPhyQ0-1iDMHJO1_H7qUr8
 
 {
-  "id": 5,
+  "id": 1,
   "email": "edit@email.com",
-  "password": "password",
+  "password": "password33",
   "firstName": "first name",
   "lastName": "last name",
   "passport": "edit",
@@ -59,27 +58,28 @@ token: test
 
 ###
 
-DELETE localhost:8080/user/delete/1
+DELETE localhost:8080/user/admin/delete/3
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIiwiVVNFUiJdLCJpYXQiOjE1ODkwMzk4NzYsImV4cCI6MTU4OTA0MTA3Nn0.M4vzIe0EM35DWtnXlCnyoSFrz7rQfVOEF5YKX1yIk5I
 ###
 
-GET localhost:8080/user/getAll
+GET localhost:8080/user/admin/findAll
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIiwiVVNFUiJdLCJpYXQiOjE1ODkwMzk4NzYsImV4cCI6MTU4OTA0MTA3Nn0.M4vzIe0EM35DWtnXlCnyoSFrz7rQfVOEF5YKX1yIk5I
 ###
 
-PUT localhost:8080/user/getAdminRole/3
+PUT localhost:8080/user/admin/establishAdminRole/2
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIiwiVVNFUiJdLCJpYXQiOjE1ODkwMzk4NzYsImV4cCI6MTU4OTA0MTA3Nn0.M4vzIe0EM35DWtnXlCnyoSFrz7rQfVOEF5YKX1yIk5I
+
 ###
 
-GET localhost:8080/user/findByWalletValue/USD111111111
+GET localhost:8080/user/admin/findByWalletValue/USD111111111
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTA0MzY4NywiZXhwIjoxNTg5MDQ0ODg3fQ.6aW3_jeR9ze_Cl3i83Q5_vQxxs6n07xIdYjRZgBi0zs
 ###
 
-PUT localhost:8080/user/changeStatus/4/BLOCKED
+PUT localhost:8080/user/admin/changeStatus/2/BLOCKED
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIiwiVVNFUiJdLCJpYXQiOjE1ODkwMzk4NzYsImV4cCI6MTU4OTA0MTA3Nn0.M4vzIe0EM35DWtnXlCnyoSFrz7rQfVOEF5YKX1yIk5I
 ###

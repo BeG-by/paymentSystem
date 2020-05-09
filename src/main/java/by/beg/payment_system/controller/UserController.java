@@ -1,12 +1,11 @@
 package by.beg.payment_system.controller;
 
+import by.beg.payment_system.dto.AuthenticationRequestDTO;
 import by.beg.payment_system.dto.AuthenticationResponseDTO;
-import by.beg.payment_system.dto.UserAuthorizationDTO;
+import by.beg.payment_system.dto.UserResponseDTO;
 import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.Status;
-import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.user.User;
-import by.beg.payment_system.model.user.UserRole;
 import by.beg.payment_system.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,105 +29,66 @@ public class UserController {
     //USER
 
     @PostMapping("/registration")
-    public ResponseEntity<User> registration(@RequestBody @Valid User user) throws UserIsPresentException {
+    public ResponseEntity<UserResponseDTO> registration(@RequestBody @Valid User user) throws UserIsPresentException {
         return new ResponseEntity<>(userService.registration(user), HttpStatus.OK);
     }
 
 
-    @PostMapping("/authorization")
-    public ResponseEntity<AuthenticationResponseDTO> authorization(@RequestBody @Valid UserAuthorizationDTO user) throws UserNotFoundException {
-        return new ResponseEntity<>(userService.authorization(user), HttpStatus.OK);
-    }
-
-    @GetMapping("/logout")
-    public ResponseEntity<User> logout(@RequestHeader String token) throws UserIsNotAuthorizedException, UserBlockedException {
-        User user = userService.checkAuthorization(token);
-        return new ResponseEntity<>(userService.logout(user), HttpStatus.OK);
-
+    @PostMapping("/authentication")
+    public ResponseEntity<AuthenticationResponseDTO> authentication(@RequestBody @Valid AuthenticationRequestDTO user) throws UserNotFoundException {
+        return new ResponseEntity<>(userService.authentication(user), HttpStatus.OK);
     }
 
 
     //ADMIN
 
-    @GetMapping("findByEmail/{email}")
-    public ResponseEntity<User> findByEmail(@PathVariable String email, @RequestHeader String token)
-            throws UserNotFoundException, NoAccessException, UserIsNotAuthorizedException, UserBlockedException {
-
-        User user = userService.checkAuthorization(token);
-        checkAdminRole(user);
+    @GetMapping("/admin/findByEmail/{email}")
+    public ResponseEntity<UserResponseDTO> findByEmail(@PathVariable String email) throws UserNotFoundException {
         return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
     }
 
-    @GetMapping("findById/{userId}")
-    public ResponseEntity<User> findById(@PathVariable long userId, @RequestHeader String token)
-            throws UserNotFoundException, NoAccessException, UserIsNotAuthorizedException, UserBlockedException {
-
-        User user = userService.checkAuthorization(token);
-        checkAdminRole(user);
+    @GetMapping("/admin/findById/{userId}")
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable long userId) throws UserNotFoundException {
         return new ResponseEntity<>(userService.findById(userId), HttpStatus.OK);
     }
 
-    @GetMapping("findByPassport/{passport}")
-    public ResponseEntity<User> findByPassport(@PathVariable String passport, @RequestHeader String token)
-            throws UserNotFoundException, NoAccessException, UserIsNotAuthorizedException, UserBlockedException {
-
-        User user = userService.checkAuthorization(token);
-        checkAdminRole(user);
+    @GetMapping("/admin/findByPassport/{passport}")
+    public ResponseEntity<UserResponseDTO> findByPassport(@PathVariable String passport) throws UserNotFoundException {
         return new ResponseEntity<>(userService.findByPassport(passport), HttpStatus.OK);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<User> updateUser(@RequestBody @Valid User user, @RequestHeader String token)
-            throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
+    @PutMapping("/admin/update") // -encode ?
+    public ResponseEntity<String> updateUser(@RequestBody @Valid User user) throws UserNotFoundException {
+        userService.updateUser(user);
+        return new ResponseEntity<>("User with id = " + user.getId() + " has been updated", HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<User> deleteUser(@PathVariable long userId, @RequestHeader String token)
-            throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException, UserBlockedException, UnremovableStatusException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return new ResponseEntity<>(userService.deleteUser(userId), HttpStatus.OK);
+    @DeleteMapping("/admin/delete/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable long userId) throws UserNotFoundException, UnremovableStatusException {
+        userService.deleteUser(userId);
+        return new ResponseEntity<>("User with id = " + userId + " has been deleted", HttpStatus.OK);
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<User>> getUsers(@RequestHeader String token)
-            throws UserIsNotAuthorizedException, NoAccessException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    @GetMapping("/admin/findAll")
+    public ResponseEntity<List<UserResponseDTO>> findAll() {
+        return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.OK);
     }
 
-    @PutMapping("/getAdminRole/{userId}")
-    public ResponseEntity<User> getAdminRoleUser(@PathVariable long userId, @RequestHeader String token)
-            throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return new ResponseEntity<>(userService.getAdminRole(userId), HttpStatus.OK);
+    @PutMapping("/admin/establishAdminRole/{userId}")
+    public ResponseEntity<String> establishRole(@PathVariable long userId) throws UserNotFoundException {
+        userService.establishAdminRole(userId);
+        return new ResponseEntity<>("User's role with id = " + userId + " has been changed", HttpStatus.OK);
     }
 
-    @GetMapping("/findByWalletValue/{value}")
-    public ResponseEntity<User> findByWalletValue(@PathVariable String value, @RequestHeader String token)
-            throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException, WalletNotFoundException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
+    @GetMapping("/admin/findByWalletValue/{value}")
+    public ResponseEntity<UserResponseDTO> findByWalletValue(@PathVariable String value) throws UserNotFoundException, WalletNotFoundException {
         return new ResponseEntity<>(userService.findByWalletValue(value), HttpStatus.OK);
     }
 
-    @PutMapping("/changeStatus/{userId}/{status}")
-    public ResponseEntity<User> changeStatus(@RequestHeader String token, @PathVariable long userId, @PathVariable Status status)
-            throws UserIsNotAuthorizedException, NoAccessException, UserNotFoundException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return new ResponseEntity<>(userService.changeStatus(userId, status), HttpStatus.OK);
-    }
-
-    private void checkAdminRole(User user) throws NoAccessException {
-        if (!user.getUserRole().equals(UserRole.ADMIN)) {
-            throw new NoAccessException();
-        }
+    @PutMapping("/admin/changeStatus/{userId}/{status}")
+    public ResponseEntity<String> changeStatus(@PathVariable long userId, @PathVariable Status status) throws UserNotFoundException {
+        userService.changeStatus(userId, status);
+        return new ResponseEntity<>("User's status with id = " + userId + " has been changed", HttpStatus.OK);
     }
 
 }
