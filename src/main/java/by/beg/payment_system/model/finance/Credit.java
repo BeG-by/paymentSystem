@@ -37,7 +37,7 @@ public class Credit {
     private BigDecimal rate;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.AVAILABLE;
+    private Status status = Status.OPEN;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "credit")
     @JsonIgnore

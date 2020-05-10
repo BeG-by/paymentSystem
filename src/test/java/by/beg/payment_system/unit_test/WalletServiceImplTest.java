@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -62,7 +61,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void should_returnWallet_whenDeleteWallet() throws WalletNotFoundException, UnremovableStatusException {
+    void should_deleteWallet_whenValidWallet() throws WalletNotFoundException, UnremovableStatusException {
 
         User user = new User();
         Wallet wallet = new Wallet();
@@ -82,11 +81,9 @@ class WalletServiceImplTest {
                 .when(walletRepository)
                 .findByCurrencyTypeAndUser(Mockito.any(), Mockito.any());
 
-        Wallet deleteWallet = walletService.delete(CurrencyType.USD, user);
+        walletService.delete(CurrencyType.USD, user);
 
-        assertEquals(wallet.getId(), deleteWallet.getId());
         Mockito.verify(walletRepository, Mockito.times(1)).delete(wallet);
-
     }
 
 }

@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(long userId) throws UserNotFoundException, UnremovableStatusException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         long walletCount = user.getWallets().stream().filter(wallet -> wallet.getBalance().compareTo(BigDecimal.ZERO) > 0).count();
-        long depositCount = user.getDepositDetails().stream().filter(depositDetail -> !depositDetail.getDepositDetailStatus().equals(Status.DELETED)).count();
+        long depositCount = user.getDepositDetails().stream().filter(depositDetail -> !depositDetail.getDepositDetailStatus().equals(Status.CLOSED)).count();
         long creditCount = user.getCreditDetails().stream().filter(creditDetail -> !creditDetail.getCreditStatus().equals(Status.CLOSED)).count();
 
         if (walletCount > 0 || depositCount > 0 || creditCount > 0) {
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
     public void establishAdminRole(long userId) throws UserNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setUserRole(UserRole.ADMIN);
-        user.setLastUpdate(LocalDateTime.now());
+        user.setLastModified(LocalDateTime.now());
         log.info("Admin role was added for: " + user);
     }
 
@@ -143,8 +143,13 @@ public class UserServiceImpl implements UserService {
     public void changeStatus(long userId, Status status) throws UserNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setStatus(status);
-        user.setLastUpdate(LocalDateTime.now());
+        user.setLastModified(LocalDateTime.now());
         log.info("Status was changed for: " + user);
+    }
+
+    @Override
+    public User findCurrentUser(String email) throws UserNotFoundException {
+        return userRepository.findUserByEmail(email).orElseThrow(UserNotFoundException::new);
     }
 
 }

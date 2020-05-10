@@ -35,23 +35,13 @@ public class JwtUserDetailService implements UserDetailsService {
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getPassport(),
-                user.getBirthday(),
-                user.getStatus(),
-                user.getLastUpdate(),
-                user.getAddress(),
-                user.getWallets(),
-                user.getTransferDetails(),
-                user.getDepositDetails(),
-                user.getCreditDetails(),
                 createGrantedAuthority(user.getUserRole()),
                 user.getStatus().equals(Status.ACTIVE)
         );
 
         log.info("User with email (" + email + ") was loaded");
         return jwtUser;
+
     }
 
     private List<GrantedAuthority> createGrantedAuthority(UserRole userRole) {

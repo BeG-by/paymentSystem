@@ -10,12 +10,13 @@ import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.service.TransferService;
 import by.beg.payment_system.service.util.CurrencyConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ public class TransferServiceImpl implements TransferService {
     private WalletRepository walletRepository;
     private CurrencyConverter currencyConverter;
 
+    @Autowired
     public TransferServiceImpl(TransferRepository transferRepository, WalletRepository walletRepository, CurrencyConverter currencyConverter) {
         this.transferRepository = transferRepository;
         this.walletRepository = walletRepository;
@@ -36,7 +38,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public TransferDetail doTransfer(User user, TransferDetail transferDetail)
+    public void makeTransfer(User user, TransferDetail transferDetail)
             throws WalletNotFoundException, LackOfMoneyException, TargetWalletNotFoundException, CurrencyConverterException {
 
         CurrencyType currencyType = transferDetail.getCurrencyType();
@@ -69,41 +71,38 @@ public class TransferServiceImpl implements TransferService {
         transferDetail.setUser(user);
         transferDetail.setMoneyReceive(receivedMoney);
         TransferDetail transferSave = transferRepository.save(transferDetail);
-        log.info("Transfer was added: " + transferSave);
+        log.info("Transfer was made: " + transferSave);
 
-        return transferSave;
     }
 
     @Override
-    public Map<String, BigDecimal> getExchangeRates() throws CurrencyConverterException {
+    public Map<String, BigDecimal> findAllRates() throws CurrencyConverterException {
         return currencyConverter.getAllRates();
     }
 
     @Override
-    public List<TransferDetail> filterByDate(Date firstDate, Date secondDate) {
-        return transferRepository.filterByDate(firstDate, secondDate, Sort.by("date"));
+    public List<TransferDetail> findAllBetweenDate(LocalDateTime firstDate, LocalDateTime secondDate) {
+        return transferRepository.findAllByDate(firstDate, secondDate, Sort.by("date"));
     }
 
     @Override
-    public List<TransferDetail> getAll() {
+    public List<TransferDetail> findAll() {
         return transferRepository.findAll(Sort.by("date"));
     }
 
     @Override
-    public TransferDetail deleteById(long id) throws TransferNotFoundException {
+    public void deleteById(long id) throws TransferNotFoundException {
         TransferDetail transferDetail = transferRepository.findById(id).orElseThrow(TransferNotFoundException::new);
         transferRepository.delete(transferDetail);
-        log.info("TransferDetail was deleted" + transferDetail);
-        return transferDetail;
+        log.info("TransferDetail was deleted: " + transferDetail);
     }
 
     @Override
-    public List<TransferDetail> deleteBetweenDate(Date firstDate, Date secondDate) {
-        List<TransferDetail> transferDetails = transferRepository.filterByDate(firstDate, secondDate, Sort.by("date"));
+    public List<TransferDetail> deleteBetweenDate(LocalDateTime firstDate, LocalDateTime secondDate) {
+        List<TransferDetail> transferDetails = transferRepository.findAllByDate(firstDate, secondDate, Sort.by("date"));
         transferRepository.deleteAll(transferDetails);
-        transferDetails.forEach(transferDetail -> log.info("TransferDetail was deleted" + transferDetail));
+        transferDetails.forEach(transferDetail -> log.info("TransferDetail was deleted: " + transferDetail));
         return transferDetails;
     }
-
 
 }

@@ -9,17 +9,17 @@ import java.util.List;
 
 public interface DepositService {
 
-    Deposit create(Deposit deposit) throws DepositIsPresentException;
+    void create(Deposit deposit) throws DepositIsPresentException;
 
-    List<Deposit> getAllAvailable();
+    List<Deposit> findAllAvailable();
 
     Deposit findById(long depositId) throws DepositNotFoundException;
 
-    List<Deposit> getAll();
+    List<Deposit> findAll();
 
-    Deposit update(Deposit deposit) throws DepositNotFoundException;
+    void update(Deposit deposit) throws DepositNotFoundException;
 
-    Deposit delete(long depositId) throws DepositNotFoundException, UnremovableStatusException;
+    void delete(long depositId) throws DepositNotFoundException, UnremovableStatusException;
 
     List<Deposit> deleteAll();
 

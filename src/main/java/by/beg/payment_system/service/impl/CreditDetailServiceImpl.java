@@ -113,7 +113,7 @@ public class CreditDetailServiceImpl implements CreditDetailService {
 
     @Override
     public List<CreditDetail> filterByCreateDate(Date firstDate, Date secondDate) {
-        return creditDetailRepository.filterByCreateDate(firstDate, secondDate, Sort.by("startDate"));
+        return creditDetailRepository.findAllByCreateDate(firstDate, secondDate, Sort.by("startDate"));
     }
 
     @Override

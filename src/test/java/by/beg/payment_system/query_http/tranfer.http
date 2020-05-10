@@ -1,22 +1,22 @@
 POST localhost:8080/transfer
 Content-Type: application/json
-token: lhookyf1275652500
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 
 {
   "currencyType": "USD",
-  "targetWalletValue": "EUR222222222",
+  "targetWalletValue": "USD899410483",
   "moneySend": 100
 }
 ###
 
-GET localhost:8080/transfer/getExchangeRates
+GET localhost:8080/transfer/findExchangeRates
 Content-Type: application/json
-token: huxueis-1020096634
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 ###
 
-POST localhost:8080/transfer//getAll/filterByDate
+POST localhost:8080/transfer/admin/findAllBetweenDate
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTEyNzEyOSwiZXhwIjoxNTg5MTI4MzI5fQ.ZRUgeFyNiEHMcvnK-G9jH9M8edKBm7iY_7joh_lOZ4Y
 
 {
   "firstDate": "31-12-2018",
@@ -24,24 +24,19 @@ token: test
 }
 ###
 
-GET localhost:8080/transfer/getExchangeRates
+GET localhost:8080/transfer/admin/findAll
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 ###
 
-GET localhost:8080/transfer/getAll
+DELETE localhost:8080/transfer/admin/deleteById/1
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 ###
 
-DELETE localhost:8080/transfer/deleteById/3
+DELETE localhost:8080/transfer/admin/deleteAllBetweenDate
 Content-Type: application/json
-token: test
-###
-
-DELETE localhost:8080/transfer/deleteAllByDate
-Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTEyNzEyOSwiZXhwIjoxNTg5MTI4MzI5fQ.ZRUgeFyNiEHMcvnK-G9jH9M8edKBm7iY_7joh_lOZ4Y
 
 {
   "firstDate": "31-12-2010",

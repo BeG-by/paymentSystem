@@ -2,11 +2,11 @@ POST localhost:8080/user/registration
 Content-Type: application/json
 
 {
-  "email": "example@email.com",
+  "email": "example1@email.com",
   "password": "password",
   "firstName": "first name",
   "lastName": "last name",
-  "passport": "MP123456789",
+  "passport": "MP1234567891",
   "birthday": "11-03-1993",
   "address": {
     "city": "Minsk",
@@ -21,7 +21,7 @@ POST localhost:8080/user/authentication
 Content-Type: application/json
 
 {
-  "email": "example@email.com",
+  "email": "something@gmail.com",
   "password": "password"
 }
 
@@ -29,17 +29,17 @@ Content-Type: application/json
 
 GET localhost:8080/user/admin/findByEmail/example@email.com
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDQ1MTc4LCJleHAiOjE1ODkwNDYzNzh9.NOBukmrjICFkTbB5htHXTrjMJNLp9IRCXAxhv0jZBlc
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 ###
 
 GET localhost:8080/user/admin/findById/2
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTA0MzY4NywiZXhwIjoxNTg5MDQ0ODg3fQ.6aW3_jeR9ze_Cl3i83Q5_vQxxs6n07xIdYjRZgBi0zs
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 ###
 
 PUT localhost:8080/user/admin/update
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDQ1OTYyLCJleHAiOjE1ODkwNDcxNjJ9.z4sspoVmHYSAhVnbMManVoPhyQ0-1iDMHJO1_H7qUr8
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
 
 {
   "id": 1,
@@ -60,26 +60,26 @@ Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsI
 
 DELETE localhost:8080/user/admin/delete/3
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIiwiVVNFUiJdLCJpYXQiOjE1ODkwMzk4NzYsImV4cCI6MTU4OTA0MTA3Nn0.M4vzIe0EM35DWtnXlCnyoSFrz7rQfVOEF5YKX1yIk5I
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
 ###
 
 GET localhost:8080/user/admin/findAll
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIiwiVVNFUiJdLCJpYXQiOjE1ODkwMzk4NzYsImV4cCI6MTU4OTA0MTA3Nn0.M4vzIe0EM35DWtnXlCnyoSFrz7rQfVOEF5YKX1yIk5I
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 ###
 
 PUT localhost:8080/user/admin/establishAdminRole/2
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIiwiVVNFUiJdLCJpYXQiOjE1ODkwMzk4NzYsImV4cCI6MTU4OTA0MTA3Nn0.M4vzIe0EM35DWtnXlCnyoSFrz7rQfVOEF5YKX1yIk5I
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
 
 ###
 
 GET localhost:8080/user/admin/findByWalletValue/USD111111111
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTA0MzY4NywiZXhwIjoxNTg5MDQ0ODg3fQ.6aW3_jeR9ze_Cl3i83Q5_vQxxs6n07xIdYjRZgBi0zs
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
 ###
 
 PUT localhost:8080/user/admin/changeStatus/2/BLOCKED
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIiwiVVNFUiJdLCJpYXQiOjE1ODkwMzk4NzYsImV4cCI6MTU4OTA0MTA3Nn0.M4vzIe0EM35DWtnXlCnyoSFrz7rQfVOEF5YKX1yIk5I
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
 ###

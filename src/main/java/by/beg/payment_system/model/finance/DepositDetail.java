@@ -33,7 +33,7 @@ public class DepositDetail {
     private BigDecimal returnBalance;
 
     @Enumerated(EnumType.STRING)
-    private Status depositDetailStatus = Status.UNAVAILABLE;
+    private Status depositDetailStatus = Status.OPEN;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -44,7 +44,6 @@ public class DepositDetail {
     @EqualsAndHashCode.Exclude
     @JsonBackReference
     private User user;
-
 
     public DepositDetail(Date startDate, Date finishDate, BigDecimal balance, BigDecimal returnBalance, Deposit deposit) {
         this.startDate = startDate;

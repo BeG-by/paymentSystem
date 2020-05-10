@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ public class UserResponseDTO {
     private LocalDate birthday;
     private UserRole userRole;
     private Status status;
-    private LocalDateTime lastUpdate;
+    private LocalDateTime lastModified;
     private Address address;
     private Set<Wallet> wallets;
     private List<DepositDetail> depositDetails;
@@ -43,7 +44,7 @@ public class UserResponseDTO {
                 user.getBirthday(),
                 user.getUserRole(),
                 user.getStatus(),
-                user.getLastUpdate(),
+                user.getLastModified(),
                 user.getAddress(),
                 user.getWallets(),
                 user.getDepositDetails(),

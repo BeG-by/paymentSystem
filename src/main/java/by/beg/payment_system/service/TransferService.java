@@ -5,22 +5,23 @@ import by.beg.payment_system.model.finance.TransferDetail;
 import by.beg.payment_system.model.user.User;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 public interface TransferService {
 
-    TransferDetail doTransfer(User user, TransferDetail transferDetail) throws WalletNotFoundException, LackOfMoneyException, TargetWalletNotFoundException, CurrencyConverterException;
+    void makeTransfer(User user, TransferDetail transferDetail)
+            throws WalletNotFoundException, LackOfMoneyException, TargetWalletNotFoundException, CurrencyConverterException;
 
-    Map<String, BigDecimal> getExchangeRates() throws CurrencyConverterException;
+    Map<String, BigDecimal> findAllRates() throws CurrencyConverterException;
 
-    List<TransferDetail> filterByDate(Date firstDate, Date secondDate);
+    List<TransferDetail> findAllBetweenDate(LocalDateTime firstDate, LocalDateTime secondDate);
 
-    List<TransferDetail> getAll();
+    List<TransferDetail> findAll();
 
-    TransferDetail deleteById(long id) throws TransferNotFoundException;
+    void deleteById(long id) throws TransferNotFoundException;
 
-    List<TransferDetail> deleteBetweenDate(Date firstDate, Date secondDate);
+    List<TransferDetail> deleteBetweenDate(LocalDateTime firstDate, LocalDateTime secondDate);
 
 }

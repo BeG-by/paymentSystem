@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -22,7 +21,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Set;
 
@@ -63,7 +61,7 @@ public class User {
     private Status status = Status.ACTIVE;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime lastUpdate = LocalDateTime.now(ZoneId.of("UTC+3"));
+    private LocalDateTime lastModified = LocalDateTime.now();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -89,6 +87,5 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     private List<CreditDetail> creditDetails;
-
 
 }

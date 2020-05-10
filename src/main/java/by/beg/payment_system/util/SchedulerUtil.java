@@ -13,7 +13,6 @@ public class SchedulerUtil {
     private DepositDetailService depositDetailService;
     private CreditDetailService creditDetailService;
 
-
     public SchedulerUtil(DepositDetailService depositDetailService, CreditDetailService creditDetailService) {
         this.depositDetailService = depositDetailService;
         this.creditDetailService = creditDetailService;

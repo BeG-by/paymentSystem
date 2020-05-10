@@ -7,18 +7,21 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChargeWalletDTO {
+public class DepositOpenRequestDTO {
 
     @DecimalMin(message = "Value \"money\" must be more than 1", value = "1")
     private BigDecimal money;
 
-    @NotNull(message = "Type can't be empty.")
-    private CurrencyType type;
+    @NotNull(message = "Currency type can't be empty.")
+    private CurrencyType currencyType;
+
+    @Pattern(regexp = "[A-Z]{3}\\d+", message = "Wrong deposit name")
+    private String depositName;
 
 }
-

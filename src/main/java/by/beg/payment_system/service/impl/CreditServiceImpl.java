@@ -40,7 +40,7 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public List<Credit> getAllAvailable() {
         return creditRepository.findAll().stream().
-                filter(credit -> credit.getStatus().equals(Status.AVAILABLE)).collect(Collectors.toList());
+                filter(credit -> credit.getStatus().equals(Status.OPEN)).collect(Collectors.toList());
     }
 
 

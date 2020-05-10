@@ -9,8 +9,9 @@ import by.beg.payment_system.model.finance.Wallet;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.service.WalletService;
-import by.beg.payment_system.util.GenerateUtil;
+import by.beg.payment_system.util.GenerateWalletUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class WalletServiceImpl implements WalletService {
 
     private WalletRepository walletRepository;
 
+    @Autowired
     public WalletServiceImpl(WalletRepository walletRepository) {
         this.walletRepository = walletRepository;
     }
@@ -35,7 +37,7 @@ public class WalletServiceImpl implements WalletService {
             throw new WalletIsExistException();
         }
 
-        String walletValue = type.toString() + GenerateUtil.generateWalletValue();
+        String walletValue = type.toString() + GenerateWalletUtil.generateWalletValue();
 
         Wallet save = walletRepository.save(new Wallet(walletValue, type, user));
         log.info("Wallet was added: " + save);
@@ -43,29 +45,30 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public List<Wallet> getAll(User user) {
+    public List<Wallet> findAll(User user) {
         return walletRepository.findAllByUser(user);
     }
 
+
     @Override
-    public Wallet delete(CurrencyType type, User user) throws WalletNotFoundException, UnremovableStatusException {
+    public void delete(CurrencyType type, User user) throws WalletNotFoundException, UnremovableStatusException {
+
         Wallet wallet = walletRepository.findByCurrencyTypeAndUser(type, user).orElseThrow(WalletNotFoundException::new);
 
         long depositCount = user.getDepositDetails().stream().
-                filter(depositDetail -> !depositDetail.getDepositDetailStatus().equals(Status.DELETED)
+                filter(depositDetail -> !depositDetail.getDepositDetailStatus().equals(Status.CLOSED)
                         && depositDetail.getDeposit().getCurrencyType().equals(type)).count();
 
         long creditCount = user.getCreditDetails().stream()
                 .filter(creditDetail -> !creditDetail.getCreditStatus().equals(Status.CLOSED)
                         && creditDetail.getCredit().getCurrencyType().equals(type)).count();
 
-        if (depositCount > 0 || creditCount > 0 || wallet.getBalance().compareTo(new BigDecimal(0)) > 0) {
+        if (depositCount > 0 || creditCount > 0 || wallet.getBalance().compareTo(BigDecimal.ZERO) > 0) {
             throw new UnremovableStatusException();
         }
 
         walletRepository.delete(wallet);
         log.info("Wallet was deleted: " + wallet);
-        return wallet;
     }
 
     @Override
@@ -77,11 +80,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Wallet clear(CurrencyType type, User user) throws WalletNotFoundException {
+    public void clear(CurrencyType type, User user) throws WalletNotFoundException {
         Wallet wallet = walletRepository.findByCurrencyTypeAndUser(type, user).orElseThrow(WalletNotFoundException::new);
-        wallet.setBalance(new BigDecimal(0));
+        wallet.setBalance(BigDecimal.ZERO);
         log.info("User has cleared the balance: " + wallet);
-        return wallet;
     }
 
 }

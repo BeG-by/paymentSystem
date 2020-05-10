@@ -30,6 +30,9 @@ public class JwtTokenProvider {
     @Value("${jwt.token.prefix}")
     private String prefix;
 
+    @Value("${jwt.token.header}")
+    private String header;
+
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -72,7 +75,7 @@ public class JwtTokenProvider {
 
 
     public String resolveToken(HttpServletRequest req) {
-        String token = req.getHeader("Authorization");
+        String token = req.getHeader(header);
         if (token != null && token.startsWith(prefix)) {
             return token.substring(prefix.length());
         }

@@ -33,4 +33,6 @@ public interface UserService {
 
     void changeStatus(long userId, Status status) throws UserNotFoundException;
 
+    User findCurrentUser(String email) throws UserNotFoundException;
+
 }

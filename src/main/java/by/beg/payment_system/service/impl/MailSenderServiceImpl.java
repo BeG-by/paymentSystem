@@ -9,6 +9,7 @@ import by.beg.payment_system.repository.UserRepository;
 import by.beg.payment_system.service.MailSenderService;
 import by.beg.payment_system.service.util.CurrencyConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,6 +34,7 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Value("${spring.mail.username}")
     private String username;
 
+    @Autowired
     public MailSenderServiceImpl(JavaMailSender javaMailSender,
                                  UserRepository userRepository, CurrencyConverter currencyConverter) {
         this.javaMailSender = javaMailSender;
@@ -76,8 +78,8 @@ public class MailSenderServiceImpl implements MailSenderService {
         message.setFrom(username);
         message.setSubject("Notification about blocking.");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy" , Locale.ENGLISH);
-//        message.setText("You have been blocked. (" + user.getLastUpdate().format(formatter) + ")");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH);
+        message.setText("You have been blocked. (" + user.getLastModified().format(formatter) + ")");
 
         javaMailSender.send(message);
         log.info("Message has been sent to user: " + user);
