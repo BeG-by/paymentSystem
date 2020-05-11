@@ -1,4 +1,4 @@
-package by.beg.payment_system.security;
+package by.beg.payment_system.security.jwt;
 
 import by.beg.payment_system.model.user.UserRole;
 import io.jsonwebtoken.*;

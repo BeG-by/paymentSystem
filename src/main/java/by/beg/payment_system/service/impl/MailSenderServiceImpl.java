@@ -54,7 +54,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         String ratesResult = String.format("%-20s%-20s%n", "Currency", "Rate");
 
-        for (Map.Entry<String, BigDecimal> entry : currencyConverter.getAllRates().entrySet()) {
+        for (Map.Entry<String, BigDecimal> entry : currencyConverter.receiveAllRates().entrySet()) {
             String format = String.format(
                     "%-15s%-15s%n", entry.getKey(), entry.getValue());
             ratesResult = ratesResult.concat(format);
@@ -70,8 +70,8 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Override
     public void sendBlockNotification(long userId) throws UnremovableStatusException {
 
-        User user = userRepository.findById(userId).
-                filter(u -> u.getStatus().equals(Status.BLOCKED)).orElseThrow(UnremovableStatusException::new);
+        User user = userRepository.findById(userId)
+                .filter(u -> u.getStatus().equals(Status.BLOCKED)).orElseThrow(UnremovableStatusException::new);
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());

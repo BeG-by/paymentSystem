@@ -1,42 +1,42 @@
 POST localhost:8080/creditDetail/create
 Content-Type: application/json
-token: lhookyf1275652500
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5Mjc2NSwiZXhwIjoxNTg5MTkzOTY1fQ.T7Ocvwk0X7SSfyRfTRuxkqkvIfTqz-pnI3ffHJ2BkFY
 
 {
   "money": 1000,
-  "creditName": "USD360"
+  "creditName": "EUR360"
 }
 
 ###
 
-GET localhost:8080/creditDetail/get
+GET localhost:8080/creditDetail/find
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###
 
 POST localhost:8080/creditDetail/repay
 Content-Type: application/json
-token: lhookyf1275652500
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5Mjc2NSwiZXhwIjoxNTg5MTkzOTY1fQ.T7Ocvwk0X7SSfyRfTRuxkqkvIfTqz-pnI3ffHJ2BkFY
 
 {
   "money": 1200,
-  "creditName": "USD720"
+  "creditName": "EUR360"
 }
 ###
 
-GET localhost:8080/creditDetail/get/1
+GET localhost:8080/creditDetail/admin/findById/1
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###
 
-GET localhost:8080/creditDetail/getAllByStatus/CLOSED
+GET localhost:8080/creditDetail/admin/findAllByStatus/CLOSED
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MjM2NywiZXhwIjoxNTg5MTkzNTY3fQ.qRwUZeYXyvIWShdLyIoTpD6GM67HPnu-pXmDO5cr4Q4
 ###
 
-POST localhost:8080/creditDetail//getAll/filterByCreateDate
+POST localhost:8080/creditDetail/admin/findAllBetweenDate
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MjM2NywiZXhwIjoxNTg5MTkzNTY3fQ.qRwUZeYXyvIWShdLyIoTpD6GM67HPnu-pXmDO5cr4Q4
 
 {
   "firstDate": "31-12-2018",
@@ -44,12 +44,12 @@ token: test
 }
 ###
 
-DELETE localhost:8080/creditDetail//deleteAll
+DELETE localhost:8080/creditDetail/admin/deleteAll
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MjM2NywiZXhwIjoxNTg5MTkzNTY3fQ.qRwUZeYXyvIWShdLyIoTpD6GM67HPnu-pXmDO5cr4Q4
 ###
 
-PUT localhost:8080/creditDetail//refreshAll
+PUT localhost:8080/creditDetail/admin/refreshAll
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MjM2NywiZXhwIjoxNTg5MTkzNTY3fQ.qRwUZeYXyvIWShdLyIoTpD6GM67HPnu-pXmDO5cr4Q4
 ###

@@ -1,6 +1,6 @@
-POST localhost:8080/deposit/create
+POST localhost:8080/deposit/admin/create
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE3NzQyOSwiZXhwIjoxNTg5MTc4NjI5fQ.oUnP1kphJT7N_znq02CnaKGBaj8iq3Rwv7JbmoquafA
 
 {
   "name": "BYN240",
@@ -12,29 +12,32 @@ token: test
 
 ###
 
-GET localhost:8080/deposit/getAllAvailable
+GET localhost:8080/deposit/findAllAvailable
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
+
 ###
 
-GET localhost:8080/deposit/getAll
+GET localhost:8080/deposit/admin/findAll
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE3NzQyOSwiZXhwIjoxNTg5MTc4NjI5fQ.oUnP1kphJT7N_znq02CnaKGBaj8iq3Rwv7JbmoquafA
+
 ###
 
-GET localhost:8080/deposit/findById/3
+GET localhost:8080/deposit/admin/findById/3
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE3NzQyOSwiZXhwIjoxNTg5MTc4NjI5fQ.oUnP1kphJT7N_znq02CnaKGBaj8iq3Rwv7JbmoquafA
+
 ###
 
-DELETE localhost:8080/deposit/delete/6
+DELETE localhost:8080/deposit/admin/deleteById/6
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###
 
-DELETE localhost:8080/deposit/deleteAll
+DELETE localhost:8080/deposit/admin/deleteAll
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###
 
 

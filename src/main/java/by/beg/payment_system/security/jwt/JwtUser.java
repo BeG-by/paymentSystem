@@ -1,4 +1,4 @@
-package by.beg.payment_system.security;
+package by.beg.payment_system.security.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;

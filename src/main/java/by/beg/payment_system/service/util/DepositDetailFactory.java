@@ -6,21 +6,18 @@ import by.beg.payment_system.model.finance.DepositDetail;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 public class DepositDetailFactory {
 
-    public static DepositDetail getInstance(Deposit deposit, BigDecimal startBalance) {
+    public static DepositDetail createInstance(Deposit deposit, BigDecimal startBalance) {
 
-        Date startDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
-        calendar.add(Calendar.DATE, deposit.getPeriod());
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime finishDate = startDate.plusDays(deposit.getPeriod());
         BigDecimal returnBalance = calculate(deposit.getPeriod(), deposit.getRate(), startBalance, deposit.isCapitalization());
 
-        return new DepositDetail(startDate, calendar.getTime(), startBalance, returnBalance, deposit);
+        return new DepositDetail(startDate, finishDate, startBalance, returnBalance, deposit);
 
     }
 

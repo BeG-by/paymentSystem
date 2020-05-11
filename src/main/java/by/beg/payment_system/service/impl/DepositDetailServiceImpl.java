@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,12 +57,12 @@ public class DepositDetailServiceImpl implements DepositDetailService {
             throw new LackOfMoneyException();
         }
 
-        Deposit deposit = depositRepository.findByName(openDTO.getDepositName()).
-                filter(d -> d.getStatus().equals(Status.OPEN)).orElseThrow(DepositNotFoundException::new);
+        Deposit deposit = depositRepository.findByName(openDTO.getDepositName())
+                .filter(d -> d.getStatus().equals(Status.OPEN)).orElseThrow(DepositNotFoundException::new);
 
         wallet.setBalance(wallet.getBalance().subtract(moneySend));
         BigDecimal receivedMoney = currencyConverter.convertMoney(openDTO.getCurrencyType(), deposit.getCurrencyType(), moneySend);
-        DepositDetail depositDetail = DepositDetailFactory.getInstance(deposit, receivedMoney);
+        DepositDetail depositDetail = DepositDetailFactory.createInstance(deposit, receivedMoney);
         depositDetail.setUser(user);
 
         DepositDetail depositDetailSave = depositDetailRepository.save(depositDetail);
@@ -74,35 +73,35 @@ public class DepositDetailServiceImpl implements DepositDetailService {
 
     @Override
     public List<DepositDetail> findAllByUser(User user) {
-        List<DepositDetail> depositDetails = depositDetailRepository.findAllByUser(user).stream().
-                filter(deposit -> !deposit.getDepositDetailStatus().equals(Status.CLOSED)).collect(Collectors.toList());
+        List<DepositDetail> depositDetails = depositDetailRepository.findAllByUser(user)
+                .stream()
+                .filter(deposit -> deposit.getDepositDetailStatus().equals(Status.OPEN))
+                .filter(deposit -> deposit.getFinishDate().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
 
-        Date today = new Date();
-
-        for (DepositDetail depositDetail : depositDetails) {
-            if (depositDetail.getFinishDate().before(today)) {
-                depositDetail.setDepositDetailStatus(Status.PRE_CLOSED);
-                log.info("DepositDetail was changed status: " + depositDetail);
-            }
-        }
+        depositDetails.forEach(deposit -> {
+            deposit.setDepositDetailStatus(Status.PRE_CLOSED);
+            log.info("DepositDetail was changed status: " + deposit);
+        });
 
         return depositDetails;
     }
 
     @Override
     public List<DepositDetail> pickUp(User user) throws WalletNotFoundException {
-        List<DepositDetail> allByUser = depositDetailRepository.findAllByUser(user).stream().
-                filter(deposit -> deposit.getDepositDetailStatus().equals(Status.PRE_CLOSED)).collect(Collectors.toList());
+        List<DepositDetail> depositDetails = depositDetailRepository.findAllByUser(user)
+                .stream()
+                .filter(deposit -> deposit.getDepositDetailStatus().equals(Status.PRE_CLOSED))
+                .collect(Collectors.toList());
 
-
-        for (DepositDetail depositDetail : allByUser) {
+        for (DepositDetail depositDetail : depositDetails) {
             Wallet wallet = walletRepository.findByCurrencyTypeAndUser(depositDetail.getDeposit().getCurrencyType(), user).orElseThrow(WalletNotFoundException::new);
             wallet.setBalance(wallet.getBalance().add(depositDetail.getReturnBalance()));
             depositDetail.setDepositDetailStatus(Status.CLOSED);
             log.info("DepositDetail was changed status: " + depositDetail);
         }
 
-        return allByUser;
+        return depositDetails;
     }
 
     @Override
@@ -143,17 +142,17 @@ public class DepositDetailServiceImpl implements DepositDetailService {
 
     @Override
     public void refreshAll() {
-        List<DepositDetail> depositDetails = depositDetailRepository.findAll().stream()
-                .filter(depositDetail -> !depositDetail.getDepositDetailStatus().equals(Status.CLOSED)).collect(Collectors.toList());
+        List<DepositDetail> depositDetails = depositDetailRepository.findAll()
+                .stream()
+                .filter(deposit -> deposit.getDepositDetailStatus().equals(Status.OPEN))
+                .filter(deposit -> deposit.getFinishDate().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
 
-        Date today = new Date();
+        depositDetails.forEach(deposit -> {
+            deposit.setDepositDetailStatus(Status.PRE_CLOSED);
+            log.info("DepositDetail was changed status: " + deposit);
+        });
 
-        for (DepositDetail depositDetail : depositDetails) {
-            if (depositDetail.getFinishDate().before(today)) {
-                depositDetail.setDepositDetailStatus(Status.PRE_CLOSED);
-                log.info("DepositDetail's status was changed: " + depositDetail);
-            }
-        }
     }
 
 }

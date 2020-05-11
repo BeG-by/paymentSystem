@@ -41,8 +41,10 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     public List<Deposit> findAllAvailable() {
-        return depositRepository.findAll().stream()
-                .filter(deposit -> deposit.getStatus().equals(Status.OPEN)).collect(Collectors.toList());
+        return depositRepository.findAll()
+                .stream()
+                .filter(deposit -> deposit.getStatus().equals(Status.OPEN))
+                .collect(Collectors.toList());
     }
 
     @Override

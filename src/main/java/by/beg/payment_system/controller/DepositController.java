@@ -58,10 +58,10 @@ public class DepositController {
     }
 
 
-    @DeleteMapping("/admin/delete/{depositId}")
+    @DeleteMapping("/admin/deleteById/{depositId}")
     public ResponseEntity<String> delete(@PathVariable long depositId) throws DepositNotFoundException, UnremovableStatusException {
         depositService.delete(depositId);
-        return ResponseEntity.ok("Deposit with id = " + depositId + "");
+        return ResponseEntity.ok("Deposit with id = " + depositId + " has been deleted");
     }
 
     @DeleteMapping("/admin/deleteAll")

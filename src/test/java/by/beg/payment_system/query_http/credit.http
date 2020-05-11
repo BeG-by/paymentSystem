@@ -1,7 +1,6 @@
-POST localhost:8080/credit/create
+POST localhost:8080/credit/admin/create
 Content-Type: application/json
-Authorization: Pay_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg4OTU1Mjg1LCJleHAiOjE1ODg5NTY0ODV9.raG5UoblMpZgVWwCP77Zd3JK_oB86dimOLeugASZa6w
-token: wzyovxq-1346522408
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5Mjc2NSwiZXhwIjoxNTg5MTkzOTY1fQ.T7Ocvwk0X7SSfyRfTRuxkqkvIfTqz-pnI3ffHJ2BkFY
 
 {
   "name": "USD721",
@@ -12,32 +11,31 @@ token: wzyovxq-1346522408
 
 ###
 
-GET localhost:8080/credit/getAllAvailable
+GET localhost:8080/credit/findAllAvailable
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 
 ###
 
-GET localhost:8080/credit/getAll
+GET localhost:8080/credit/admin/findAll
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 
 ###
 
-GET localhost:8080/credit/findById/1
+GET localhost:8080/credit/admin/findById/1
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
+###
+
+DELETE localhost:8080/deposit/admin/deleteById/1
+Content-Type: application/json
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 
 ###
 
-DELETE localhost:8080/deposit/delete/1
+DELETE localhost:8080/deposit/admin/deleteAll
 Content-Type: application/json
-token: test
-
-###
-
-DELETE localhost:8080/deposit/deleteAll
-Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 
 ###

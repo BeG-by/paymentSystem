@@ -1,6 +1,6 @@
 POST localhost:8080/depositDetail/create
 Content-Type: application/json
-token: huxueis-1020096634
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE3OTk3OCwiZXhwIjoxNTg5MTgxMTc4fQ.EWatMxftRBAOCqjDFzyqPeiOZvjL2hIFeu5JnI62pUA
 
 {
   "money": 100,
@@ -9,33 +9,37 @@ token: huxueis-1020096634
 }
 ###
 
-GET localhost:8080/depositDetail/getAll/132
+GET localhost:8080/depositDetail/admin/findAll/3
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###
 
 PUT localhost:8080/depositDetail/pickUp
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###
 
-GET localhost:8080/depositDetail/getAllByStatus/UNAVAILABLE
+GET localhost:8080/depositDetail/admin/findAllByStatus/OPEN
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE3OTk3OCwiZXhwIjoxNTg5MTgxMTc4fQ.EWatMxftRBAOCqjDFzyqPeiOZvjL2hIFeu5JnI62pUA
 ###
 
-POST localhost:8080/depositDetail//getAll/filterByCreateDate
+POST localhost:8080/depositDetail/admin/findAllBetweenDate
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 
 {
-  "firstDate": "31-12-2018",
-  "secondDate": "31-12-2025"
+  "firstDate": "31-12-2015",
+  "secondDate": "31-12-2024"
 }
 ###
 
-DELETE localhost:8080/depositDetail/deleteAll
+DELETE localhost:8080/depositDetail/admin/deleteAll
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
+###
 
+PUT localhost:8080/depositDetail/admin/refreshAll
+Content-Type: application/json
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###

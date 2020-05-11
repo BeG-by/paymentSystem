@@ -93,7 +93,7 @@ class TransferServiceImplTest {
         transferDetail.setMoneySend(new BigDecimal(100));
 
         Wallet targetWallet = new Wallet();
-        targetWallet.setBalance(new BigDecimal(0));
+        targetWallet.setBalance(BigDecimal.ZERO);
         targetWallet.setCurrencyType(CurrencyType.USD);
 
         Mockito.doReturn(Optional.of(targetWallet))
@@ -110,7 +110,7 @@ class TransferServiceImplTest {
 
 
         assertEquals(new BigDecimal(50), wallet.getBalance());
-        assertEquals(new BigDecimal(0), targetWallet.getBalance());
+        assertEquals(BigDecimal.ZERO, targetWallet.getBalance());
         assertNull(transferDetail.getMoneyReceive());
 
         Mockito.verify(walletRepository, Mockito.times(0)).findWalletByWalletValue(Mockito.any());

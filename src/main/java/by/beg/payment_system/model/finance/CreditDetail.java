@@ -8,7 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -20,14 +20,11 @@ public class CreditDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private LocalDateTime startDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date finishDate;
+    private LocalDateTime finishDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date lastUpdate;
+    private LocalDateTime lastModified;
 
     @Column(precision = 20, scale = 2)
     private BigDecimal startDebt;
@@ -51,10 +48,17 @@ public class CreditDetail {
     @JsonBackReference
     private User user;
 
-    public CreditDetail(Date startDate, Date finishDate, Date lastUpdate, BigDecimal startDebt, BigDecimal currentDebt, BigDecimal fullDebt, Credit credit) {
+    public CreditDetail(LocalDateTime startDate,
+                        LocalDateTime finishDate,
+                        LocalDateTime lastModified,
+                        BigDecimal startDebt,
+                        BigDecimal currentDebt,
+                        BigDecimal fullDebt,
+                        Credit credit) {
+
         this.startDate = startDate;
         this.finishDate = finishDate;
-        this.lastUpdate = lastUpdate;
+        this.lastModified = lastModified;
         this.startDebt = startDebt;
         this.currentDebt = currentDebt;
         this.fullDebt = fullDebt;

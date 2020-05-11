@@ -1,4 +1,4 @@
-package by.beg.payment_system.security;
+package by.beg.payment_system.security.jwt;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

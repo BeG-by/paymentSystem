@@ -29,20 +29,20 @@ Content-Type: application/json
 
 GET localhost:8080/user/admin/findByEmail/example@email.com
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###
 
-GET localhost:8080/user/admin/findById/2
+GET localhost:8080/user/admin/findById/3
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###
 
 PUT localhost:8080/user/admin/update
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE4MjU3MiwiZXhwIjoxNTg5MTgzNzcyfQ.t2r3-k27rkSna9BpYGMQOUBQec_Npx7Cahc2wFFCjhk
 
 {
-  "id": 1,
+  "id": 3,
   "email": "edit@email.com",
   "password": "password33",
   "firstName": "first name",
@@ -68,9 +68,9 @@ Content-Type: application/json
 Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 ###
 
-PUT localhost:8080/user/admin/establishAdminRole/2
+PUT localhost:8080/user/admin/establishAdminRole/3
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE4MzM5MywiZXhwIjoxNTg5MTg0NTkzfQ.S761mxdtoaE4jV4xW9k-kjDiP7tRfxTMLrt4zYy2mqg
 
 ###
 
@@ -79,7 +79,7 @@ Content-Type: application/json
 Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
 ###
 
-PUT localhost:8080/user/admin/changeStatus/2/BLOCKED
+PUT localhost:8080/user/admin/changeStatus/3/ACTIVE
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###

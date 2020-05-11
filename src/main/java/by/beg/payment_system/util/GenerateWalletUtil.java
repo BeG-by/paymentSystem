@@ -6,7 +6,7 @@ public class GenerateWalletUtil {
 
     private static Random random = new Random();
     private static char[] digits;
-    public final static int WALLET_LENGTH = 12;
+    private final static int WALLET_LENGTH = 12;
 
     static {
         digits = new char[9];

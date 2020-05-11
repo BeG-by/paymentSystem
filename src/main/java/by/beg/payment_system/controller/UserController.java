@@ -67,7 +67,7 @@ public class UserController {
         return ResponseEntity.ok("User with id = " + user.getId() + " has been updated");
     }
 
-    @DeleteMapping("/admin/delete/{userId}")
+    @DeleteMapping("/admin/deleteById/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable long userId) throws UserNotFoundException, UnremovableStatusException {
         userService.deleteUser(userId);
         return ResponseEntity.ok("User with id = " + userId + " has been deleted");
@@ -81,7 +81,7 @@ public class UserController {
     @PutMapping("/admin/establishAdminRole/{userId}")
     public ResponseEntity<String> establishRole(@PathVariable long userId) throws UserNotFoundException {
         userService.establishAdminRole(userId);
-        return ResponseEntity.ok("User's role with id = " + userId + " has been changed");
+        return ResponseEntity.ok("Role of user with id = " + userId + " has been changed");
     }
 
     @GetMapping("/admin/findByWalletValue/{value}")
@@ -92,7 +92,7 @@ public class UserController {
     @PutMapping("/admin/changeStatus/{userId}/{status}")
     public ResponseEntity<String> changeStatus(@PathVariable long userId, @PathVariable Status status) throws UserNotFoundException {
         userService.changeStatus(userId, status);
-        return ResponseEntity.ok("User's status with id = " + userId + " has been changed");
+        return ResponseEntity.ok("Status of user with id = " + userId + " has been changed");
     }
 
 }

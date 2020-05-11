@@ -6,20 +6,17 @@ import by.beg.payment_system.model.finance.CreditDetail;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class CreditDetailFactory {
 
-    public static CreditDetail getInstance(Credit credit, BigDecimal startDebt) {
+    public static CreditDetail createInstance(Credit credit, BigDecimal startDebt) {
 
-        Date startDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
-        calendar.add(Calendar.DATE, credit.getPeriod());
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime finishDate = startDate.plusDays(credit.getPeriod());
         BigDecimal fullDebt = calculate(credit.getPeriod(), credit.getRate(), startDebt);
 
-        return new CreditDetail(startDate, calendar.getTime(), startDate, startDebt, fullDebt, fullDebt, credit);
+        return new CreditDetail(startDate, finishDate, startDate, startDebt, fullDebt, fullDebt, credit);
 
     }
 

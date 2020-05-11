@@ -1,6 +1,6 @@
 package by.beg.payment_system.service.impl;
 
-import by.beg.payment_system.dto.CreditOpenDTO;
+import by.beg.payment_system.dto.CreditOpenRequestDTO;
 import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Credit;
@@ -14,13 +14,13 @@ import by.beg.payment_system.repository.WalletRepository;
 import by.beg.payment_system.service.CreditDetailService;
 import by.beg.payment_system.service.util.CreditDetailFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +35,9 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     private WalletRepository walletRepository;
     private UserRepository userRepository;
 
+    private final static int DELAY_PERIOD = 30;
+
+    @Autowired
     public CreditDetailServiceImpl(CreditDetailRepository creditDetailRepository, CreditRepository creditRepository,
                                    WalletRepository walletRepository, UserRepository userRepository) {
         this.creditDetailRepository = creditDetailRepository;
@@ -44,10 +47,12 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     }
 
     @Override
-    public CreditDetail create(CreditOpenDTO openDTO, User user)
+    public void create(CreditOpenRequestDTO openDTO, User user)
             throws WalletNotFoundException, CreditDetailIsPresentException, CreditNotFoundException {
 
-        if (creditDetailRepository.findByUser(user).isPresent()) {
+        if (creditDetailRepository.findByUser(user)
+                .filter(credit -> credit.getCreditStatus().equals(Status.OPEN))
+                .isPresent()) {
             throw new CreditDetailIsPresentException();
         }
 
@@ -55,45 +60,46 @@ public class CreditDetailServiceImpl implements CreditDetailService {
         Wallet wallet = walletRepository.findByCurrencyTypeAndUser(credit.getCurrencyType(), user).orElseThrow(WalletNotFoundException::new);
         wallet.setBalance(wallet.getBalance().add(openDTO.getMoney()));
 
-        CreditDetail instance = CreditDetailFactory.getInstance(credit, openDTO.getMoney());
-        instance.setUser(user);
-        CreditDetail save = creditDetailRepository.save(instance);
+        CreditDetail creditDetail = CreditDetailFactory.createInstance(credit, openDTO.getMoney());
+        creditDetail.setUser(user);
+        CreditDetail save = creditDetailRepository.save(creditDetail);
         log.info("CreditDetail was created: " + save);
-        return save;
     }
 
     @Override
-    public CreditDetail getByUser(User user) throws CreditNotFoundException {
+    public CreditDetail findByUser(User user) throws CreditNotFoundException {
         return creditDetailRepository.findByUser(user).orElseThrow(CreditNotFoundException::new);
     }
 
     @Override
-    public CreditDetail repayDebt(User user, CreditOpenDTO openDTO)
+    public CreditDetail repayDebt(User user, CreditOpenRequestDTO openDTO)
             throws CreditNotFoundException, WalletNotFoundException, LackOfMoneyException {
 
-        CreditDetail creditDetail = creditDetailRepository.findByUser(user).
-                filter(credit -> credit.getCreditStatus().equals(Status.OPEN)).orElseThrow(CreditNotFoundException::new);
+        CreditDetail creditDetail = creditDetailRepository.findByUser(user)
+                .filter(credit -> credit.getCreditStatus().equals(Status.OPEN))
+                .orElseThrow(CreditNotFoundException::new);
 
-        Wallet wallet = walletRepository.findByCurrencyTypeAndUser(creditDetail.getCredit().getCurrencyType(), user).orElseThrow(WalletNotFoundException::new);
+        Wallet wallet = walletRepository.findByCurrencyTypeAndUser(creditDetail.getCredit().getCurrencyType(), user)
+                .orElseThrow(WalletNotFoundException::new);
 
         if (wallet.getBalance().compareTo(openDTO.getMoney()) < 0) {
             throw new LackOfMoneyException();
 
-        } else if (creditDetail.getCurrentDebt().subtract(openDTO.getMoney()).compareTo(new BigDecimal(0)) <= 0) {
+        } else if (creditDetail.getCurrentDebt().subtract(openDTO.getMoney()).compareTo(BigDecimal.ZERO) <= 0) {
 
             wallet.setBalance(wallet.getBalance().subtract(creditDetail.getCurrentDebt()));
 
-            creditDetail.setCurrentDebt(new BigDecimal(0));
+            creditDetail.setCurrentDebt(BigDecimal.ZERO);
             creditDetail.setCreditStatus(Status.CLOSED);
-            Date today = new Date();
-            creditDetail.setLastUpdate(today);
+            LocalDateTime today = LocalDateTime.now();
+            creditDetail.setLastModified(today);
             creditDetail.setFinishDate(today);
             log.info("CreditDetail was closed: " + creditDetail);
 
         } else {
             wallet.setBalance(wallet.getBalance().subtract(openDTO.getMoney()));
             creditDetail.setCurrentDebt(creditDetail.getCurrentDebt().subtract(openDTO.getMoney()));
-            creditDetail.setLastUpdate(new Date());
+            creditDetail.setLastModified(LocalDateTime.now());
             log.info("CreditDetail was changed: " + creditDetail);
         }
 
@@ -101,23 +107,23 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     }
 
     @Override
-    public CreditDetail getForAdmin(long userId) throws UserNotFoundException, CreditNotFoundException {
+    public CreditDetail findByUserId(long userId) throws UserNotFoundException, CreditNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         return creditDetailRepository.findByUser(user).orElseThrow(CreditNotFoundException::new);
     }
 
     @Override
-    public List<CreditDetail> getAllForAdminByStatus(Status status) {
+    public List<CreditDetail> findAllByStatus(Status status) {
         return creditDetailRepository.findAllByCreditStatus(status);
     }
 
     @Override
-    public List<CreditDetail> filterByCreateDate(Date firstDate, Date secondDate) {
+    public List<CreditDetail> findAllBetweenDate(LocalDateTime firstDate, LocalDateTime secondDate) {
         return creditDetailRepository.findAllByCreateDate(firstDate, secondDate, Sort.by("startDate"));
     }
 
     @Override
-    public CreditDetail delete(long creditId) throws CreditNotFoundException, UnremovableStatusException {
+    public void deleteById(long creditId) throws CreditNotFoundException, UnremovableStatusException {
         CreditDetail creditDetail = creditDetailRepository.findById(creditId).orElseThrow(CreditNotFoundException::new);
 
         if (creditDetail.getCreditStatus().equals(Status.CLOSED)) {
@@ -127,7 +133,6 @@ public class CreditDetailServiceImpl implements CreditDetailService {
             throw new UnremovableStatusException();
         }
 
-        return creditDetail;
     }
 
     @Override
@@ -140,18 +145,18 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     @Override
     public void refreshAll() {
 
-        List<CreditDetail> creditDetails = creditDetailRepository.findAll().stream().
-                filter(creditDetail -> creditDetail.getCreditStatus().equals(Status.OPEN)).collect(Collectors.toList());
+        List<CreditDetail> creditDetails = creditDetailRepository.findAll()
+                .stream()
+                .filter(creditDetail -> creditDetail.getCreditStatus().equals(Status.OPEN))
+                .collect(Collectors.toList());
 
-        Date today = new Date();
-        Calendar calendar = Calendar.getInstance();
+        LocalDateTime today = LocalDateTime.now();
 
         for (CreditDetail creditDetail : creditDetails) {
 
-            calendar.setTime(creditDetail.getLastUpdate());
-            calendar.add(Calendar.DATE, 30);
+            LocalDateTime delay = creditDetail.getLastModified().plusDays(DELAY_PERIOD);
 
-            if (calendar.getTime().before(today) || creditDetail.getFinishDate().before(today)) {
+            if (delay.isBefore(today) || creditDetail.getFinishDate().isBefore(today)) {
                 userRepository.findUserByCreditDetails(creditDetail).ifPresent(user -> {
                     user.setStatus(Status.BLOCKED);
                     log.info("User was blocked: " + user);

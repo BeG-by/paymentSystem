@@ -61,7 +61,7 @@ class DepositDetailServiceImplTest {
         DepositOpenRequestDTO openDTO = new DepositOpenRequestDTO(new BigDecimal(100), CurrencyType.USD, "BYN360");
 
         Deposit deposit = new Deposit(1, "BYN360", CurrencyType.USD, 360, new BigDecimal(10), false, Status.OPEN, new ArrayList<>());
-        DepositDetail depositDetail = DepositDetailFactory.getInstance(deposit, openDTO.getMoney());
+        DepositDetail depositDetail = DepositDetailFactory.createInstance(deposit, openDTO.getMoney());
 
 
         Mockito.doReturn(Optional.of(wallet))

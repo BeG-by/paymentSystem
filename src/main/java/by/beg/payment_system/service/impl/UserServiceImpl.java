@@ -13,7 +13,7 @@ import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.model.user.UserRole;
 import by.beg.payment_system.repository.UserRepository;
 import by.beg.payment_system.repository.WalletRepository;
-import by.beg.payment_system.security.JwtTokenProvider;
+import by.beg.payment_system.security.jwt.JwtTokenProvider;
 import by.beg.payment_system.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,12 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.dto.AuthenticationResponseDTO;
 import by.beg.payment_system.dto.AuthenticationRequestDTO;
+import by.beg.payment_system.dto.AuthenticationResponseDTO;
 import by.beg.payment_system.dto.UserResponseDTO;
-import by.beg.payment_system.exception.*;
+import by.beg.payment_system.exception.UnremovableStatusException;
+import by.beg.payment_system.exception.UserIsPresentException;
+import by.beg.payment_system.exception.UserNotFoundException;
+import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.user.User;
 

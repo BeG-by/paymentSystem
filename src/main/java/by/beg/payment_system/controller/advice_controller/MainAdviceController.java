@@ -37,13 +37,10 @@ public class MainAdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> userNotFound() {
-        return new ResponseEntity<>("User not found. Check your input data.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("User not found. Check your input data.", HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler(JwtAuthenticationException.class)
-    public ResponseEntity<String> checkAdmin() {
-        return new ResponseEntity<>("JWT token expired or invalid.", HttpStatus.FORBIDDEN);
-    }
+
 //
 //    @ExceptionHandler(UserIsNotAuthorizedException.class)
 //    public ResponseEntity<String> checkAuth() {
@@ -98,7 +95,7 @@ public class MainAdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DepositIsPresentException.class)
     public ResponseEntity<String> depositIsPresent() {
-        return new ResponseEntity<>("Deposit is present. Change deposit name.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Deposit is present. Change deposit's name.", HttpStatus.BAD_REQUEST);
     }
 
     //CREDIT

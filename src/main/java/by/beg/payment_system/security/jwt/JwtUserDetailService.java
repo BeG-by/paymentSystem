@@ -1,4 +1,4 @@
-package by.beg.payment_system.security;
+package by.beg.payment_system.security.jwt;
 
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.user.User;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Slf4j
 public class JwtUserDetailService implements UserDetailsService {
 
     private UserRepository userRepository;
@@ -31,7 +30,7 @@ public class JwtUserDetailService implements UserDetailsService {
         User user = userRepository.findUserByEmail(email).
                 orElseThrow(() -> new UsernameNotFoundException("User with email (" + email + ") not found"));
 
-        JwtUser jwtUser = new JwtUser(
+        return new JwtUser(
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
@@ -39,10 +38,8 @@ public class JwtUserDetailService implements UserDetailsService {
                 user.getStatus().equals(Status.ACTIVE)
         );
 
-        log.info("User with email (" + email + ") was loaded");
-        return jwtUser;
-
     }
+
 
     private List<GrantedAuthority> createGrantedAuthority(UserRole userRole) {
         return userRole.equals(UserRole.ADMIN) ?

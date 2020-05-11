@@ -1,10 +1,10 @@
 POST localhost:8080/transfer
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MjM2NywiZXhwIjoxNTg5MTkzNTY3fQ.qRwUZeYXyvIWShdLyIoTpD6GM67HPnu-pXmDO5cr4Q4
 
 {
   "currencyType": "USD",
-  "targetWalletValue": "USD899410483",
+  "targetWalletValue": "BYN666666666666",
   "moneySend": 100
 }
 ###
@@ -16,7 +16,7 @@ Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iL
 
 POST localhost:8080/transfer/admin/findAllBetweenDate
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTEyNzEyOSwiZXhwIjoxNTg5MTI4MzI5fQ.ZRUgeFyNiEHMcvnK-G9jH9M8edKBm7iY_7joh_lOZ4Y
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE3ODI3MiwiZXhwIjoxNTg5MTc5NDcyfQ.1Dvh8gwDjW4el1TZwDrJuJgC9lj1qTeDcUKE-4vfz-0
 
 {
   "firstDate": "31-12-2018",

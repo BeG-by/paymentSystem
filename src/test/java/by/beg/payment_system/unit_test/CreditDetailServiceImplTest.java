@@ -1,6 +1,6 @@
 package by.beg.payment_system.unit_test;
 
-import by.beg.payment_system.dto.CreditOpenDTO;
+import by.beg.payment_system.dto.CreditOpenRequestDTO;
 import by.beg.payment_system.exception.CreditNotFoundException;
 import by.beg.payment_system.exception.LackOfMoneyException;
 import by.beg.payment_system.exception.WalletNotFoundException;
@@ -22,7 +22,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,8 +57,8 @@ class CreditDetailServiceImplTest {
         wallet.setCurrencyType(CurrencyType.USD);
         wallet.setBalance(new BigDecimal(300));
 
-        CreditOpenDTO creditOpenDTO = new CreditOpenDTO();
-        creditOpenDTO.setMoney(new BigDecimal(200));
+        CreditOpenRequestDTO creditOpenRequestDTO = new CreditOpenRequestDTO();
+        creditOpenRequestDTO.setMoney(new BigDecimal(200));
 
         Mockito.doReturn(Optional.of(creditDetail))
                 .when(creditDetailRepository)
@@ -67,11 +68,11 @@ class CreditDetailServiceImplTest {
                 .when(walletRepository)
                 .findByCurrencyTypeAndUser(Mockito.any(), Mockito.any());
 
-        creditDetailService.repayDebt(new User(), creditOpenDTO);
+        creditDetailService.repayDebt(new User(), creditOpenRequestDTO);
 
         assertEquals(new BigDecimal(300), creditDetail.getCurrentDebt());
         assertEquals(new BigDecimal(100), wallet.getBalance());
-        assertEquals(new Date().getTime(), creditDetail.getLastUpdate().getTime(), 10);
+        assertTrue(Duration.between(LocalDateTime.now(), creditDetail.getLastModified()).getSeconds() < 3);
         assertEquals(creditDetail.getCreditStatus(), Status.OPEN);
 
     }
@@ -91,8 +92,8 @@ class CreditDetailServiceImplTest {
         wallet.setCurrencyType(CurrencyType.USD);
         wallet.setBalance(new BigDecimal(300));
 
-        CreditOpenDTO creditOpenDTO = new CreditOpenDTO();
-        creditOpenDTO.setMoney(new BigDecimal(600));
+        CreditOpenRequestDTO creditOpenRequestDTO = new CreditOpenRequestDTO();
+        creditOpenRequestDTO.setMoney(new BigDecimal(600));
 
         Mockito.doReturn(Optional.of(creditDetail))
                 .when(creditDetailRepository)
@@ -103,9 +104,9 @@ class CreditDetailServiceImplTest {
                 .findByCurrencyTypeAndUser(Mockito.any(), Mockito.any());
 
 
-        assertThrows(LackOfMoneyException.class, () -> {
-            creditDetailService.repayDebt(new User(), creditOpenDTO);
-        });
+        assertThrows(LackOfMoneyException.class, () ->
+            creditDetailService.repayDebt(new User(), creditOpenRequestDTO)
+        );
 
 
         assertEquals(new BigDecimal(500), creditDetail.getCurrentDebt());
@@ -130,8 +131,8 @@ class CreditDetailServiceImplTest {
         wallet.setCurrencyType(CurrencyType.USD);
         wallet.setBalance(new BigDecimal(600));
 
-        CreditOpenDTO creditOpenDTO = new CreditOpenDTO();
-        creditOpenDTO.setMoney(new BigDecimal(500));
+        CreditOpenRequestDTO creditOpenRequestDTO = new CreditOpenRequestDTO();
+        creditOpenRequestDTO.setMoney(new BigDecimal(500));
 
         Mockito.doReturn(Optional.of(creditDetail))
                 .when(creditDetailRepository)
@@ -141,11 +142,11 @@ class CreditDetailServiceImplTest {
                 .when(walletRepository)
                 .findByCurrencyTypeAndUser(Mockito.any(), Mockito.any());
 
-        creditDetailService.repayDebt(new User(), creditOpenDTO);
+        creditDetailService.repayDebt(new User(), creditOpenRequestDTO);
 
-        assertEquals(new BigDecimal(0), creditDetail.getCurrentDebt());
+        assertEquals(BigDecimal.ZERO, creditDetail.getCurrentDebt());
         assertEquals(new BigDecimal(100), wallet.getBalance());
-        assertEquals(new Date().getTime(), creditDetail.getLastUpdate().getTime(), 10);
+        assertTrue(Duration.between(LocalDateTime.now(), creditDetail.getLastModified()).getSeconds() < 3);
         assertEquals(creditDetail.getCreditStatus(), Status.CLOSED);
 
     }

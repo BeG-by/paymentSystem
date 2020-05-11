@@ -77,7 +77,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public Map<String, BigDecimal> findAllRates() throws CurrencyConverterException {
-        return currencyConverter.getAllRates();
+        return currencyConverter.receiveAllRates();
     }
 
     @Override

@@ -38,7 +38,7 @@ public class DepositDetailController {
             throws LackOfMoneyException, WalletNotFoundException, DepositNotFoundException, CurrencyConverterException, UserNotFoundException {
         User currentUser = userService.findCurrentUser(principal.getName());
         depositDetailService.create(openDTO, currentUser);
-        return ResponseEntity.ok("Deposit has been successfully create");
+        return ResponseEntity.ok("DepositDetail has been successfully create");
     }
 
     @GetMapping("/findAll")
@@ -71,7 +71,7 @@ public class DepositDetailController {
         return ResponseEntity.ok(depositDetailService.findAllBetweenDate(dateDTO.getFirstDate(), dateDTO.getSecondDate()));
     }
 
-    @DeleteMapping("/admin/delete/{depositId}")
+    @DeleteMapping("/admin/deleteById/{depositId}")
     public ResponseEntity<String> delete(@PathVariable long depositId) throws DepositNotFoundException, UnremovableStatusException {
         depositDetailService.deleteById(depositId);
         return ResponseEntity.ok("DepositDetail with id = " + depositId + " has been deleted");
@@ -79,13 +79,13 @@ public class DepositDetailController {
 
     @DeleteMapping("/admin/deleteAll")
     public ResponseEntity<List<DepositDetail>> deleteAll() {
-        return ResponseEntity.ok().body(depositDetailService.deleteAll());
+        return ResponseEntity.ok(depositDetailService.deleteAll());
     }
 
     @PutMapping("/admin/refreshAll")
     public ResponseEntity<String> refreshAll() {
         depositDetailService.refreshAll();
-        return ResponseEntity.ok().body("DepositsDetails have been refreshed");
+        return ResponseEntity.ok("DepositsDetails have been refreshed");
     }
 
 }
