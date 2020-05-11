@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepositOpenDTO {
+public class DepositOpenRequestDTO {
 
     @DecimalMin(message = "Value \"money\" must be more than 1", value = "1")
     private BigDecimal money;

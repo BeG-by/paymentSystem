@@ -1,11 +1,11 @@
 package by.beg.payment_system.controller;
 
-import by.beg.payment_system.exception.*;
+import by.beg.payment_system.exception.CreditIsPresentException;
+import by.beg.payment_system.exception.CreditNotFoundException;
+import by.beg.payment_system.exception.UnremovableStatusException;
 import by.beg.payment_system.model.finance.Credit;
-import by.beg.payment_system.model.user.User;
-import by.beg.payment_system.model.user.UserRole;
 import by.beg.payment_system.service.CreditService;
-import by.beg.payment_system.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,76 +19,53 @@ import java.util.List;
 public class CreditController {
 
     private CreditService creditService;
-    private UserService userService;
 
-    public CreditController(CreditService creditService, UserService userService) {
+    @Autowired
+    public CreditController(CreditService creditService) {
         this.creditService = creditService;
-        this.userService = userService;
     }
 
     //USER
 
-    @GetMapping("/getAllAvailable")
-    public ResponseEntity<List<Credit>> getAllAvailable(@RequestHeader String token) throws UserIsNotAuthorizedException, UserBlockedException {
-        userService.checkAuthorization(token);
-        return ResponseEntity.ok(creditService.getAllAvailable());
+    @GetMapping("/findAllAvailable")
+    public ResponseEntity<List<Credit>> findAllAvailable() {
+        return ResponseEntity.ok(creditService.findAllAvailable());
     }
 
 
     //ADMIN
 
-    @PostMapping("/create")
-    public ResponseEntity<Credit> create(@RequestHeader String token, @RequestBody @Valid Credit credit)
-            throws UserIsNotAuthorizedException, NoAccessException, UserBlockedException, CreditIsPresentException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok(creditService.create(credit));
+    @PostMapping("/admin/create")
+    public ResponseEntity<String> create(@RequestBody @Valid Credit credit) throws CreditIsPresentException {
+        creditService.create(credit);
+        return ResponseEntity.ok("Credit " + credit.getName() + " has been created");
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<Credit>> getAll(@RequestHeader String token)
-            throws UserIsNotAuthorizedException, NoAccessException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok(creditService.getAll());
+    @GetMapping("/admin/findAll")
+    public ResponseEntity<List<Credit>> findAll() {
+        return ResponseEntity.ok(creditService.findAll());
     }
 
-    @GetMapping("/findById/{creditId}")
-    public ResponseEntity<Credit> getAll(@RequestHeader String token, @PathVariable long creditId)
-            throws UserIsNotAuthorizedException, NoAccessException, CreditNotFoundException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
+    @GetMapping("/admin/findById/{creditId}")
+    public ResponseEntity<Credit> findById(@PathVariable long creditId) throws CreditNotFoundException {
         return ResponseEntity.ok(creditService.findById(creditId));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Credit> update(@RequestHeader String token, @RequestBody @Valid Credit credit)
-            throws UserIsNotAuthorizedException, NoAccessException, UserBlockedException, CreditNotFoundException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok(creditService.update(credit));
+    @PutMapping("/admin/update")
+    public ResponseEntity<String> update(@RequestBody @Valid Credit credit) throws CreditNotFoundException {
+        creditService.update(credit);
+        return ResponseEntity.ok("Credit with id " + credit.getId() + " has been updated");
     }
 
-    @DeleteMapping("/delete/{creditId}")
-    public ResponseEntity<Credit> delete(@RequestHeader String token, @PathVariable long creditId)
-            throws UserIsNotAuthorizedException, NoAccessException, UnremovableStatusException, CreditNotFoundException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok(creditService.delete(creditId));
+    @DeleteMapping("/admin/deleteById/{creditId}")
+    public ResponseEntity<String> delete(@PathVariable long creditId) throws UnremovableStatusException, CreditNotFoundException {
+        creditService.delete(creditId);
+        return ResponseEntity.ok("Credit with id " + creditId + " has been deleted");
     }
 
-    @DeleteMapping("/deleteAll")
-    public ResponseEntity<List<Credit>> deleteAll(@RequestHeader String token)
-            throws UserIsNotAuthorizedException, NoAccessException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
+    @DeleteMapping("/admin/deleteAll")
+    public ResponseEntity<List<Credit>> deleteAll() {
         return ResponseEntity.ok(creditService.deleteAll());
-    }
-
-    private void checkAdminRole(User user) throws NoAccessException {
-        if (!user.getUserRole().equals(UserRole.ADMIN)) {
-            throw new NoAccessException();
-        }
     }
 
 }

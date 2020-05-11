@@ -5,7 +5,6 @@ import by.beg.payment_system.model.finance.CreditDetail;
 import by.beg.payment_system.model.finance.DepositDetail;
 import by.beg.payment_system.model.finance.TransferDetail;
 import by.beg.payment_system.model.finance.Wallet;
-import by.beg.payment_system.model.security.Token;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -20,8 +19,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +37,6 @@ public class User {
     @Pattern(regexp = "\\w+[@]\\w+\\.\\w+", message = "Incorrect email")
     private String email;
 
-    @Size(min = 4, max = 16, message = "Password must have 4-16 symbols")
     private String password;
 
     @NotBlank(message = "First name can't be empty")
@@ -51,9 +49,8 @@ public class User {
     private String passport;
 
     @NotNull(message = "Date can't be empty")
-    @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date birthday;
+    private LocalDate birthday;
 
     @Enumerated(EnumType.STRING)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -63,18 +60,13 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Status status = Status.ACTIVE;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Date lastUpdate = new Date();
+    private LocalDateTime lastModified = LocalDateTime.now();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     @Valid
     private Address address;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    @JsonIgnore
-    private List<Token> tokens;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -95,6 +87,5 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     private List<CreditDetail> creditDetails;
-
 
 }

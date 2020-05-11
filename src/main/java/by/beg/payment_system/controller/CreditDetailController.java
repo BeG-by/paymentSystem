@@ -1,19 +1,20 @@
 package by.beg.payment_system.controller;
 
-import by.beg.payment_system.dto.CreditOpenDTO;
-import by.beg.payment_system.dto.DateDTO;
+import by.beg.payment_system.dto.CreditOpenRequestDTO;
+import by.beg.payment_system.dto.DateFilterRequestDTO;
 import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.CreditDetail;
 import by.beg.payment_system.model.user.User;
-import by.beg.payment_system.model.user.UserRole;
 import by.beg.payment_system.service.CreditDetailService;
 import by.beg.payment_system.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,7 @@ public class CreditDetailController {
     private CreditDetailService creditDetailService;
     private UserService userService;
 
+    @Autowired
     public CreditDetailController(CreditDetailService creditDetailService, UserService userService) {
         this.creditDetailService = creditDetailService;
         this.userService = userService;
@@ -32,86 +34,61 @@ public class CreditDetailController {
     //USER
 
     @PostMapping("/create")
-    public ResponseEntity<CreditDetail> create(@RequestHeader String token, @RequestBody @Valid CreditOpenDTO creditOpenDTO)
-            throws UserIsNotAuthorizedException, WalletNotFoundException, CreditNotFoundException, CreditDetailIsPresentException, UserBlockedException {
-
-        User user = userService.checkAuthorization(token);
-        return ResponseEntity.ok(creditDetailService.create(creditOpenDTO, user));
+    public ResponseEntity<String> create(@RequestBody @Valid CreditOpenRequestDTO openDTO, Principal principal)
+            throws WalletNotFoundException, CreditNotFoundException, CreditDetailIsPresentException, UserNotFoundException {
+        User currentUser = userService.findCurrentUser(principal.getName());
+        creditDetailService.create(openDTO, currentUser);
+        return ResponseEntity.ok("CreditDetail has been successfully create");
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<CreditDetail> get(@RequestHeader String token)
-            throws UserIsNotAuthorizedException, CreditNotFoundException, UserBlockedException {
-
-        User user = userService.checkAuthorization(token);
-        return ResponseEntity.ok(creditDetailService.getByUser(user));
+    @GetMapping("/find")
+    public ResponseEntity<CreditDetail> find(Principal principal) throws CreditNotFoundException, UserNotFoundException {
+        User currentUser = userService.findCurrentUser(principal.getName());
+        return ResponseEntity.ok(creditDetailService.findByUser(currentUser));
     }
 
     @PostMapping("/repay")
-    public ResponseEntity<CreditDetail> repay(@RequestHeader String token, @RequestBody @Valid CreditOpenDTO creditOpenDTO)
-            throws UserIsNotAuthorizedException, CreditNotFoundException, LackOfMoneyException, WalletNotFoundException, UserBlockedException {
-
-        User user = userService.checkAuthorization(token);
-        return ResponseEntity.ok(creditDetailService.repayDebt(user, creditOpenDTO));
+    public ResponseEntity<CreditDetail> repay(@RequestBody @Valid CreditOpenRequestDTO openDTO, Principal principal)
+            throws CreditNotFoundException, LackOfMoneyException, WalletNotFoundException, UserNotFoundException {
+        User currentUser = userService.findCurrentUser(principal.getName());
+        return ResponseEntity.ok(creditDetailService.repayDebt(currentUser, openDTO));
     }
 
     //ADMIN
 
-    @GetMapping("/get/{userId}")
-    public ResponseEntity<CreditDetail> getForAdmin(@RequestHeader String token, @PathVariable long userId)
-            throws UserIsNotAuthorizedException, UserBlockedException, NoAccessException, UserNotFoundException, CreditNotFoundException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok(creditDetailService.getForAdmin(userId));
+    @GetMapping("/admin/findById/{userId}")
+    public ResponseEntity<CreditDetail> findById(@PathVariable long userId)
+            throws UserNotFoundException, CreditNotFoundException {
+        return ResponseEntity.ok(creditDetailService.findByUserId(userId));
     }
 
-    @GetMapping("/getAllByStatus/{status}")
-    public ResponseEntity<List<CreditDetail>> getByStatus(@RequestHeader String token, @PathVariable Status status)
-            throws UserIsNotAuthorizedException, UserBlockedException, NoAccessException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok(creditDetailService.getAllForAdminByStatus(status));
+    @GetMapping("/admin/findAllByStatus/{status}")
+    public ResponseEntity<List<CreditDetail>> findAllByStatus(@PathVariable Status status) {
+        return ResponseEntity.ok(creditDetailService.findAllByStatus(status));
     }
 
-    @PostMapping("/getAll/filterByCreateDate")
-    public ResponseEntity<List<CreditDetail>> getByDate(@RequestHeader String token, @RequestBody @Valid DateDTO dateDTO)
-            throws UserIsNotAuthorizedException, UserBlockedException, NoAccessException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok(creditDetailService.filterByCreateDate(dateDTO.getFirstDate(), dateDTO.getSecondDate()));
+    @PostMapping("/admin/findAllBetweenDate")
+    public ResponseEntity<List<CreditDetail>> findByDate(@RequestBody @Valid DateFilterRequestDTO dateDTO) {
+        return ResponseEntity.ok(creditDetailService.findAllBetweenDate(dateDTO.getFirstDate(), dateDTO.getSecondDate()));
     }
 
-    @DeleteMapping("/delete/{creditId}")
-    public ResponseEntity<CreditDetail> delete(@RequestHeader String token, @PathVariable long creditId)
-            throws UserIsNotAuthorizedException, UserBlockedException, NoAccessException, CreditNotFoundException, UnremovableStatusException {
-
-        checkAdminRole(userService.checkAuthorization(token));
-        return ResponseEntity.ok(creditDetailService.delete(creditId));
+    @DeleteMapping("/admin/deleteById/{creditId}")
+    public ResponseEntity<String> delete(@PathVariable long creditId)
+            throws CreditNotFoundException, UnremovableStatusException {
+        creditDetailService.deleteById(creditId);
+        return ResponseEntity.ok("CreditDetail with id = " + creditId + " has been deleted");
     }
 
-    @DeleteMapping("/deleteAll")
-    public ResponseEntity<List<CreditDetail>> deleteAll(@RequestHeader String token)
-            throws UserIsNotAuthorizedException, UserBlockedException, NoAccessException {
-
-        checkAdminRole(userService.checkAuthorization(token));
+    @DeleteMapping("/admin/deleteAll")
+    public ResponseEntity<List<CreditDetail>> deleteAll() {
         return ResponseEntity.ok(creditDetailService.deleteAll());
     }
 
-    @PutMapping("/refreshAll")
-    public ResponseEntity<String> refreshAll(@RequestHeader String token)
-            throws UserIsNotAuthorizedException, NoAccessException, UserBlockedException {
-
-        checkAdminRole(userService.checkAuthorization(token));
+    @PutMapping("/admin/refreshAll")
+    public ResponseEntity<String> refreshAll() {
         creditDetailService.refreshAll();
         return ResponseEntity.ok().body("CreditDetails were refreshed");
 
     }
-
-    private void checkAdminRole(User user) throws NoAccessException {
-        if (!user.getUserRole().equals(UserRole.ADMIN)) {
-            throw new NoAccessException();
-        }
-    }
-
 
 }

@@ -1,42 +1,41 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.dto.UserAuthorizationDTO;
-import by.beg.payment_system.exception.*;
+import by.beg.payment_system.dto.AuthenticationRequestDTO;
+import by.beg.payment_system.dto.AuthenticationResponseDTO;
+import by.beg.payment_system.dto.UserResponseDTO;
+import by.beg.payment_system.exception.UnremovableStatusException;
+import by.beg.payment_system.exception.UserIsPresentException;
+import by.beg.payment_system.exception.UserNotFoundException;
+import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.enumerations.Status;
-import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.user.User;
 
 import java.util.List;
 
 public interface UserService {
 
-    User registration(User user) throws UserIsPresentException;
+    UserResponseDTO registration(User user) throws UserIsPresentException;
 
-    Token authorization(UserAuthorizationDTO user) throws UserNotFoundException;
+    AuthenticationResponseDTO authentication(AuthenticationRequestDTO user) throws UserNotFoundException;
 
-    User logout(User user);
+    UserResponseDTO findById(long id) throws UserNotFoundException;
 
-    User checkAuthorization(String token) throws UserIsNotAuthorizedException, UserBlockedException;
+    UserResponseDTO findByEmail(String email) throws UserNotFoundException;
 
-    User findById(long id) throws UserNotFoundException;
+    UserResponseDTO findByPassport(String passport) throws UserNotFoundException;
 
-    User findByEmail(String email) throws UserNotFoundException;
+    void updateUser(User user) throws UserNotFoundException;
 
-    User findByPassport(String passport) throws UserNotFoundException;
+    void deleteUser(long userId) throws UserNotFoundException, UnremovableStatusException;
 
-    User updateUser(User user) throws UserNotFoundException;
+    List<UserResponseDTO> findAllUsers();
 
-    User deleteUser(long userId) throws UserNotFoundException, UnremovableStatusException;
+    void establishAdminRole(long userId) throws UserNotFoundException;
 
-    List<User> getAllUsers();
+    UserResponseDTO findByWalletValue(String walletValue) throws WalletNotFoundException, UserNotFoundException;
 
-    User getAdminRole(long userId) throws UserNotFoundException;
+    void changeStatus(long userId, Status status) throws UserNotFoundException;
 
-    User findByWalletValue(String walletValue) throws WalletNotFoundException, UserNotFoundException;
-
-    User changeStatus(long userId, Status status) throws UserNotFoundException;
-
-    void clearTokens();
-
+    User findCurrentUser(String email) throws UserNotFoundException;
 
 }

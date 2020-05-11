@@ -1,6 +1,6 @@
 package by.beg.payment_system.unit_test;
 
-import by.beg.payment_system.dto.DepositOpenDTO;
+import by.beg.payment_system.dto.DepositOpenRequestDTO;
 import by.beg.payment_system.exception.CurrencyConverterException;
 import by.beg.payment_system.exception.DepositNotFoundException;
 import by.beg.payment_system.exception.LackOfMoneyException;
@@ -58,10 +58,10 @@ class DepositDetailServiceImplTest {
         wallet.setCurrencyType(CurrencyType.USD);
         wallet.setBalance(new BigDecimal(150));
 
-        DepositOpenDTO openDTO = new DepositOpenDTO(new BigDecimal(100), CurrencyType.USD, "BYN360");
+        DepositOpenRequestDTO openDTO = new DepositOpenRequestDTO(new BigDecimal(100), CurrencyType.USD, "BYN360");
 
-        Deposit deposit = new Deposit(1, "BYN360", CurrencyType.USD, 360, new BigDecimal(10), false, Status.AVAILABLE, new ArrayList<>());
-        DepositDetail depositDetail = DepositDetailFactory.getInstance(deposit, openDTO.getMoney());
+        Deposit deposit = new Deposit(1, "BYN360", CurrencyType.USD, 360, new BigDecimal(10), false, Status.OPEN, new ArrayList<>());
+        DepositDetail depositDetail = DepositDetailFactory.createInstance(deposit, openDTO.getMoney());
 
 
         Mockito.doReturn(Optional.of(wallet))
@@ -93,7 +93,7 @@ class DepositDetailServiceImplTest {
         wallet.setCurrencyType(CurrencyType.USD);
         wallet.setBalance(new BigDecimal(150));
 
-        DepositOpenDTO openDTO = new DepositOpenDTO(new BigDecimal(200), CurrencyType.USD, "BYN360");
+        DepositOpenRequestDTO openDTO = new DepositOpenRequestDTO(new BigDecimal(200), CurrencyType.USD, "BYN360");
 
         Mockito.doReturn(Optional.of(wallet))
                 .when(walletRepository)

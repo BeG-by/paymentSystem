@@ -9,17 +9,17 @@ import java.util.List;
 
 public interface CreditService {
 
-    Credit create(Credit credit) throws CreditIsPresentException;
+    void create(Credit credit) throws CreditIsPresentException;
 
-    List<Credit> getAllAvailable();
+    List<Credit> findAllAvailable();
 
     Credit findById(long creditId) throws CreditNotFoundException;
 
-    List<Credit> getAll();
+    List<Credit> findAll();
 
-    Credit update(Credit credit) throws CreditNotFoundException;
+    void update(Credit credit) throws CreditNotFoundException;
 
-    Credit delete(long creditId) throws CreditNotFoundException, UnremovableStatusException;
+    void delete(long creditId) throws CreditNotFoundException, UnremovableStatusException;
 
     List<Credit> deleteAll();
 

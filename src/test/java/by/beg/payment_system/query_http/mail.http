@@ -1,9 +1,9 @@
-GET localhost:8080/mail/sendRates/3
+GET localhost:8080/mail/admin/sendRates/3
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###
 
-GET localhost:8080/mail/blockNotification/3
+GET localhost:8080/mail/admin/blockNotification/3
 Content-Type: application/json
-token: test
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 ###

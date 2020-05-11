@@ -8,7 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -20,11 +20,9 @@ public class DepositDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private LocalDateTime startDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date finishDate;
+    private LocalDateTime finishDate;
 
     @Column(precision = 20, scale = 2)
     private BigDecimal balance;
@@ -33,7 +31,7 @@ public class DepositDetail {
     private BigDecimal returnBalance;
 
     @Enumerated(EnumType.STRING)
-    private Status depositDetailStatus = Status.UNAVAILABLE;
+    private Status depositDetailStatus = Status.OPEN;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -45,8 +43,12 @@ public class DepositDetail {
     @JsonBackReference
     private User user;
 
+    public DepositDetail(LocalDateTime startDate,
+                         LocalDateTime finishDate,
+                         BigDecimal balance,
+                         BigDecimal returnBalance,
+                         Deposit deposit) {
 
-    public DepositDetail(Date startDate, Date finishDate, BigDecimal balance, BigDecimal returnBalance, Deposit deposit) {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.balance = balance;

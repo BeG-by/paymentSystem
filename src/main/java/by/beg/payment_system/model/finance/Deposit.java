@@ -40,7 +40,7 @@ public class Deposit {
     private boolean isCapitalization;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.AVAILABLE;
+    private Status status = Status.OPEN;
 
     @OneToMany(cascade = CascadeType.PERSIST , mappedBy = "deposit")
     @JsonIgnore

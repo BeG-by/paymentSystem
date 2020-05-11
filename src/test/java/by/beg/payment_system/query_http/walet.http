@@ -1,30 +1,30 @@
 GET localhost:8080/wallet/create/USD
 Content-Type: application/json
-token: lhookyf1275652500
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 
 ###
 
-GET localhost:8080/wallet/getAll
+GET localhost:8080/wallet/findAll
 Content-Type: application/json
-token: lhookyf1275652500
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 
 ###
 
-DELETE localhost:8080/wallet/delete/USD
+DELETE localhost:8080/wallet/delete/RUB
 Content-Type: application/json
-token: lhookyf1275652500
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 
 ###
 
 PUT localhost:8080/wallet/clear/USD
 Content-Type: application/json
-token: lhookyf1275652500
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
 
 ###
 
-POST localhost:8080/wallet/rechargeBalance
+POST localhost:8080/wallet/recharge
 Content-Type: application/json
-token: lhookyf1275652500
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
 
 {
   "money": 1000,

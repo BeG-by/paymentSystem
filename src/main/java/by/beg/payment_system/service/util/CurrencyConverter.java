@@ -31,23 +31,23 @@ public class CurrencyConverter {
         }
 
         String key = rootCurrencyType.toString() + DELIMITER + targetCurrencyType.toString();
-        return transferMoney.multiply(getRate(exchangeRatesURL.get(key)));
+        return transferMoney.multiply(parseRate(exchangeRatesURL.get(key)));
 
     }
 
-    public Map<String, BigDecimal> getAllRates() throws CurrencyConverterException {
+    public Map<String, BigDecimal> receiveAllRates() throws CurrencyConverterException {
 
         Map<String, BigDecimal> rates = new HashMap<>();
 
         for (Map.Entry<String, String> entry : exchangeRatesURL.entrySet()) {
-            rates.put(entry.getKey(), getRate(entry.getValue()));
+            rates.put(entry.getKey(), parseRate(entry.getValue()));
         }
 
         return rates;
 
     }
 
-    private BigDecimal getRate(String url) throws CurrencyConverterException {
+    private BigDecimal parseRate(String url) throws CurrencyConverterException {
 
         String result;
 

@@ -5,10 +5,8 @@ import by.beg.payment_system.exception.UserNotFoundException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.CreditDetail;
 import by.beg.payment_system.model.finance.TransferDetail;
-import by.beg.payment_system.model.security.Token;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.model.user.UserRole;
-import by.beg.payment_system.repository.TokenRepository;
 import by.beg.payment_system.repository.UserRepository;
 import by.beg.payment_system.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -20,7 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,9 +36,6 @@ class UserServiceImplTest {
 
     @MockBean
     private UserRepository userRepository;
-
-    @MockBean
-    private TokenRepository tokenRepository;
 
 
     @Test
@@ -54,17 +54,17 @@ class UserServiceImplTest {
         assertThrows(UnremovableStatusException.class, () -> userService.deleteUser(Mockito.anyLong()));
         Mockito.verify(userRepository, Mockito.times(0)).delete(ArgumentMatchers.any(User.class));
 
-
     }
 
     @Test
-    void should_returnUser_whenDeleteUser() throws UserNotFoundException, UnremovableStatusException {
+    void should_userEqualsNull_whenDeleteUser() throws UserNotFoundException, UnremovableStatusException {
 
         User user = new User();
         user.setId(1);
         user.setCreditDetails(new ArrayList<>());
         user.setWallets(new HashSet<>());
         TransferDetail transferDetail = new TransferDetail();
+        transferDetail.setUser(user);
         user.setTransferDetails(List.of(transferDetail));
         user.setDepositDetails(new ArrayList<>());
 
@@ -72,10 +72,9 @@ class UserServiceImplTest {
                 .when(userRepository)
                 .findById(Mockito.anyLong());
 
-        User returnUser = userService.deleteUser(ArgumentMatchers.anyLong());
-        assertEquals(user.getId(), returnUser.getId());
+        userService.deleteUser(ArgumentMatchers.anyLong());
+        assertNull(transferDetail.getUser());
         Mockito.verify(userRepository, Mockito.times(1)).delete(ArgumentMatchers.any(User.class));
-
 
     }
 
@@ -88,10 +87,9 @@ class UserServiceImplTest {
                 .when(userRepository)
                 .findById(Mockito.anyLong());
 
-        User adminUser = userService.getAdminRole(Mockito.anyLong());
-        assertEquals(user.getId(), adminUser.getId());
+        userService.establishAdminRole(Mockito.anyLong());
         assertEquals(UserRole.ADMIN, user.getUserRole());
-        assertEquals(new Date().getTime(), adminUser.getLastUpdate().getTime(), 10);
+        assertTrue(Duration.between(LocalDateTime.now(), user.getLastModified()).getSeconds() < 3);
 
     }
 
@@ -104,38 +102,10 @@ class UserServiceImplTest {
                 .when(userRepository)
                 .findById(Mockito.anyLong());
 
-        User adminUser = userService.changeStatus(Mockito.anyLong(), Status.DELETED);
-        assertEquals(user.getId(), adminUser.getId());
+        userService.changeStatus(Mockito.anyLong(), Status.DELETED);
         assertEquals(Status.DELETED, user.getStatus());
-        assertEquals(new Date().getTime(), adminUser.getLastUpdate().getTime(), 10);
+        assertTrue(Duration.between(LocalDateTime.now(), user.getLastModified()).getSeconds() < 3);
 
     }
-
-
-    @Test
-    void should_deleteOneToken_whenGivenTwoToken() {
-
-        Token firstToken = new Token();
-        Calendar firstCalendar = Calendar.getInstance();
-        firstCalendar.add(Calendar.MINUTE, -20);
-        firstToken.setCreateDate(firstCalendar.getTime());
-
-        Token secondToken = new Token();
-        Calendar secondCalendar = Calendar.getInstance();
-        secondCalendar.add(Calendar.MINUTE, -10);
-        secondToken.setCreateDate(secondCalendar.getTime());
-
-        List<Token> tokens = List.of(firstToken, secondToken);
-
-        Mockito.doReturn(tokens)
-                .when(tokenRepository)
-                .findAll();
-
-        userService.clearTokens();
-
-        Mockito.verify(tokenRepository, Mockito.times(1)).delete(ArgumentMatchers.any(Token.class));
-
-    }
-
 
 }

@@ -37,23 +37,20 @@ public class MainAdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> userNotFound() {
-        return new ResponseEntity<>("User not found. Check your input data.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("User not found. Check your input data.", HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler(NoAccessException.class)
-    public ResponseEntity<String> checkAdmin() {
-        return new ResponseEntity<>("User role isn't administration.", HttpStatus.LOCKED);
-    }
 
-    @ExceptionHandler(UserIsNotAuthorizedException.class)
-    public ResponseEntity<String> checkAuth() {
-        return new ResponseEntity<>("User isn't authorized.", HttpStatus.LOCKED);
-    }
-
-    @ExceptionHandler(UserBlockedException.class)
-    public ResponseEntity<String> blockUser() {
-        return new ResponseEntity<>("User is blocked.", HttpStatus.LOCKED);
-    }
+//
+//    @ExceptionHandler(UserIsNotAuthorizedException.class)
+//    public ResponseEntity<String> checkAuth() {
+//        return new ResponseEntity<>("User isn't authorized.", HttpStatus.LOCKED);
+//    }
+//
+//    @ExceptionHandler(UserBlockedException.class)
+//    public ResponseEntity<String> blockUser() {
+//        return new ResponseEntity<>("User is blocked.", HttpStatus.LOCKED);
+//    }
 
     //WALLET
 
@@ -98,7 +95,7 @@ public class MainAdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DepositIsPresentException.class)
     public ResponseEntity<String> depositIsPresent() {
-        return new ResponseEntity<>("Deposit is present. Change deposit name.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Deposit is present. Change deposit's name.", HttpStatus.BAD_REQUEST);
     }
 
     //CREDIT

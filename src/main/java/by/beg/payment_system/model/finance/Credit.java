@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -37,12 +40,11 @@ public class Credit {
     private BigDecimal rate;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.AVAILABLE;
+    private Status status = Status.OPEN;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "credit")
     @JsonIgnore
     @ToString.Exclude
     private List<CreditDetail> creditDetails;
-
 
 }

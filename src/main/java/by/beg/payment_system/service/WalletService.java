@@ -14,12 +14,12 @@ public interface WalletService {
 
     Wallet create(CurrencyType type, User user) throws WalletIsExistException;
 
-    List<Wallet> getAll(User user);
+    List<Wallet> findAll(User user);
 
-    Wallet delete(CurrencyType type, User user) throws WalletNotFoundException, UnremovableStatusException;
+    void delete(CurrencyType type, User user) throws WalletNotFoundException, UnremovableStatusException;
 
     Wallet recharge(User user, CurrencyType type, BigDecimal balance) throws WalletNotFoundException;
 
-    Wallet clear(CurrencyType type , User user) throws WalletNotFoundException;
+    void clear(CurrencyType type, User user) throws WalletNotFoundException;
 
 }

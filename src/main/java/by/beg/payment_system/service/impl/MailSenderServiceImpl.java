@@ -1,4 +1,4 @@
-package by.beg.payment_system.service;
+package by.beg.payment_system.service.impl;
 
 import by.beg.payment_system.exception.CurrencyConverterException;
 import by.beg.payment_system.exception.UnremovableStatusException;
@@ -6,8 +6,10 @@ import by.beg.payment_system.exception.UserNotFoundException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.repository.UserRepository;
+import by.beg.payment_system.service.MailSenderService;
 import by.beg.payment_system.service.util.CurrencyConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,8 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map;
+
 
 @Service
 @Transactional
@@ -30,6 +34,7 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Value("${spring.mail.username}")
     private String username;
 
+    @Autowired
     public MailSenderServiceImpl(JavaMailSender javaMailSender,
                                  UserRepository userRepository, CurrencyConverter currencyConverter) {
         this.javaMailSender = javaMailSender;
@@ -49,7 +54,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         String ratesResult = String.format("%-20s%-20s%n", "Currency", "Rate");
 
-        for (Map.Entry<String, BigDecimal> entry : currencyConverter.getAllRates().entrySet()) {
+        for (Map.Entry<String, BigDecimal> entry : currencyConverter.receiveAllRates().entrySet()) {
             String format = String.format(
                     "%-15s%-15s%n", entry.getKey(), entry.getValue());
             ratesResult = ratesResult.concat(format);
@@ -65,16 +70,16 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Override
     public void sendBlockNotification(long userId) throws UnremovableStatusException {
 
-        User user = userRepository.findById(userId).
-                filter(u -> u.getStatus().equals(Status.BLOCKED)).orElseThrow(UnremovableStatusException::new);
+        User user = userRepository.findById(userId)
+                .filter(u -> u.getStatus().equals(Status.BLOCKED)).orElseThrow(UnremovableStatusException::new);
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
         message.setFrom(username);
         message.setSubject("Notification about blocking.");
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyyг.");
-        message.setText("You have been blocked. (" + simpleDateFormat.format(user.getLastUpdate()) + ")");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH);
+        message.setText("You have been blocked. (" + user.getLastModified().format(formatter) + ")");
 
         javaMailSender.send(message);
         log.info("Message has been sent to user: " + user);

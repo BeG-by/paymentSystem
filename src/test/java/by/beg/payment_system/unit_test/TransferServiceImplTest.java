@@ -40,7 +40,7 @@ class TransferServiceImplTest {
 
 
     @Test
-    void should_targetWalletBalanceEquals100_walletBalanceEquals0()
+    void should_targetWalletBalanceEquals100_walletBalanceEquals0_whenMakeTransfer()
             throws CurrencyConverterException, WalletNotFoundException, TargetWalletNotFoundException, LackOfMoneyException {
 
         User user = new User();
@@ -55,7 +55,7 @@ class TransferServiceImplTest {
         transferDetail.setMoneySend(new BigDecimal(100));
 
         Wallet targetWallet = new Wallet();
-        targetWallet.setBalance(new BigDecimal(0));
+        targetWallet.setBalance(BigDecimal.ZERO);
         targetWallet.setCurrencyType(CurrencyType.USD);
 
         Mockito.doReturn(Optional.of(targetWallet))
@@ -67,11 +67,10 @@ class TransferServiceImplTest {
                 .save(Mockito.any());
 
 
-        TransferDetail resultTransfer = transferService.doTransfer(user, transferDetail);
+        transferService.makeTransfer(user, transferDetail);
 
-        assertEquals(new BigDecimal(0), wallet.getBalance());
+        assertEquals(BigDecimal.ZERO, wallet.getBalance());
         assertEquals(new BigDecimal(100), targetWallet.getBalance());
-        assertEquals(resultTransfer.getId(), transferDetail.getId());
         assertEquals(new BigDecimal(100), transferDetail.getMoneyReceive());
 
         Mockito.verify(walletRepository, Mockito.times(1)).findWalletByWalletValue(Mockito.any());
@@ -94,7 +93,7 @@ class TransferServiceImplTest {
         transferDetail.setMoneySend(new BigDecimal(100));
 
         Wallet targetWallet = new Wallet();
-        targetWallet.setBalance(new BigDecimal(0));
+        targetWallet.setBalance(BigDecimal.ZERO);
         targetWallet.setCurrencyType(CurrencyType.USD);
 
         Mockito.doReturn(Optional.of(targetWallet))
@@ -106,18 +105,17 @@ class TransferServiceImplTest {
                 .save(Mockito.any());
 
         assertThrows(LackOfMoneyException.class, () -> {
-            transferService.doTransfer(user, transferDetail);
+            transferService.makeTransfer(user, transferDetail);
         });
 
 
         assertEquals(new BigDecimal(50), wallet.getBalance());
-        assertEquals(new BigDecimal(0), targetWallet.getBalance());
+        assertEquals(BigDecimal.ZERO, targetWallet.getBalance());
         assertNull(transferDetail.getMoneyReceive());
 
         Mockito.verify(walletRepository, Mockito.times(0)).findWalletByWalletValue(Mockito.any());
         Mockito.verify(transferRepository, Mockito.times(0)).save(Mockito.any());
 
     }
-
 
 }

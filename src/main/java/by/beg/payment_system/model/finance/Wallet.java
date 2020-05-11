@@ -8,7 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -25,12 +25,11 @@ public class Wallet {
     @Enumerated(EnumType.STRING)
     private CurrencyType currencyType;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private final Date creatDate = new Date();
+    private LocalDateTime creatDate = LocalDateTime.now();
 
-    @Column(scale = 2 , precision = 20)
-    private BigDecimal balance = new BigDecimal(0);
+    @Column(scale = 2, precision = 20)
+    private BigDecimal balance = BigDecimal.ZERO;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @ToString.Exclude
