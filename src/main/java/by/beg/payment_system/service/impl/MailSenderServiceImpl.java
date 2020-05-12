@@ -1,8 +1,8 @@
 package by.beg.payment_system.service.impl;
 
 import by.beg.payment_system.exception.CurrencyConverterException;
+import by.beg.payment_system.exception.NotFoundException;
 import by.beg.payment_system.exception.UnremovableStatusException;
-import by.beg.payment_system.exception.UserNotFoundException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.repository.UserRepository;
@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
 
+import static by.beg.payment_system.service.util.MessageConstant.*;
 
 @Service
 @Transactional
@@ -36,16 +37,18 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     @Autowired
     public MailSenderServiceImpl(JavaMailSender javaMailSender,
-                                 UserRepository userRepository, CurrencyConverter currencyConverter) {
+                                 UserRepository userRepository,
+                                 CurrencyConverter currencyConverter) {
+
         this.javaMailSender = javaMailSender;
         this.userRepository = userRepository;
         this.currencyConverter = currencyConverter;
     }
 
     @Override
-    public void sendExchangeRates(long userId) throws CurrencyConverterException, UserNotFoundException {
+    public void sendExchangeRates(long userId) throws CurrencyConverterException {
 
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
@@ -68,7 +71,7 @@ public class MailSenderServiceImpl implements MailSenderService {
     }
 
     @Override
-    public void sendBlockNotification(long userId) throws UnremovableStatusException {
+    public void sendBlockNotification(long userId) {
 
         User user = userRepository.findById(userId)
                 .filter(u -> u.getStatus().equals(Status.BLOCKED)).orElseThrow(UnremovableStatusException::new);

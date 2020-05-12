@@ -1,6 +1,6 @@
 package by.beg.payment_system.service.impl;
 
-import by.beg.payment_system.dto.CreditOpenRequestDTO;
+import by.beg.payment_system.dto.request.CreditOpenRequestDTO;
 import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Credit;
@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static by.beg.payment_system.service.util.MessageConstant.*;
 
 @Service
 @Transactional
@@ -38,8 +39,11 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     private final static int DELAY_PERIOD = 30;
 
     @Autowired
-    public CreditDetailServiceImpl(CreditDetailRepository creditDetailRepository, CreditRepository creditRepository,
-                                   WalletRepository walletRepository, UserRepository userRepository) {
+    public CreditDetailServiceImpl(CreditDetailRepository creditDetailRepository,
+                                   CreditRepository creditRepository,
+                                   WalletRepository walletRepository,
+                                   UserRepository userRepository) {
+
         this.creditDetailRepository = creditDetailRepository;
         this.creditRepository = creditRepository;
         this.walletRepository = walletRepository;
@@ -47,17 +51,20 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     }
 
     @Override
-    public void create(CreditOpenRequestDTO openDTO, User user)
-            throws WalletNotFoundException, CreditDetailIsPresentException, CreditNotFoundException {
+    public void create(CreditOpenRequestDTO openDTO, User user) {
 
         if (creditDetailRepository.findByUser(user)
                 .filter(credit -> credit.getCreditStatus().equals(Status.OPEN))
                 .isPresent()) {
-            throw new CreditDetailIsPresentException();
+            throw new ExistException(CREDIT_DETAIL_EXIST_MESSAGE);
         }
 
-        Credit credit = creditRepository.findCreditByName(openDTO.getCreditName()).orElseThrow(CreditNotFoundException::new);
-        Wallet wallet = walletRepository.findByCurrencyTypeAndUser(credit.getCurrencyType(), user).orElseThrow(WalletNotFoundException::new);
+        Credit credit = creditRepository.findCreditByName(openDTO.getCreditName())
+                .orElseThrow(() -> new NotFoundException(CREDIT_NOT_FOUND_MESSAGE));
+
+        Wallet wallet = walletRepository.findByCurrencyTypeAndUser(credit.getCurrencyType(), user)
+                .orElseThrow(() -> new NotFoundException(WALLET_NOT_FOUND_MESSAGE));
+
         wallet.setBalance(wallet.getBalance().add(openDTO.getMoney()));
 
         CreditDetail creditDetail = CreditDetailFactory.createInstance(credit, openDTO.getMoney());
@@ -67,20 +74,19 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     }
 
     @Override
-    public CreditDetail findByUser(User user) throws CreditNotFoundException {
-        return creditDetailRepository.findByUser(user).orElseThrow(CreditNotFoundException::new);
+    public CreditDetail findByUser(User user) {
+        return creditDetailRepository.findByUser(user).orElseThrow(() -> new NotFoundException(CREDIT_DETAIL_NOT_FOUND_MESSAGE));
     }
 
     @Override
-    public CreditDetail repayDebt(User user, CreditOpenRequestDTO openDTO)
-            throws CreditNotFoundException, WalletNotFoundException, LackOfMoneyException {
+    public CreditDetail repayDebt(User user, CreditOpenRequestDTO openDTO) throws LackOfMoneyException {
 
         CreditDetail creditDetail = creditDetailRepository.findByUser(user)
                 .filter(credit -> credit.getCreditStatus().equals(Status.OPEN))
-                .orElseThrow(CreditNotFoundException::new);
+                .orElseThrow(() -> new NotFoundException(CREDIT_DETAIL_NOT_FOUND_MESSAGE));
 
         Wallet wallet = walletRepository.findByCurrencyTypeAndUser(creditDetail.getCredit().getCurrencyType(), user)
-                .orElseThrow(WalletNotFoundException::new);
+                .orElseThrow(() -> new NotFoundException(WALLET_NOT_FOUND_MESSAGE));
 
         if (wallet.getBalance().compareTo(openDTO.getMoney()) < 0) {
             throw new LackOfMoneyException();
@@ -107,9 +113,9 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     }
 
     @Override
-    public CreditDetail findByUserId(long userId) throws UserNotFoundException, CreditNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        return creditDetailRepository.findByUser(user).orElseThrow(CreditNotFoundException::new);
+    public CreditDetail findByUserId(long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+        return creditDetailRepository.findByUser(user).orElseThrow(() -> new NotFoundException(CREDIT_DETAIL_NOT_FOUND_MESSAGE));
     }
 
     @Override
@@ -123,8 +129,9 @@ public class CreditDetailServiceImpl implements CreditDetailService {
     }
 
     @Override
-    public void deleteById(long creditId) throws CreditNotFoundException, UnremovableStatusException {
-        CreditDetail creditDetail = creditDetailRepository.findById(creditId).orElseThrow(CreditNotFoundException::new);
+    public void deleteById(long creditId) throws UnremovableStatusException {
+        CreditDetail creditDetail = creditDetailRepository.findById(creditId)
+                .orElseThrow(() -> new NotFoundException(CREDIT_DETAIL_NOT_FOUND_MESSAGE));
 
         if (creditDetail.getCreditStatus().equals(Status.CLOSED)) {
             creditDetailRepository.delete(creditDetail);

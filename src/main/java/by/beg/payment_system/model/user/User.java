@@ -63,7 +63,7 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastModified = LocalDateTime.now();
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @JsonManagedReference
     @Valid
     private Address address;

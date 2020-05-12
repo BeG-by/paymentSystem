@@ -1,5 +1,5 @@
 # Payment system
-Graduate project for programming course "Java developer" (Programming school TeachMeSkills)<br/>
+Graduate project for programming course "Java developer"<br/>
 Date of defence: 31.03.2020
 
 ### Functionality

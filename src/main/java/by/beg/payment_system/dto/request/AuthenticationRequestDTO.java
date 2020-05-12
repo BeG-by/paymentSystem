@@ -1,4 +1,4 @@
-package by.beg.payment_system.dto;
+package by.beg.payment_system.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

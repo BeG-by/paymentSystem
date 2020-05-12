@@ -1,12 +1,8 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.dto.AuthenticationRequestDTO;
-import by.beg.payment_system.dto.AuthenticationResponseDTO;
-import by.beg.payment_system.dto.UserResponseDTO;
-import by.beg.payment_system.exception.UnremovableStatusException;
-import by.beg.payment_system.exception.UserIsPresentException;
-import by.beg.payment_system.exception.UserNotFoundException;
-import by.beg.payment_system.exception.WalletNotFoundException;
+import by.beg.payment_system.dto.request.AuthenticationRequestDTO;
+import by.beg.payment_system.dto.response.AuthenticationResponseDTO;
+import by.beg.payment_system.dto.response.UserResponseDTO;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.user.User;
 
@@ -14,28 +10,28 @@ import java.util.List;
 
 public interface UserService {
 
-    UserResponseDTO registration(User user) throws UserIsPresentException;
+    UserResponseDTO register(User user);
 
-    AuthenticationResponseDTO authentication(AuthenticationRequestDTO user) throws UserNotFoundException;
+    AuthenticationResponseDTO authenticate(AuthenticationRequestDTO user);
 
-    UserResponseDTO findById(long id) throws UserNotFoundException;
+    UserResponseDTO findById(long id);
 
-    UserResponseDTO findByEmail(String email) throws UserNotFoundException;
+    UserResponseDTO findByEmail(String email);
 
-    UserResponseDTO findByPassport(String passport) throws UserNotFoundException;
+    UserResponseDTO findByPassport(String passport);
 
-    void updateUser(User user) throws UserNotFoundException;
+    void updateUser(User user);
 
-    void deleteUser(long userId) throws UserNotFoundException, UnremovableStatusException;
+    void deleteUser(long userId);
 
     List<UserResponseDTO> findAllUsers();
 
-    void establishAdminRole(long userId) throws UserNotFoundException;
+    void establishAdminRole(long userId);
 
-    UserResponseDTO findByWalletValue(String walletValue) throws WalletNotFoundException, UserNotFoundException;
+    UserResponseDTO findByWalletValue(String walletValue);
 
-    void changeStatus(long userId, Status status) throws UserNotFoundException;
+    void changeStatus(long userId, Status status);
 
-    User findCurrentUser(String email) throws UserNotFoundException;
+    User findCurrentUser(String email);
 
 }

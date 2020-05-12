@@ -1,8 +1,9 @@
 package by.beg.payment_system.controller;
 
-import by.beg.payment_system.dto.CreditOpenRequestDTO;
-import by.beg.payment_system.dto.DateFilterRequestDTO;
-import by.beg.payment_system.exception.*;
+import by.beg.payment_system.dto.request.CreditOpenRequestDTO;
+import by.beg.payment_system.dto.request.DateFilterRequestDTO;
+import by.beg.payment_system.dto.response.MessageResponseDTO;
+import by.beg.payment_system.exception.LackOfMoneyException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.CreditDetail;
 import by.beg.payment_system.model.user.User;
@@ -34,22 +35,22 @@ public class CreditDetailController {
     //USER
 
     @PostMapping("/create")
-    public ResponseEntity<String> create(@RequestBody @Valid CreditOpenRequestDTO openDTO, Principal principal)
-            throws WalletNotFoundException, CreditNotFoundException, CreditDetailIsPresentException, UserNotFoundException {
+    public ResponseEntity<MessageResponseDTO> create(@RequestBody @Valid CreditOpenRequestDTO openDTO, Principal principal) {
         User currentUser = userService.findCurrentUser(principal.getName());
         creditDetailService.create(openDTO, currentUser);
-        return ResponseEntity.ok("CreditDetail has been successfully create");
+        MessageResponseDTO message = new MessageResponseDTO("CreditDetail has been successfully create");
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("/find")
-    public ResponseEntity<CreditDetail> find(Principal principal) throws CreditNotFoundException, UserNotFoundException {
+    public ResponseEntity<CreditDetail> find(Principal principal) {
         User currentUser = userService.findCurrentUser(principal.getName());
         return ResponseEntity.ok(creditDetailService.findByUser(currentUser));
     }
 
     @PostMapping("/repay")
     public ResponseEntity<CreditDetail> repay(@RequestBody @Valid CreditOpenRequestDTO openDTO, Principal principal)
-            throws CreditNotFoundException, LackOfMoneyException, WalletNotFoundException, UserNotFoundException {
+            throws LackOfMoneyException {
         User currentUser = userService.findCurrentUser(principal.getName());
         return ResponseEntity.ok(creditDetailService.repayDebt(currentUser, openDTO));
     }
@@ -57,8 +58,7 @@ public class CreditDetailController {
     //ADMIN
 
     @GetMapping("/admin/findById/{userId}")
-    public ResponseEntity<CreditDetail> findById(@PathVariable long userId)
-            throws UserNotFoundException, CreditNotFoundException {
+    public ResponseEntity<CreditDetail> findById(@PathVariable long userId) {
         return ResponseEntity.ok(creditDetailService.findByUserId(userId));
     }
 
@@ -73,10 +73,10 @@ public class CreditDetailController {
     }
 
     @DeleteMapping("/admin/deleteById/{creditId}")
-    public ResponseEntity<String> delete(@PathVariable long creditId)
-            throws CreditNotFoundException, UnremovableStatusException {
+    public ResponseEntity<MessageResponseDTO> delete(@PathVariable long creditId) {
         creditDetailService.deleteById(creditId);
-        return ResponseEntity.ok("CreditDetail with id = " + creditId + " has been deleted");
+        MessageResponseDTO message = new MessageResponseDTO("CreditDetail has been successfully create");
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/admin/deleteAll")
@@ -85,9 +85,10 @@ public class CreditDetailController {
     }
 
     @PutMapping("/admin/refreshAll")
-    public ResponseEntity<String> refreshAll() {
+    public ResponseEntity<MessageResponseDTO> refreshAll() {
         creditDetailService.refreshAll();
-        return ResponseEntity.ok().body("CreditDetails were refreshed");
+        MessageResponseDTO message = new MessageResponseDTO("CreditDetails were refreshed");
+        return ResponseEntity.ok(message);
 
     }
 

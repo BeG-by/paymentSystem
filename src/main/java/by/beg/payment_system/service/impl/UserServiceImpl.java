@@ -1,12 +1,9 @@
 package by.beg.payment_system.service.impl;
 
-import by.beg.payment_system.dto.AuthenticationRequestDTO;
-import by.beg.payment_system.dto.AuthenticationResponseDTO;
-import by.beg.payment_system.dto.UserResponseDTO;
-import by.beg.payment_system.exception.UnremovableStatusException;
-import by.beg.payment_system.exception.UserIsPresentException;
-import by.beg.payment_system.exception.UserNotFoundException;
-import by.beg.payment_system.exception.WalletNotFoundException;
+import by.beg.payment_system.dto.request.AuthenticationRequestDTO;
+import by.beg.payment_system.dto.response.AuthenticationResponseDTO;
+import by.beg.payment_system.dto.response.UserResponseDTO;
+import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Wallet;
 import by.beg.payment_system.model.user.User;
@@ -28,6 +25,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static by.beg.payment_system.service.util.MessageConstant.*;
+
 @Service
 @Transactional
 @Slf4j
@@ -45,6 +44,7 @@ public class UserServiceImpl implements UserService {
                            PasswordEncoder passwordEncoder,
                            JwtTokenProvider jwtTokenProvider,
                            AuthenticationManager authenticationManager) {
+
         this.userRepository = userRepository;
         this.walletRepository = walletRepository;
         this.passwordEncoder = passwordEncoder;
@@ -53,10 +53,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO registration(User user) throws UserIsPresentException {
+    public UserResponseDTO register(User user) {
 
         if (userRepository.findUserByEmailOrPassport(user.getEmail(), user.getPassport()).isPresent()) {
-            throw new UserIsPresentException();
+            throw new ExistException(USER_EXIST_MESSAGE);
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -67,13 +67,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AuthenticationResponseDTO authentication(AuthenticationRequestDTO user) throws UserNotFoundException {
+    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO user) {
 
         String email = user.getEmail();
         String password = user.getPassword();
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        User realUser = userRepository.findUserByEmail(user.getEmail()).orElseThrow(UserNotFoundException::new);
+        User realUser = userRepository.findUserByEmail(user.getEmail())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
 
         String token = jwtTokenProvider.createToken(email, realUser.getUserRole());
         return new AuthenticationResponseDTO(email, token);
@@ -81,34 +82,47 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserResponseDTO findById(long id) throws UserNotFoundException {
-        return userRepository.findById(id).map(UserResponseDTO::fromUser).orElseThrow(UserNotFoundException::new);
+    public UserResponseDTO findById(long id) {
+        return userRepository.findById(id).map(UserResponseDTO::fromUser)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
     @Override
-    public UserResponseDTO findByEmail(String email) throws UserNotFoundException {
-        return userRepository.findUserByEmail(email).map(UserResponseDTO::fromUser).orElseThrow(UserNotFoundException::new);
+    public UserResponseDTO findByEmail(String email) {
+        return userRepository.findUserByEmail(email).map(UserResponseDTO::fromUser)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
     @Override
-    public UserResponseDTO findByPassport(String passport) throws UserNotFoundException {
-        return userRepository.findUserByPassport(passport).map(UserResponseDTO::fromUser).orElseThrow(UserNotFoundException::new);
+    public UserResponseDTO findByPassport(String passport) {
+        return userRepository.findUserByPassport(passport).map(UserResponseDTO::fromUser)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
     @Override
-    public void updateUser(User user) throws UserNotFoundException {
-        User persistUser = userRepository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
+    public void updateUser(User user) {
+        User persistUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.getAddress().setId(persistUser.getAddress().getId());
+
         userRepository.save(user);
         log.info("User was updated: " + persistUser);
     }
 
     @Override
-    public void deleteUser(long userId) throws UserNotFoundException, UnremovableStatusException {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        long walletCount = user.getWallets().stream().filter(wallet -> wallet.getBalance().compareTo(BigDecimal.ZERO) > 0).count();
-        long depositCount = user.getDepositDetails().stream().filter(depositDetail -> !depositDetail.getDepositDetailStatus().equals(Status.CLOSED)).count();
-        long creditCount = user.getCreditDetails().stream().filter(creditDetail -> !creditDetail.getCreditStatus().equals(Status.CLOSED)).count();
+    public void deleteUser(long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+
+        long walletCount = user.getWallets().stream()
+                .filter(wallet -> wallet.getBalance().compareTo(BigDecimal.ZERO) > 0).count();
+
+        long depositCount = user.getDepositDetails().stream()
+                .filter(depositDetail -> !depositDetail.getDepositDetailStatus().equals(Status.CLOSED)).count();
+
+        long creditCount = user.getCreditDetails().stream()
+                .filter(creditDetail -> !creditDetail.getCreditStatus().equals(Status.CLOSED)).count();
 
         if (walletCount > 0 || depositCount > 0 || creditCount > 0) {
             throw new UnremovableStatusException();
@@ -126,30 +140,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void establishAdminRole(long userId) throws UserNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public void establishAdminRole(long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
         user.setUserRole(UserRole.ADMIN);
         user.setLastModified(LocalDateTime.now());
         log.info("Admin role was added for: " + user);
     }
 
     @Override
-    public UserResponseDTO findByWalletValue(String walletValue) throws WalletNotFoundException, UserNotFoundException {
-        Wallet wallet = walletRepository.findWalletByWalletValue(walletValue).orElseThrow(WalletNotFoundException::new);
-        return userRepository.findUserByWallets(wallet).map(UserResponseDTO::fromUser).orElseThrow(UserNotFoundException::new);
+    public UserResponseDTO findByWalletValue(String walletValue) {
+        Wallet wallet = walletRepository.findWalletByWalletValue(walletValue)
+                .orElseThrow(() -> new NotFoundException("Wallet not found"));
+        return userRepository.findUserByWallets(wallet).map(UserResponseDTO::fromUser)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
     @Override
-    public void changeStatus(long userId, Status status) throws UserNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public void changeStatus(long userId, Status status) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
         user.setStatus(status);
         user.setLastModified(LocalDateTime.now());
         log.info("Status was changed for: " + user);
     }
 
     @Override
-    public User findCurrentUser(String email) throws UserNotFoundException {
-        return userRepository.findUserByEmail(email).orElseThrow(UserNotFoundException::new);
+    public User findCurrentUser(String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
 }

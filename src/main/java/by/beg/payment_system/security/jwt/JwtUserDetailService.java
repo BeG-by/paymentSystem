@@ -4,7 +4,6 @@ import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.model.user.UserRole;
 import by.beg.payment_system.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,8 +1,6 @@
 package by.beg.payment_system.controller;
 
-import by.beg.payment_system.exception.DepositIsPresentException;
-import by.beg.payment_system.exception.DepositNotFoundException;
-import by.beg.payment_system.exception.UnremovableStatusException;
+import by.beg.payment_system.dto.response.MessageResponseDTO;
 import by.beg.payment_system.model.finance.Deposit;
 import by.beg.payment_system.service.DepositService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +34,10 @@ public class DepositController {
     //ADMIN
 
     @PostMapping("/admin/create")
-    public ResponseEntity<String> create(@RequestBody @Valid Deposit deposit) throws DepositIsPresentException {
+    public ResponseEntity<MessageResponseDTO> create(@RequestBody @Valid Deposit deposit) {
         depositService.create(deposit);
-        return ResponseEntity.ok("Deposit " + deposit.getName() + " has been created");
+        MessageResponseDTO message = new MessageResponseDTO("Deposit " + deposit.getName() + " has been created");
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("/admin/findAll")
@@ -47,21 +46,23 @@ public class DepositController {
     }
 
     @GetMapping("/admin/findById/{depositId}")
-    public ResponseEntity<Deposit> findById(@PathVariable long depositId) throws DepositNotFoundException {
+    public ResponseEntity<Deposit> findById(@PathVariable long depositId) {
         return ResponseEntity.ok(depositService.findById(depositId));
     }
 
     @PutMapping("/admin/update")
-    public ResponseEntity<String> update(@RequestBody @Valid Deposit deposit) throws DepositNotFoundException {
+    public ResponseEntity<MessageResponseDTO> update(@RequestBody @Valid Deposit deposit) {
         depositService.update(deposit);
-        return ResponseEntity.ok("Deposit with id = " + deposit.getId() + " has been updated");
+        MessageResponseDTO message = new MessageResponseDTO("Deposit with id = " + deposit.getId() + " has been updated");
+        return ResponseEntity.ok(message);
     }
 
 
     @DeleteMapping("/admin/deleteById/{depositId}")
-    public ResponseEntity<String> delete(@PathVariable long depositId) throws DepositNotFoundException, UnremovableStatusException {
+    public ResponseEntity<MessageResponseDTO> delete(@PathVariable long depositId) {
         depositService.delete(depositId);
-        return ResponseEntity.ok("Deposit with id = " + depositId + " has been deleted");
+        MessageResponseDTO message = new MessageResponseDTO("Deposit with id = " + depositId + " has been deleted");
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/admin/deleteAll")

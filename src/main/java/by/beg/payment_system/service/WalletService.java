@@ -1,8 +1,5 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.exception.UnremovableStatusException;
-import by.beg.payment_system.exception.WalletIsExistException;
-import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.enumerations.CurrencyType;
 import by.beg.payment_system.model.finance.Wallet;
 import by.beg.payment_system.model.user.User;
@@ -12,14 +9,14 @@ import java.util.List;
 
 public interface WalletService {
 
-    Wallet create(CurrencyType type, User user) throws WalletIsExistException;
+    Wallet create(CurrencyType type, User user);
 
     List<Wallet> findAll(User user);
 
-    void delete(CurrencyType type, User user) throws WalletNotFoundException, UnremovableStatusException;
+    void delete(CurrencyType type, User user);
 
-    Wallet recharge(User user, CurrencyType type, BigDecimal balance) throws WalletNotFoundException;
+    Wallet recharge(User user, CurrencyType type, BigDecimal balance);
 
-    void clear(CurrencyType type, User user) throws WalletNotFoundException;
+    void clear(CurrencyType type, User user);
 
 }

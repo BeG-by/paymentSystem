@@ -1,8 +1,6 @@
 package by.beg.payment_system.service.impl;
 
-import by.beg.payment_system.exception.DepositIsPresentException;
-import by.beg.payment_system.exception.DepositNotFoundException;
-import by.beg.payment_system.exception.UnremovableStatusException;
+import by.beg.payment_system.exception.*;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Deposit;
 import by.beg.payment_system.repository.DepositRepository;
@@ -15,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static by.beg.payment_system.service.util.MessageConstant.*;
+
 @Service
 @Transactional
 @Slf4j
@@ -22,16 +22,17 @@ public class DepositServiceImpl implements DepositService {
 
     private DepositRepository depositRepository;
 
+
     @Autowired
     public DepositServiceImpl(DepositRepository depositRepository) {
         this.depositRepository = depositRepository;
     }
 
     @Override
-    public void create(Deposit deposit) throws DepositIsPresentException {
+    public void create(Deposit deposit) {
 
         if (depositRepository.findByName(deposit.getName()).isPresent()) {
-            throw new DepositIsPresentException();
+            throw new ExistException(DEPOSIT_EXIST_MESSAGE);
         }
 
         Deposit save = depositRepository.save(deposit);
@@ -48,8 +49,8 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
-    public Deposit findById(long depositId) throws DepositNotFoundException {
-        return depositRepository.findById(depositId).orElseThrow(DepositNotFoundException::new);
+    public Deposit findById(long depositId) {
+        return depositRepository.findById(depositId).orElseThrow(() -> new NotFoundException(DEPOSIT_NOT_FOUND_MESSAGE));
     }
 
     @Override
@@ -58,15 +59,15 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
-    public void update(Deposit deposit) throws DepositNotFoundException {
-        depositRepository.findById(deposit.getId()).orElseThrow(DepositNotFoundException::new);
+    public void update(Deposit deposit) {
+        depositRepository.findById(deposit.getId()).orElseThrow(() -> new NotFoundException(DEPOSIT_NOT_FOUND_MESSAGE));
         Deposit save = depositRepository.save(deposit);
         log.info("Deposit was updated: " + save);
     }
 
     @Override
-    public void delete(long depositId) throws DepositNotFoundException, UnremovableStatusException {
-        Deposit deposit = depositRepository.findById(depositId).orElseThrow(DepositNotFoundException::new);
+    public void delete(long depositId) {
+        Deposit deposit = depositRepository.findById(depositId).orElseThrow(() -> new NotFoundException(DEPOSIT_NOT_FOUND_MESSAGE));
 
         if (deposit.getStatus().equals(Status.CLOSED)) {
             depositRepository.delete(deposit);

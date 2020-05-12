@@ -1,7 +1,7 @@
 package by.beg.payment_system.service;
 
-import by.beg.payment_system.dto.CreditOpenRequestDTO;
-import by.beg.payment_system.exception.*;
+import by.beg.payment_system.dto.request.CreditOpenRequestDTO;
+import by.beg.payment_system.exception.LackOfMoneyException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.CreditDetail;
 import by.beg.payment_system.model.user.User;
@@ -11,19 +11,19 @@ import java.util.List;
 
 public interface CreditDetailService {
 
-    void create(CreditOpenRequestDTO openDTO, User user) throws WalletNotFoundException, CreditDetailIsPresentException, CreditNotFoundException;
+    void create(CreditOpenRequestDTO openDTO, User user);
 
-    CreditDetail findByUser(User user) throws CreditNotFoundException;
+    CreditDetail findByUser(User user);
 
-    CreditDetail repayDebt(User user, CreditOpenRequestDTO openDTO) throws CreditNotFoundException, WalletNotFoundException, LackOfMoneyException;
+    CreditDetail repayDebt(User user, CreditOpenRequestDTO openDTO) throws LackOfMoneyException;
 
-    CreditDetail findByUserId(long userId) throws UserNotFoundException, CreditNotFoundException;
+    CreditDetail findByUserId(long userId);
 
     List<CreditDetail> findAllByStatus(Status status);
 
     List<CreditDetail> findAllBetweenDate(LocalDateTime firstDate, LocalDateTime secondDate);
 
-    void deleteById(long creditId) throws CreditNotFoundException, UnremovableStatusException;
+    void deleteById(long creditId);
 
     List<CreditDetail> deleteAll();
 

@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static by.beg.payment_system.service.util.MessageConstant.*;
 
 @Service
 @Transactional
@@ -31,15 +32,17 @@ public class TransferServiceImpl implements TransferService {
     private CurrencyConverter currencyConverter;
 
     @Autowired
-    public TransferServiceImpl(TransferRepository transferRepository, WalletRepository walletRepository, CurrencyConverter currencyConverter) {
+    public TransferServiceImpl(TransferRepository transferRepository,
+                               WalletRepository walletRepository,
+                               CurrencyConverter currencyConverter) {
+
         this.transferRepository = transferRepository;
         this.walletRepository = walletRepository;
         this.currencyConverter = currencyConverter;
     }
 
     @Override
-    public void makeTransfer(User user, TransferDetail transferDetail)
-            throws WalletNotFoundException, LackOfMoneyException, TargetWalletNotFoundException, CurrencyConverterException {
+    public void makeTransfer(User user, TransferDetail transferDetail) throws LackOfMoneyException, CurrencyConverterException {
 
         CurrencyType currencyType = transferDetail.getCurrencyType();
         BigDecimal moneySend = transferDetail.getMoneySend();
@@ -55,14 +58,15 @@ public class TransferServiceImpl implements TransferService {
         }
 
         if (userWallet == null) {
-            throw new WalletNotFoundException();
+            throw new NotFoundException(WALLET_NOT_FOUND_MESSAGE);
         }
 
         if (userWallet.getBalance().compareTo(moneySend) < 0) {
             throw new LackOfMoneyException();
         }
 
-        Wallet targetWallet = walletRepository.findWalletByWalletValue(targetWalletValue).orElseThrow(TargetWalletNotFoundException::new);
+        Wallet targetWallet = walletRepository.findWalletByWalletValue(targetWalletValue)
+                .orElseThrow(() -> new NotFoundException("Target wallet not found"));
 
         userWallet.setBalance(userWallet.getBalance().subtract(moneySend));
         BigDecimal receivedMoney = currencyConverter.convertMoney(userWallet.getCurrencyType(), targetWallet.getCurrencyType(), moneySend);
@@ -91,8 +95,10 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public void deleteById(long id) throws TransferNotFoundException {
-        TransferDetail transferDetail = transferRepository.findById(id).orElseThrow(TransferNotFoundException::new);
+    public void deleteById(long id) {
+        TransferDetail transferDetail = transferRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(TRANSFER_NOT_FOUND_MESSAGE));
+
         transferRepository.delete(transferDetail);
         log.info("TransferDetail was deleted: " + transferDetail);
     }

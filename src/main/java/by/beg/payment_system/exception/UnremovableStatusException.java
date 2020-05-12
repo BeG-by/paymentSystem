@@ -1,6 +1,6 @@
 package by.beg.payment_system.exception;
 
-public class UnremovableStatusException extends Exception {
+public class UnremovableStatusException extends RuntimeException {
 
     public UnremovableStatusException() {
         super();

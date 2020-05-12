@@ -18,7 +18,7 @@ public class SchedulerUtil {
         this.creditDetailService = creditDetailService;
     }
 
-    @Scheduled(cron = "0 */45 * * * *")
+    @Scheduled(cron = "0 */30 * * * *")
     public void refreshDepositsDetail() {
 
         depositDetailService.refreshAll();
@@ -26,7 +26,7 @@ public class SchedulerUtil {
 
     }
 
-    @Scheduled(cron = "0 */45 * * * *")
+    @Scheduled(cron = "0 */30 * * * *")
     public void refreshCreditsDetail() {
 
         creditDetailService.refreshAll();

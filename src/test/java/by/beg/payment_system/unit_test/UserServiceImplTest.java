@@ -1,7 +1,6 @@
 package by.beg.payment_system.unit_test;
 
 import by.beg.payment_system.exception.UnremovableStatusException;
-import by.beg.payment_system.exception.UserNotFoundException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.CreditDetail;
 import by.beg.payment_system.model.finance.TransferDetail;
@@ -57,7 +56,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void should_userEqualsNull_whenDeleteUser() throws UserNotFoundException, UnremovableStatusException {
+    void should_userEqualsNull_whenDeleteUser() {
 
         User user = new User();
         user.setId(1);
@@ -79,7 +78,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void should_returnUserAdmin_whenGivenUser() throws UserNotFoundException {
+    void should_returnUserAdmin_whenGivenUser() {
         User user = new User();
         user.setId(1);
 
@@ -94,7 +93,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void should_returnDeleteStatus_whenGivenStatusAndUser() throws UserNotFoundException {
+    void should_returnDeleteStatus_whenGivenStatusAndUser() {
         User user = new User();
         user.setId(1);
 

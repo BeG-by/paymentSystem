@@ -1,10 +1,8 @@
 package by.beg.payment_system.unit_test;
 
-import by.beg.payment_system.dto.DepositOpenRequestDTO;
+import by.beg.payment_system.dto.request.DepositOpenRequestDTO;
 import by.beg.payment_system.exception.CurrencyConverterException;
-import by.beg.payment_system.exception.DepositNotFoundException;
 import by.beg.payment_system.exception.LackOfMoneyException;
-import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.enumerations.CurrencyType;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Deposit;
@@ -52,7 +50,7 @@ class DepositDetailServiceImplTest {
 
     @Test
     void should_walletBalanceEquals50_whenSending100()
-            throws CurrencyConverterException, LackOfMoneyException, WalletNotFoundException, DepositNotFoundException {
+            throws CurrencyConverterException, LackOfMoneyException {
 
         Wallet wallet = new Wallet();
         wallet.setCurrencyType(CurrencyType.USD);

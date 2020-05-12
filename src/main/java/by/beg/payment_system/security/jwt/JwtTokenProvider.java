@@ -2,6 +2,7 @@ package by.beg.payment_system.security.jwt;
 
 import by.beg.payment_system.model.user.UserRole;
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,7 @@ import java.util.List;
 
 
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
     @Value("${jwt.token.secret}")
@@ -87,11 +89,7 @@ public class JwtTokenProvider {
         try {
 
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretWord).parseClaimsJws(token);
-
-            if (claims.getBody().getExpiration().before(new Date())) {
-                return false;
-            }
-            return true;
+            return claims.getBody().getExpiration().after(new Date());
 
         } catch (JwtException | IllegalArgumentException e) {
             return false;

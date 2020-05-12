@@ -1,7 +1,10 @@
 package by.beg.payment_system.service.impl;
 
-import by.beg.payment_system.dto.DepositOpenRequestDTO;
-import by.beg.payment_system.exception.*;
+import by.beg.payment_system.dto.request.DepositOpenRequestDTO;
+import by.beg.payment_system.exception.CurrencyConverterException;
+import by.beg.payment_system.exception.LackOfMoneyException;
+import by.beg.payment_system.exception.NotFoundException;
+import by.beg.payment_system.exception.UnremovableStatusException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Deposit;
 import by.beg.payment_system.model.finance.DepositDetail;
@@ -25,6 +28,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static by.beg.payment_system.service.util.MessageConstant.*;
+
 @Service
 @Transactional
 @Slf4j
@@ -36,9 +41,14 @@ public class DepositDetailServiceImpl implements DepositDetailService {
     private UserRepository userRepository;
     private CurrencyConverter currencyConverter;
 
+
     @Autowired
-    public DepositDetailServiceImpl(DepositDetailRepository depositDetailRepository, DepositRepository depositRepository,
-                                    WalletRepository walletRepository, UserRepository userRepository, CurrencyConverter currencyConverter) {
+    public DepositDetailServiceImpl(DepositDetailRepository depositDetailRepository,
+                                    DepositRepository depositRepository,
+                                    WalletRepository walletRepository,
+                                    UserRepository userRepository,
+                                    CurrencyConverter currencyConverter) {
+
         this.depositDetailRepository = depositDetailRepository;
         this.depositRepository = depositRepository;
         this.walletRepository = walletRepository;
@@ -48,17 +58,18 @@ public class DepositDetailServiceImpl implements DepositDetailService {
 
     @Override
     public void create(DepositOpenRequestDTO openDTO, User user)
-            throws WalletNotFoundException, LackOfMoneyException, DepositNotFoundException, CurrencyConverterException {
+            throws LackOfMoneyException, CurrencyConverterException {
 
         BigDecimal moneySend = openDTO.getMoney();
-        Wallet wallet = walletRepository.findByCurrencyTypeAndUser(openDTO.getCurrencyType(), user).orElseThrow(WalletNotFoundException::new);
+        Wallet wallet = walletRepository.findByCurrencyTypeAndUser(openDTO.getCurrencyType(), user)
+                .orElseThrow(() -> new NotFoundException(WALLET_NOT_FOUND_MESSAGE));
 
         if (wallet.getBalance().compareTo(moneySend) < 0) {
             throw new LackOfMoneyException();
         }
 
         Deposit deposit = depositRepository.findByName(openDTO.getDepositName())
-                .filter(d -> d.getStatus().equals(Status.OPEN)).orElseThrow(DepositNotFoundException::new);
+                .filter(d -> d.getStatus().equals(Status.OPEN)).orElseThrow(() -> new NotFoundException(DEPOSIT_NOT_FOUND_MESSAGE));
 
         wallet.setBalance(wallet.getBalance().subtract(moneySend));
         BigDecimal receivedMoney = currencyConverter.convertMoney(openDTO.getCurrencyType(), deposit.getCurrencyType(), moneySend);
@@ -88,14 +99,16 @@ public class DepositDetailServiceImpl implements DepositDetailService {
     }
 
     @Override
-    public List<DepositDetail> pickUp(User user) throws WalletNotFoundException {
+    public List<DepositDetail> pickUp(User user) {
         List<DepositDetail> depositDetails = depositDetailRepository.findAllByUser(user)
                 .stream()
                 .filter(deposit -> deposit.getDepositDetailStatus().equals(Status.PRE_CLOSED))
                 .collect(Collectors.toList());
 
         for (DepositDetail depositDetail : depositDetails) {
-            Wallet wallet = walletRepository.findByCurrencyTypeAndUser(depositDetail.getDeposit().getCurrencyType(), user).orElseThrow(WalletNotFoundException::new);
+            Wallet wallet = walletRepository.findByCurrencyTypeAndUser(depositDetail.getDeposit().getCurrencyType(), user)
+                    .orElseThrow(() -> new NotFoundException(WALLET_NOT_FOUND_MESSAGE));
+
             wallet.setBalance(wallet.getBalance().add(depositDetail.getReturnBalance()));
             depositDetail.setDepositDetailStatus(Status.CLOSED);
             log.info("DepositDetail was changed status: " + depositDetail);
@@ -105,8 +118,9 @@ public class DepositDetailServiceImpl implements DepositDetailService {
     }
 
     @Override
-    public List<DepositDetail> findAllById(long userId) throws UserNotFoundException {
-        return depositDetailRepository.findAllByUser(userRepository.findById(userId).orElseThrow(UserNotFoundException::new));
+    public List<DepositDetail> findAllById(long userId) {
+        return depositDetailRepository.findAllByUser(userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE)));
     }
 
     @Override
@@ -120,9 +134,10 @@ public class DepositDetailServiceImpl implements DepositDetailService {
     }
 
     @Override
-    public void deleteById(long depositId) throws DepositNotFoundException, UnremovableStatusException {
+    public void deleteById(long depositId) {
 
-        DepositDetail depositDetail = depositDetailRepository.findById(depositId).orElseThrow(DepositNotFoundException::new);
+        DepositDetail depositDetail = depositDetailRepository.findById(depositId)
+                .orElseThrow(() -> new NotFoundException("Deposit detail not found"));
 
         if (depositDetail.getDepositDetailStatus().equals(Status.CLOSED)) {
             depositDetailRepository.delete(depositDetail);

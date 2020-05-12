@@ -1,12 +1,12 @@
-POST localhost:8080/user/registration
+POST localhost:8080/user/register
 Content-Type: application/json
 
 {
-  "email": "example1@email.com",
+  "email": "example2@email.com",
   "password": "password",
   "firstName": "first name",
   "lastName": "last name",
-  "passport": "MP1234567891",
+  "passport": "MP1234567892",
   "birthday": "11-03-1993",
   "address": {
     "city": "Minsk",
@@ -17,11 +17,11 @@ Content-Type: application/json
 
 ###
 
-POST localhost:8080/user/authentication
+POST localhost:8080/user/authenticate
 Content-Type: application/json
 
 {
-  "email": "something@gmail.com",
+  "email": "example2@email.com",
   "password": "password"
 }
 
@@ -29,21 +29,21 @@ Content-Type: application/json
 
 GET localhost:8080/user/admin/findByEmail/example@email.com
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
+Authorization: Bearer_yJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTI4MTExNywiZXhwIjoxNTg5MjgyOTE3fQ.kwheD91m9ifM0EJlWy52P8wCzehYv7Fxc2-XWeRIXeo
 ###
 
 GET localhost:8080/user/admin/findById/3
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTI4MTExNywiZXhwIjoxNTg5MjgyOTE3fQ.kwheD91m9ifM0EJlWy52P8wCzehYv7Fxc2-XWeRIXeo
 ###
 
 PUT localhost:8080/user/admin/update
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE4MjU3MiwiZXhwIjoxNTg5MTgzNzcyfQ.t2r3-k27rkSna9BpYGMQOUBQec_Npx7Cahc2wFFCjhk
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBlbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTI4NjgzNCwiZXhwIjoxNTg5Mjg4NjM0fQ.WvpJELv4RShpryTk_kgvXjftTxalAekurrf7DxxIjpI
 
 {
-  "id": 3,
-  "email": "edit@email.com",
+
+  "email": "example@email.com",
   "password": "password33",
   "firstName": "first name",
   "lastName": "last name",
@@ -51,21 +51,21 @@ Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tI
   "birthday": "11-03-1990",
   "address": {
     "city": "Moscow",
-    "street": "Nemiga",
-    "house": "12a"
+    "street": "Voronyma",
+    "house": "13a"
   }
 }
 
 ###
 
-DELETE localhost:8080/user/admin/delete/3
+DELETE localhost:8080/user/admin/deleteById/4
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBlbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTI4NjgzNCwiZXhwIjoxNTg5Mjg4NjM0fQ.WvpJELv4RShpryTk_kgvXjftTxalAekurrf7DxxIjpI
 ###
 
 GET localhost:8080/user/admin/findAll
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsMS5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTEyNTEzOSwiZXhwIjoxNTg5MTI2MzM5fQ.Xc6U_mdQCQF7Ejcxq7neq8Qe2hy0vAle5u0xi59Rgy8
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTI4MTExNywiZXhwIjoxNTg5MjgyOTE3fQ.kwheD91m9ifM0EJlWy52P8wCzehYv7Fxc2-XWeRIXeo
 ###
 
 PUT localhost:8080/user/admin/establishAdminRole/3
@@ -76,10 +76,10 @@ Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tI
 
 GET localhost:8080/user/admin/findByWalletValue/USD111111111
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNTg5MDY0MjkxLCJleHAiOjE1ODkwNjU0OTF9.mlvI5Rd1JRriOI1j49eV4qw9P-G66Hs83NCA_2nzThM
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTI4MTExNywiZXhwIjoxNTg5MjgyOTE3fQ.kwheD91m9ifM0EJlWy52P8wCzehYv7Fxc2-XWeRIXeo
 ###
 
 PUT localhost:8080/user/admin/changeStatus/3/ACTIVE
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTE5MDk4OCwiZXhwIjoxNTg5MTkyMTg4fQ.vftF4JPTegfKV_fDtgPE0gftf5TFIofrZyIHSJDf6LI
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTI4MTExNywiZXhwIjoxNTg5MjgyOTE3fQ.kwheD91m9ifM0EJlWy52P8wCzehYv7Fxc2-XWeRIXeo
 ###

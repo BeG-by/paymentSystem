@@ -1,7 +1,6 @@
 package by.beg.payment_system.controller;
 
-import by.beg.payment_system.exception.CreditIsPresentException;
-import by.beg.payment_system.exception.CreditNotFoundException;
+import by.beg.payment_system.dto.response.MessageResponseDTO;
 import by.beg.payment_system.exception.UnremovableStatusException;
 import by.beg.payment_system.model.finance.Credit;
 import by.beg.payment_system.service.CreditService;
@@ -36,9 +35,10 @@ public class CreditController {
     //ADMIN
 
     @PostMapping("/admin/create")
-    public ResponseEntity<String> create(@RequestBody @Valid Credit credit) throws CreditIsPresentException {
+    public ResponseEntity<MessageResponseDTO> create(@RequestBody @Valid Credit credit) {
         creditService.create(credit);
-        return ResponseEntity.ok("Credit " + credit.getName() + " has been created");
+        MessageResponseDTO message = new MessageResponseDTO("Credit " + credit.getName() + " has been created");
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("/admin/findAll")
@@ -47,20 +47,22 @@ public class CreditController {
     }
 
     @GetMapping("/admin/findById/{creditId}")
-    public ResponseEntity<Credit> findById(@PathVariable long creditId) throws CreditNotFoundException {
+    public ResponseEntity<Credit> findById(@PathVariable long creditId) {
         return ResponseEntity.ok(creditService.findById(creditId));
     }
 
     @PutMapping("/admin/update")
-    public ResponseEntity<String> update(@RequestBody @Valid Credit credit) throws CreditNotFoundException {
+    public ResponseEntity<MessageResponseDTO> update(@RequestBody @Valid Credit credit) {
         creditService.update(credit);
-        return ResponseEntity.ok("Credit with id " + credit.getId() + " has been updated");
+        MessageResponseDTO message = new MessageResponseDTO("Credit with id " + credit.getId() + " has been updated");
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/admin/deleteById/{creditId}")
-    public ResponseEntity<String> delete(@PathVariable long creditId) throws UnremovableStatusException, CreditNotFoundException {
+    public ResponseEntity<MessageResponseDTO> delete(@PathVariable long creditId) throws UnremovableStatusException {
         creditService.delete(creditId);
-        return ResponseEntity.ok("Credit with id " + creditId + " has been deleted");
+        MessageResponseDTO message = new MessageResponseDTO("Credit with id " + creditId + " has been deleted");
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/admin/deleteAll")

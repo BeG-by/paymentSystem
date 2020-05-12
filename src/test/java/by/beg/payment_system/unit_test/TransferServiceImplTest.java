@@ -2,8 +2,6 @@ package by.beg.payment_system.unit_test;
 
 import by.beg.payment_system.exception.CurrencyConverterException;
 import by.beg.payment_system.exception.LackOfMoneyException;
-import by.beg.payment_system.exception.TargetWalletNotFoundException;
-import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.enumerations.CurrencyType;
 import by.beg.payment_system.model.finance.TransferDetail;
 import by.beg.payment_system.model.finance.Wallet;
@@ -41,7 +39,7 @@ class TransferServiceImplTest {
 
     @Test
     void should_targetWalletBalanceEquals100_walletBalanceEquals0_whenMakeTransfer()
-            throws CurrencyConverterException, WalletNotFoundException, TargetWalletNotFoundException, LackOfMoneyException {
+            throws CurrencyConverterException, LackOfMoneyException {
 
         User user = new User();
         Wallet wallet = new Wallet();

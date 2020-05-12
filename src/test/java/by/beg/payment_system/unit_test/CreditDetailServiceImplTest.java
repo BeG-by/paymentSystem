@@ -1,9 +1,7 @@
 package by.beg.payment_system.unit_test;
 
-import by.beg.payment_system.dto.CreditOpenRequestDTO;
-import by.beg.payment_system.exception.CreditNotFoundException;
+import by.beg.payment_system.dto.request.CreditOpenRequestDTO;
 import by.beg.payment_system.exception.LackOfMoneyException;
-import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.enumerations.CurrencyType;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Credit;
@@ -42,8 +40,7 @@ class CreditDetailServiceImplTest {
     private WalletRepository walletRepository;
 
     @Test
-    void should_depositStatusOpen_walletBalanceEquals100_whenSending200()
-            throws CreditNotFoundException, WalletNotFoundException, LackOfMoneyException {
+    void should_creditStatusOpen_walletBalanceEquals100_whenSending200() throws LackOfMoneyException {
 
         Credit credit = new Credit();
         credit.setCurrencyType(CurrencyType.USD);
@@ -105,7 +102,7 @@ class CreditDetailServiceImplTest {
 
 
         assertThrows(LackOfMoneyException.class, () ->
-            creditDetailService.repayDebt(new User(), creditOpenRequestDTO)
+                creditDetailService.repayDebt(new User(), creditOpenRequestDTO)
         );
 
 
@@ -116,8 +113,7 @@ class CreditDetailServiceImplTest {
     }
 
     @Test
-    void should_depositStatusClosed_walletBalanceEquals100_whenSending500()
-            throws CreditNotFoundException, WalletNotFoundException, LackOfMoneyException {
+    void should_creditStatusClosed_walletBalanceEquals100_whenSending500() throws LackOfMoneyException {
 
         Credit credit = new Credit();
         credit.setCurrencyType(CurrencyType.USD);

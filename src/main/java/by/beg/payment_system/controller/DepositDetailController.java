@@ -1,8 +1,11 @@
 package by.beg.payment_system.controller;
 
-import by.beg.payment_system.dto.DateFilterRequestDTO;
-import by.beg.payment_system.dto.DepositOpenRequestDTO;
-import by.beg.payment_system.exception.*;
+import by.beg.payment_system.dto.request.DateFilterRequestDTO;
+import by.beg.payment_system.dto.request.DepositOpenRequestDTO;
+import by.beg.payment_system.dto.response.MessageResponseDTO;
+import by.beg.payment_system.exception.CurrencyConverterException;
+import by.beg.payment_system.exception.LackOfMoneyException;
+import by.beg.payment_system.exception.UnremovableStatusException;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.DepositDetail;
 import by.beg.payment_system.model.user.User;
@@ -34,21 +37,22 @@ public class DepositDetailController {
     //USER
 
     @PostMapping("/create")
-    public ResponseEntity<String> createDeposit(@RequestBody @Valid DepositOpenRequestDTO openDTO, Principal principal)
-            throws LackOfMoneyException, WalletNotFoundException, DepositNotFoundException, CurrencyConverterException, UserNotFoundException {
+    public ResponseEntity<MessageResponseDTO> createDeposit(@RequestBody @Valid DepositOpenRequestDTO openDTO, Principal principal)
+            throws LackOfMoneyException, CurrencyConverterException {
         User currentUser = userService.findCurrentUser(principal.getName());
         depositDetailService.create(openDTO, currentUser);
-        return ResponseEntity.ok("DepositDetail has been successfully create");
+        MessageResponseDTO message = new MessageResponseDTO("DepositDetail has been successfully create");
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<DepositDetail>> findAllByUser(Principal principal) throws UserNotFoundException {
+    public ResponseEntity<List<DepositDetail>> findAllByUser(Principal principal) {
         User currentUser = userService.findCurrentUser(principal.getName());
         return ResponseEntity.ok(depositDetailService.findAllByUser(currentUser));
     }
 
     @PutMapping("/pickUp")
-    public ResponseEntity<List<DepositDetail>> pickUpDeposits(Principal principal) throws WalletNotFoundException, UserNotFoundException {
+    public ResponseEntity<List<DepositDetail>> pickUpDeposits(Principal principal) {
         User currentUser = userService.findCurrentUser(principal.getName());
         return ResponseEntity.ok(depositDetailService.pickUp(currentUser));
     }
@@ -57,7 +61,7 @@ public class DepositDetailController {
     //ADMIN
 
     @GetMapping("/admin/findAll/{userId}")
-    public ResponseEntity<List<DepositDetail>> findAllById(@PathVariable long userId) throws UserNotFoundException {
+    public ResponseEntity<List<DepositDetail>> findAllById(@PathVariable long userId) {
         return ResponseEntity.ok(depositDetailService.findAllById(userId));
     }
 
@@ -72,9 +76,10 @@ public class DepositDetailController {
     }
 
     @DeleteMapping("/admin/deleteById/{depositId}")
-    public ResponseEntity<String> delete(@PathVariable long depositId) throws DepositNotFoundException, UnremovableStatusException {
+    public ResponseEntity<MessageResponseDTO> delete(@PathVariable long depositId) throws UnremovableStatusException {
         depositDetailService.deleteById(depositId);
-        return ResponseEntity.ok("DepositDetail with id = " + depositId + " has been deleted");
+        MessageResponseDTO message = new MessageResponseDTO("DepositDetail with id = " + depositId + " has been deleted");
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/admin/deleteAll")
@@ -83,9 +88,10 @@ public class DepositDetailController {
     }
 
     @PutMapping("/admin/refreshAll")
-    public ResponseEntity<String> refreshAll() {
+    public ResponseEntity<MessageResponseDTO> refreshAll() {
         depositDetailService.refreshAll();
-        return ResponseEntity.ok("DepositsDetails have been refreshed");
+        MessageResponseDTO message = new MessageResponseDTO("DepositsDetails have been refreshed");
+        return ResponseEntity.ok(message);
     }
 
 }

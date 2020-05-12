@@ -1,7 +1,9 @@
 package by.beg.payment_system.controller;
 
-import by.beg.payment_system.dto.DateFilterRequestDTO;
-import by.beg.payment_system.exception.*;
+import by.beg.payment_system.dto.request.DateFilterRequestDTO;
+import by.beg.payment_system.dto.response.MessageResponseDTO;
+import by.beg.payment_system.exception.CurrencyConverterException;
+import by.beg.payment_system.exception.LackOfMoneyException;
 import by.beg.payment_system.model.finance.TransferDetail;
 import by.beg.payment_system.model.user.User;
 import by.beg.payment_system.service.TransferService;
@@ -34,14 +36,18 @@ public class TransferController {
     //USER
 
     @PostMapping
-    public ResponseEntity<String> transfer(@RequestBody @Valid TransferDetail transferDetail, Principal principal)
-            throws WalletNotFoundException, TargetWalletNotFoundException, LackOfMoneyException, CurrencyConverterException, UserNotFoundException {
+    public ResponseEntity<MessageResponseDTO> transfer(@RequestBody @Valid TransferDetail transferDetail, Principal principal)
+            throws LackOfMoneyException, CurrencyConverterException {
         User currentUser = userService.findCurrentUser(principal.getName());
         transferService.makeTransfer(currentUser, transferDetail);
-        return ResponseEntity.ok("Transfer to wallet " + transferDetail.getTargetWalletValue() + " has been successfully made ");
+
+        MessageResponseDTO message = new MessageResponseDTO("Transfer to wallet "
+                + transferDetail.getTargetWalletValue() + " has been successfully made");
+
+        return ResponseEntity.ok(message);
     }
 
-    @GetMapping("/findExchangeRates")
+    @GetMapping("/findAllExchangeRates")
     public ResponseEntity<Map<String, BigDecimal>> findAllRates() throws CurrencyConverterException {
         return ResponseEntity.ok(transferService.findAllRates());
     }
@@ -58,10 +64,11 @@ public class TransferController {
         return ResponseEntity.ok(transferService.findAll());
     }
 
-    @DeleteMapping("/admin/deleteById/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable long id) throws TransferNotFoundException {
-        transferService.deleteById(id);
-        return ResponseEntity.ok("Transfer with id = " + id + " was deleted");
+    @DeleteMapping("/admin/deleteById/{transferId}")
+    public ResponseEntity<MessageResponseDTO> deleteById(@PathVariable long transferId) {
+        transferService.deleteById(transferId);
+        MessageResponseDTO message = new MessageResponseDTO("Transfer with id = " + transferId + " was deleted");
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/admin/deleteAllBetweenDate")

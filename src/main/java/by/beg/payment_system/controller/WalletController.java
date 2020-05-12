@@ -1,10 +1,7 @@
 package by.beg.payment_system.controller;
 
-import by.beg.payment_system.dto.ChargeWalletRequestDTO;
-import by.beg.payment_system.exception.UnremovableStatusException;
-import by.beg.payment_system.exception.UserNotFoundException;
-import by.beg.payment_system.exception.WalletIsExistException;
-import by.beg.payment_system.exception.WalletNotFoundException;
+import by.beg.payment_system.dto.request.ChargeWalletRequestDTO;
+import by.beg.payment_system.dto.response.MessageResponseDTO;
 import by.beg.payment_system.model.enumerations.CurrencyType;
 import by.beg.payment_system.model.finance.Wallet;
 import by.beg.payment_system.model.user.User;
@@ -35,40 +32,38 @@ public class WalletController {
     }
 
     @GetMapping("/create/{type}")
-    public ResponseEntity<Wallet> createWallet(@PathVariable CurrencyType type, Principal principal)
-            throws WalletIsExistException, UserNotFoundException {
+    public ResponseEntity<Wallet> createWallet(@PathVariable CurrencyType type, Principal principal) {
         User currentUser = userService.findCurrentUser(principal.getName());
         return ResponseEntity.ok(walletService.create(type, currentUser));
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<Wallet>> findAllWallets(Principal principal) throws UserNotFoundException {
+    public ResponseEntity<List<Wallet>> findAllWallets(Principal principal) {
         User currentUser = userService.findCurrentUser(principal.getName());
         return ResponseEntity.ok(walletService.findAll(currentUser));
     }
 
 
     @DeleteMapping("/delete/{type}")
-    public ResponseEntity<String> deleteWallet(@PathVariable CurrencyType type, Principal principal)
-            throws WalletNotFoundException, UnremovableStatusException, UserNotFoundException {
+    public ResponseEntity<MessageResponseDTO> deleteWallet(@PathVariable CurrencyType type, Principal principal) {
         User currentUser = userService.findCurrentUser(principal.getName());
         walletService.delete(type, currentUser);
-        return ResponseEntity.ok(type + " wallet has been deleted");
+        MessageResponseDTO message = new MessageResponseDTO(type + " wallet has been deleted");
+        return ResponseEntity.ok(message);
     }
 
     @PostMapping("/recharge")
-    public ResponseEntity<Wallet> rechargeBalance(@RequestBody @Valid ChargeWalletRequestDTO requestDTO, Principal principal)
-            throws WalletNotFoundException, UserNotFoundException {
+    public ResponseEntity<Wallet> rechargeBalance(@RequestBody @Valid ChargeWalletRequestDTO requestDTO, Principal principal) {
         User currentUser = userService.findCurrentUser(principal.getName());
         return ResponseEntity.ok(walletService.recharge(currentUser, requestDTO.getType(), requestDTO.getMoney()));
     }
 
     @PutMapping("/clear/{type}")
-    public ResponseEntity<String> clearBalance(@PathVariable CurrencyType type, Principal principal)
-            throws WalletNotFoundException, UserNotFoundException {
+    public ResponseEntity<MessageResponseDTO> clearBalance(@PathVariable CurrencyType type, Principal principal) {
         User currentUser = userService.findCurrentUser(principal.getName());
         walletService.clear(type, currentUser);
-        return ResponseEntity.ok("Balance of " + type + " wallet is zero");
+        MessageResponseDTO message = new MessageResponseDTO("Balance of " + type + " wallet is zero");
+        return ResponseEntity.ok(message);
     }
 
 }

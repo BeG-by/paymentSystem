@@ -1,7 +1,6 @@
 package by.beg.payment_system.unit_test;
 
 import by.beg.payment_system.exception.UnremovableStatusException;
-import by.beg.payment_system.exception.WalletNotFoundException;
 import by.beg.payment_system.model.enumerations.CurrencyType;
 import by.beg.payment_system.model.enumerations.Status;
 import by.beg.payment_system.model.finance.Credit;
@@ -61,7 +60,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    void should_deleteWallet_whenValidWallet() throws WalletNotFoundException, UnremovableStatusException {
+    void should_deleteWallet_whenValidWallet() {
 
         User user = new User();
         Wallet wallet = new Wallet();

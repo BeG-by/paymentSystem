@@ -1,8 +1,8 @@
 package by.beg.payment_system.controller;
 
+import by.beg.payment_system.dto.response.MessageResponseDTO;
 import by.beg.payment_system.exception.CurrencyConverterException;
 import by.beg.payment_system.exception.UnremovableStatusException;
-import by.beg.payment_system.exception.UserNotFoundException;
 import by.beg.payment_system.service.MailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +25,17 @@ public class MailSenderController {
     //ADMIN
 
     @GetMapping("/admin/sendRates/{userId}")
-    public ResponseEntity<String> sendRates(@PathVariable long userId) throws CurrencyConverterException, UserNotFoundException {
+    public ResponseEntity<MessageResponseDTO> sendRates(@PathVariable long userId) throws CurrencyConverterException {
         mailSenderService.sendExchangeRates(userId);
-        return ResponseEntity.ok("Mail has been sent.");
+        MessageResponseDTO message = new MessageResponseDTO("Mail has been sent");
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("/admin/blockNotification/{userId}")
-    public ResponseEntity<String> sendNotification(@PathVariable long userId) throws UnremovableStatusException {
+    public ResponseEntity<MessageResponseDTO> sendNotification(@PathVariable long userId) throws UnremovableStatusException {
         mailSenderService.sendBlockNotification(userId);
-        return ResponseEntity.ok("Mail has been sent.");
+        MessageResponseDTO message = new MessageResponseDTO("Mail has been sent");
+        return ResponseEntity.ok(message);
     }
 
 }
