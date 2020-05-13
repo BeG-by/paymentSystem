@@ -13,4 +13,5 @@ public class MessageConstant {
     public static final String CREDIT_EXIST_MESSAGE = "Credit is present. Change credit's name";
     public static final String CREDIT_DETAIL_NOT_FOUND_MESSAGE = "Credit detail not found";
     public static final String CREDIT_DETAIL_EXIST_MESSAGE = "Credit detail is present";
+
 }

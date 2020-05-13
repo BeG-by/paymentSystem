@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,7 @@ public class User {
     @Pattern(regexp = "\\w+[@]\\w+\\.\\w+", message = "Incorrect email")
     private String email;
 
+    @Size(min = 4, max = 16, message = "Password must have 4-16 symbols")
     private String password;
 
     @NotBlank(message = "First name can't be empty")

@@ -2,11 +2,11 @@ POST localhost:8080/user/register
 Content-Type: application/json
 
 {
-  "email": "example2@email.com",
+  "email": "examplee@email.com",
   "password": "password",
   "firstName": "first name",
   "lastName": "last name",
-  "passport": "MP1234567892",
+  "passport": "MP123456789e",
   "birthday": "11-03-1993",
   "address": {
     "city": "Minsk",
@@ -21,7 +21,7 @@ POST localhost:8080/user/authenticate
 Content-Type: application/json
 
 {
-  "email": "example2@email.com",
+  "email": "something@gmail.com",
   "password": "password"
 }
 
@@ -39,10 +39,10 @@ Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tI
 
 PUT localhost:8080/user/admin/update
 Content-Type: application/json
-Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlMkBlbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTU4OTI4NjgzNCwiZXhwIjoxNTg5Mjg4NjM0fQ.WvpJELv4RShpryTk_kgvXjftTxalAekurrf7DxxIjpI
+Authorization: Bearer_eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb21ldGhpbmdAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlhdCI6MTU4OTM0ODAxOSwiZXhwIjoxNTg5MzQ5ODE5fQ.9LfbOhD2tSCMC7liL3CR1-WS30LO3JKSIpox6ZSB7oc
 
 {
-
+  "id": 3,
   "email": "example@email.com",
   "password": "password33",
   "firstName": "first name",

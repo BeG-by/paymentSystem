@@ -64,8 +64,8 @@ INSERT INTO deposit_detail VALUE (null, 1000, 'OPEN', '2024-01-01', 1300, '2017-
 INSERT INTO deposit_detail VALUE (null, 500, 'CLOSED', '2013-01-01', 545, '2011-01-01', 6, 3);
 INSERT INTO deposit_detail VALUE (null, 100, 'PRE_CLOSED', '2021-01-01', 120, '2018-01-01', 4, 4);
 
-INSERT INTO credit_detail VALUE (null, 'OPEN', 200, '2025-02-02', 220, '2020-03-29', '2020-03-29', 180, 1, 1);
+INSERT INTO credit_detail VALUE (null, 'CLOSED', 0, '2025-02-02', 220, '2020-03-29', '2020-03-29', 180, 1, 1);
 INSERT INTO credit_detail VALUE (null, 'OPEN', 300, '2025-02-02', 350, '2020-03-29', '2020-03-29', 180, 2, 2);
 INSERT INTO credit_detail VALUE (null, 'OPEN', 400, '2025-02-02', 460, '2020-03-29', '2020-03-29', 180, 3, 3);
-INSERT INTO credit_detail VALUE (null, 'CLOSED', 500, '2025-02-02', 557, '2020-03-29', '2020-03-29', 180, 4, 4);
+INSERT INTO credit_detail VALUE (null, 'OPEN', 500, '2025-02-02', 557, '2020-03-29', '2020-03-29', 180, 4, 4);
 

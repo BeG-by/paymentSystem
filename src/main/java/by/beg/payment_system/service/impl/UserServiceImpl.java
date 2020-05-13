@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
         user.getAddress().setId(persistUser.getAddress().getId());
 
         userRepository.save(user);
-        log.info("User was updated: " + persistUser);
+        log.info("User was updated: " + user);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO findByWalletValue(String walletValue) {
         Wallet wallet = walletRepository.findWalletByWalletValue(walletValue)
-                .orElseThrow(() -> new NotFoundException("Wallet not found"));
+                .orElseThrow(() -> new NotFoundException(WALLET_NOT_FOUND_MESSAGE));
         return userRepository.findUserByWallets(wallet).map(UserResponseDTO::fromUser)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
